@@ -1,0 +1,58 @@
+name: CI
+on: [push]
+jobs:
+  MAIN:
+    name: Main
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      # == Preparation ==
+      - name: Install NodeJS 14
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - name: Install yarn
+        run: npm i -g yarn
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: yarn install
+      # == END Preparation ==
+
+      # Actual Steps
+      - name: Run Linter
+        run: yarn lint
+      - name: Run Tests
+        run: yarn test
+      - name: Run Builds
+        run: yarn build
+
+  PR:
+    name: Pull Request
+    runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/main'
+    steps:
+      # == Preparation ==
+      - name: Install NodeJS 14
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - name: Install yarn
+        run: npm i -g yarn
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: yarn install
+      # == END Preparation ==
+
+      # Actual Steps
+      - name: Run Linter
+        run: yarn nx affected --target=lint --base=origin/main --head=HEAD #just lint affected changens
+      - name: Run Tests
+        run: yarn nx affected --target=test --base=origin/main --head=HEAD #just test affected changens
+      - name: Run Builds
+        run: yarn nx affected --target=build --configuration=production --base=origin/main --head=HEAD #just lint affected changens

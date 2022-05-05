@@ -1,0 +1,6 @@
+{
+  "version": 2,
+  "projects": {
+    "nft-playbook": "packages/nft-playbook"
+  }
+}
