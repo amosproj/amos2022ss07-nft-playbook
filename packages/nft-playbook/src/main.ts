@@ -1,12 +1,1 @@
-import { ExampleClass } from './app/ExampleClass';
-import { ExampleChildClass } from './app/ExampleChildClass';
-
-console.log('asdfasdfasdysdfgaasdfasdfasdfdff WORLD');
-console.log('asdf');
-
-const exampleClass = new ExampleClass();
-const exampleChildClass = new ExampleChildClass();
-
-exampleClass.printSomething();
-exampleChildClass.printSomething();
-exampleChildClass.printSomethingOther();
+console.log('Hallo WORLD');
