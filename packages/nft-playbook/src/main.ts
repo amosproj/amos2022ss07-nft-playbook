@@ -1,7 +1,7 @@
 import { ExampleClass } from './app/ExampleClass';
 import { ExampleChildClass } from './app/ExampleChildClass';
 
-console.log('Hello WORLD');
+console.log('asdfasdfasdysdfgaasdfasdfasdfdff WORLD');
 console.log('asdf');
 
 const exampleClass = new ExampleClass();
