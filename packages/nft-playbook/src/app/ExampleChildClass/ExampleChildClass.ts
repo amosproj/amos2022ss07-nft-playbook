@@ -1,4 +1,4 @@
-import { ExampleClass } from '../ExampleClass';
+import { ExampleClass } from '../ExampleClass/';
 
 export class ExampleChildClass extends ExampleClass {
   printSomethingOther() {
