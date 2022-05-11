@@ -1,15 +1,20 @@
-import { Command } from "./Command";
-
-const program_information = {
-    name: 'nft-playbook',
-    version: '0.0.1',
-};
+import { Command } from './Command';
+import { program_information } from '../../../main';
+import inquirer = require('inquirer');
 
 export class VersionCommand implements Command {
-    name: string = 'version';
-    execute(): void {
-        console.log("VERSION");
-        console.log(`${program_information.version}`);
-    }
+  name = 'Version';
+  help = 'Version will provide you with the current version of the program.';
+  async execute() {
+    console.log(`${program_information.version}`);
 
+    await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'selectedCommand',
+        message: 'Want to go back?',
+        choices: ['Back'],
+      },
+    ]);
+  }
 }

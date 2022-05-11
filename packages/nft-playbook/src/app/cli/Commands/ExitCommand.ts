@@ -1,10 +1,11 @@
-import { Command } from "./Command";
+import { Command, sleep } from './Command';
 
 export class ExitCommand implements Command {
-    name: string = 'exit';
-    execute(): void {
-        console.log("EXIT");
-        process.exit(0);
-    }
-
+  name = 'Exit';
+  help = 'Exit will close the program';
+  async execute() {
+    console.log('Bye bye');
+    await sleep(2000);
+    process.exit(0);
+  }
 }

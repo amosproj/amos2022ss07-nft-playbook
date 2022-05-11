@@ -1,36 +1,44 @@
-import inquirer = require("inquirer");
-import { CommandIndex } from "./app/cli/Commands";
+/* eslint-disable no-constant-condition */
+
+import inquirer = require('inquirer');
+import { TopLevelCommandIndex } from './app/cli/Commands';
+
+export const program_information = {
+  name: 'nft-playbook',
+  version: '0.0.1',
+};
 
 function greet() {
-    console.clear();
-    console.log("Welcome to 'nft-playbook'")
-    console.log('\x1b[36m%s\x1b[0m', 'I am cyan');
+  console.clear();
+  console.log(`Welcome to ${program_information.name}`);
 }
 
 async function main() {
+  const commandChoices: string[] = [];
+
+  for (const command of TopLevelCommandIndex) {
+    commandChoices.push(command.name);
+  }
+
+  const promptQuestions: inquirer.QuestionCollection = [
+    {
+      type: 'list',
+      name: 'selectedCommand',
+      message: 'Please select a command',
+      choices: commandChoices,
+    },
+  ];
+
+  while (true) {
     greet();
 
-    let topLevelCommands: string[] = [];
+    await inquirer.prompt(promptQuestions).then(async (answers) => {
+      const index = commandChoices.indexOf(answers.selectedCommand);
 
-    for (let x of CommandIndex) {
-        topLevelCommands.push(x.name);
-    }
-
-    const topLevelQuestion: inquirer.QuestionCollection = [
-        { type: 'list', name: 'topLevelCommand', message: 'Please select a command', choices: topLevelCommands }
-    ];
-
-    while (true) {
-        let x = inquirer.prompt(topLevelQuestion);
-        await x.then(answers => {
-
-            let index = topLevelCommands.indexOf(answers.topLevelCommand)
-
-            CommandIndex.at(index).execute();
-        })
-    }
-
+      console.clear();
+      await TopLevelCommandIndex.at(index).execute();
+    });
+  }
 }
-
 
 main();
