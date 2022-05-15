@@ -1,33 +1,43 @@
 import { ethers } from 'ethers';
 import { compile_contract } from './compile_contract';
 
-export const deploy_contract = async () => {
+/**
+ * Deploy a contract which is saved under path_to_contract using hostname and port
+ *
+ * @param server_uri
+ * @param path_to_contract
+ * @param private_key_of_contract_owner
+ * @param name_of_contract
+ * @param symbol_of_contract
+ * @param baseuri_of_contract
+ * @returns address of deployed contract
+ */
+export const deploy_contract = async (
+  server_uri: string,
+  path_to_contract: string,
+  private_key_of_contract_owner: string,
+  name_of_contract: string,
+  symbol_of_contract: string,
+  baseuri_of_contract: string
+) => {
   // get ABI and contract byte code
-  const contractInfo = compile_contract(
-    './packages/nft-playbook/src/app/backend/contracts/ERC721PresetMinterPauserAutoId.sol'
-  );
-  console.log(contractInfo['abi']);
-
-  const provider = ethers.providers.getDefaultProvider('http://127.0.0.1:7545');
+  const contractInfo = compile_contract(path_to_contract);
+  const provider = ethers.providers.getDefaultProvider(server_uri);
 
   // Use your wallet's private key to deploy the contract, private key of content owner
-  const privateKey =
-    '1d7e1d43a7db52ce032125a3a467d118555d0b3d617d10800cc0080e0394b990';
-  const wallet = new ethers.Wallet(privateKey, provider);
-
+  const wallet = new ethers.Wallet(private_key_of_contract_owner, provider);
   const factory = new ethers.ContractFactory(
     contractInfo['abi'],
     contractInfo['bytecode'],
     wallet
-  ); // TODO
+  );
 
   // If your contract requires constructor args, you can specify them here
   const contract = await factory.deploy(
-    'NFTPLAYBOOK_DEMO_NFT',
-    '🚀',
-    'baseURI'
+    name_of_contract,
+    symbol_of_contract,
+    baseuri_of_contract
   );
-
-  console.log(contract.address);
-  console.log(contract.deployTransaction);
+  //TODO: Introduce types for return obejcts
+  return contract.address;
 };

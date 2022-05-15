@@ -12,8 +12,6 @@ export const compile_contract = (path_to_contract_solidity) => {
   _rec_merge_all_solidity_sources(path_to_contract_solidity, merged_sources);
   process.chdir(prev_cwd);
 
-  writeFileSync('./tmp.txt', JSON.stringify(merged_sources));
-
   // predefined format of the solc-input
   const input = {
     language: 'Solidity',
