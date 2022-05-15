@@ -13,7 +13,6 @@
   "dependencies": {
     "ethers": "^5.6.5",
     "solc": "^0.8.13",
-    "truffle": "^5.5.13",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
