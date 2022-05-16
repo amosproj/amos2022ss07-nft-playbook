@@ -1,17 +1,22 @@
 import inquirer = require('inquirer');
-import { Command, TopLevelCommandIndex } from './Command';
+import { Command } from './Command';
 
 export class HelpCommand implements Command {
   name = 'Help';
-  help = `This is the help page of the Help Command
-  It is useless
+  help = `MISSING HELP TEXT FOR THIS MENU`;
 
-  The End
-`;
+  commandIndex: Command[];
+
   async execute() {
-    TopLevelCommandIndex.forEach((command) => {
-      console.log(command.help);
-      console.log();
+    console.log(this.help);
+    console.log();
+
+    this.commandIndex.forEach((command) => {
+      if (command !== this) {
+        console.log(`${command.name}:`);
+        console.log(command.help);
+        console.log();
+      }
     });
 
     await inquirer.prompt([
@@ -22,5 +27,7 @@ export class HelpCommand implements Command {
         choices: ['Back'],
       },
     ]);
+
+    console.clear();
   }
 }

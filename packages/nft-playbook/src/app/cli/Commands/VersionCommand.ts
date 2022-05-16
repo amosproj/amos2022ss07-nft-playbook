@@ -4,7 +4,7 @@ import inquirer = require('inquirer');
 
 export class VersionCommand implements Command {
   name = 'Version';
-  help = 'Version will provide you with the current version of the program.';
+  help = '\tVersion will provide you with the current version of the program.';
   async execute() {
     console.log(`${program_information.version}`);
 

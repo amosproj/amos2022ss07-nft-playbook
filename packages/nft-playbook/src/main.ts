@@ -1,7 +1,6 @@
-/* eslint-disable no-constant-condition */
-
 import inquirer = require('inquirer');
 import { TopLevelCommandIndex } from './app/cli/Commands';
+import { MainRun } from './app/cli/Commands/Command';
 
 export const program_information = {
   name: 'nft-playbook',
@@ -14,6 +13,8 @@ function greet() {
 }
 
 async function main() {
+  MainRun.run = true;
+
   const commandChoices: string[] = [];
 
   for (const command of TopLevelCommandIndex) {
@@ -29,15 +30,14 @@ async function main() {
     },
   ];
 
-  while (true) {
+  while (MainRun.run) {
     greet();
 
-    await inquirer.prompt(promptQuestions).then(async (answers) => {
-      const index = commandChoices.indexOf(answers.selectedCommand);
-
-      console.clear();
-      await TopLevelCommandIndex.at(index).execute();
-    });
+    const answers = await inquirer.prompt(promptQuestions);
+    const index = commandChoices.indexOf(answers.selectedCommand);
+    console.clear();
+    await TopLevelCommandIndex.at(index).execute();
+    console.clear();
   }
 }
 
