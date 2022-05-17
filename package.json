@@ -13,6 +13,7 @@
   "dependencies": {
     "ethers": "^5.6.5",
     "solc": "^0.8.13",
+    "inquirer": "^8.2.4",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
@@ -24,6 +25,7 @@
     "@nrwl/node": "^14.1.2",
     "@nrwl/workspace": "14.1.2",
     "@openzeppelin/contracts": "^4.6.0",
+    "@types/inquirer": "^8.2.1",
     "@types/jest": "27.4.1",
     "@types/node": "^17.0.32",
     "@typescript-eslint/eslint-plugin": "~5.18.0",

@@ -33,11 +33,18 @@ export const deploy_contract = async (
   );
 
   // If your contract requires constructor args, you can specify them here
-  const contract = await factory.deploy(
+  let contract;
+  try {
+    contract = await factory.deploy(
     name_of_contract,
     symbol_of_contract,
     baseuri_of_contract
   );
+    } catch (e) {
+      console.log("test3")
+      console.log(e);
+      while (true) {}
+    }
   //TODO: Introduce types for return obejcts
   return contract.address;
 };
