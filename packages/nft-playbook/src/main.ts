@@ -31,13 +31,13 @@ async function main() {
  ];
 
  while (MainRun.run) {
-//    greet();
+   greet();
 
    const answers = await inquirer.prompt(promptQuestions);
    const index = commandChoices.indexOf(answers.selectedCommand);
-//    console.clear();
+   console.clear();
    await TopLevelCommandIndex.at(index).execute();
-//    console.clear();
+   console.clear();
  }
 }
 
