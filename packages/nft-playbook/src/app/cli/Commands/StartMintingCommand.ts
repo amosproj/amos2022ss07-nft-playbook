@@ -1,45 +1,111 @@
 import inquirer = require('inquirer');
-import { Command } from './Command';
-import { HelpCommand } from './HelpCommand';
-import { BackCommand } from './BackCommand';
+import fs = require('fs');
+import { Command, sleep } from './Command';
 
-const SMRun = {
-  run: false,
-};
+import { deploy_contract } from '../../backend/deploy_contract';
+import { mint_nft } from '../../backend/mint_nft';
+import {
+  read_smart_contract,
+  read_user_transactions_on_smart_contract,
+} from '../../backend/read_smart_contract';
 
-const helpCommand = new HelpCommand();
-helpCommand.help = `This is the help text for the Minting menu`;
-const CommandIndex: Command[] = [helpCommand, new BackCommand(SMRun)];
-helpCommand.commandIndex = CommandIndex;
+let GAS_LIMIT;
+let server_uri;
+let priv_key_contract_owner;
+let priv_key_NFT_transmitter;
+let pub_key_NFT_receiver;
 
 export class StartMintingCommand implements Command {
   name = 'Start Minting';
   help = `\tStart the minting process`;
 
   async execute() {
-    SMRun.run = true;
-
-    const commandChoices: string[] = [];
-
-    for (const command of CommandIndex) {
-      commandChoices.push(command.name);
-    }
-
-    const promptQuestions: inquirer.QuestionCollection = [
+    const promptQuestion: inquirer.QuestionCollection = [
       {
-        type: 'list',
-        name: 'selectedCommand',
-        message: 'Please select a command',
-        choices: commandChoices,
+        type: 'input',
+        name: 'filename',
+        message: 'Please provide a settings.json',
+        default: './packages/nft-playbook/src/info.json',
       },
     ];
+    const answer = await inquirer.prompt(promptQuestion);
 
-    while (SMRun.run) {
-      const answers = await inquirer.prompt(promptQuestions);
-      const index = commandChoices.indexOf(answers.selectedCommand);
-      console.clear();
-      await CommandIndex.at(index).execute();
-      console.clear();
+    let file;
+    try {
+      file = fs.readFileSync(answer.filename, 'utf-8');
+    } catch (e) {
+      console.log('Please provide a valid filepath');
+      await sleep(5000);
+      return;
     }
+
+    let info;
+    try {
+      info = JSON.parse(file);
+    } catch (error) {
+      console.log('Error parsing json file');
+      await sleep(5000);
+      return;
+    }
+
+    GAS_LIMIT = info.GAS_LIMIT;
+    server_uri = info.server_uri;
+    priv_key_contract_owner = info.priv_key_contract_owner;
+    priv_key_NFT_transmitter = info.priv_key_NFT_transmitter;
+    pub_key_NFT_receiver = info.pub_key_NFT_receiver;
+
+    if (
+      GAS_LIMIT === undefined ||
+      server_uri === undefined ||
+      priv_key_contract_owner === undefined ||
+      priv_key_NFT_transmitter === undefined ||
+      pub_key_NFT_receiver === undefined
+    ) {
+      console.log(
+        'Neccessary parameter missing. Please provide all required parameters in the json file.'
+      );
+      await sleep(5000);
+      return;
+    }
+
+    console.log(GAS_LIMIT);
+    console.log(server_uri);
+    console.log(priv_key_contract_owner);
+    console.log(priv_key_NFT_transmitter);
+    console.log(pub_key_NFT_receiver);
+
+    await sleep(5000);
+
+    // await this.mint();
+  }
+
+  async mint() {
+    let addr = undefined;
+    addr = await deploy_contract(
+      server_uri,
+      './packages/nft-playbook/src/app/backend/contracts/ERC721PresetMinterPauserAutoId.sol',
+      priv_key_contract_owner,
+      'NFT-DEMO',
+      '🚀',
+      'basis-uri'
+    );
+
+    console.log('Deployment successfull!');
+    console.log('Deployment successfull!');
+
+    await mint_nft(
+      server_uri,
+      priv_key_NFT_transmitter,
+      addr,
+      pub_key_NFT_receiver,
+      GAS_LIMIT
+    );
+
+    read_smart_contract(server_uri, addr);
+    read_user_transactions_on_smart_contract(
+      server_uri,
+      addr,
+      pub_key_NFT_receiver
+    );
   }
 }
