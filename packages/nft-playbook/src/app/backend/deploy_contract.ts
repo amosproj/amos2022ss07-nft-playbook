@@ -36,15 +36,13 @@ export const deploy_contract = async (
   let contract;
   try {
     contract = await factory.deploy(
-    name_of_contract,
-    symbol_of_contract,
-    baseuri_of_contract
-  );
-    } catch (e) {
-      console.log("test3")
-      console.log(e);
-      while (true) {}
-    }
+      name_of_contract,
+      symbol_of_contract,
+      baseuri_of_contract
+    );
+  } catch (e) {
+    console.log(e);
+  }
   //TODO: Introduce types for return obejcts
   return contract.address;
 };
