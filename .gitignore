@@ -20,7 +20,6 @@ pids
 __pycache__/
 
 # vscode
-.vscode/
 web-build/
 dist/
 
