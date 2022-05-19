@@ -120,5 +120,7 @@ export class StartMintingCommand implements Command {
     eth.read_user_data_from_smart_contract(
       ethereumConfigReadUserDataFromSmartContract
     );
+
+    await sleep(5000);
   }
 }

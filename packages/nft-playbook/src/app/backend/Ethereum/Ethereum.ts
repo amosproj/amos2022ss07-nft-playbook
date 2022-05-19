@@ -121,8 +121,6 @@ export class Ethereum implements Blockchain {
     console.log(
       `${balance} NFTs are belonging to user: ${config.pub_key_user}`
     );
-
-    throw new Error('Method not implemented.');
   }
 
   private static _compile_contract(path_to_contract_solidity) {
