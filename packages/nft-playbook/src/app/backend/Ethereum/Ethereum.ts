@@ -10,7 +10,6 @@ import { resolve, sep, posix } from 'path';
 import solc = require('solc');
 
 export class Ethereum implements Blockchain {
-  /* deploys the contract to ethereum*/
   async deploy_contract(config: EthereumConfigDeployContract): Promise<string> {
     // get ABI and contract byte code
     const contractInfo = Ethereum._compile_contract(config.path_to_contract);
@@ -72,17 +71,16 @@ export class Ethereum implements Blockchain {
     config: EthereumConfigReadSmartContract
   ): Promise<void> {
     // change to ERC721
-    const ERC20_ABI = [
+    const ERC721_ABI = [
       'function name() view returns (string)',
       'function symbol() view returns (string)',
       'function totalSupply() view returns (uint256)',
-      'function balanceOf(address) view returns (uint256)',
     ];
 
     const provider = new ethers.providers.JsonRpcProvider(config.server_uri);
     const contract = new ethers.Contract(
       config.address_of_contract,
-      ERC20_ABI,
+      ERC721_ABI,
       provider
     );
     const name = await contract.name();
@@ -102,7 +100,6 @@ export class Ethereum implements Blockchain {
     const ERC20_ABI = [
       'function name() view returns (string)',
       'function symbol() view returns (string)',
-      'function totalSupply() view returns (uint256)',
       'function balanceOf(address) view returns (uint256)',
     ];
 

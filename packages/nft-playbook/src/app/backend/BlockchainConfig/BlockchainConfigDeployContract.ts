@@ -1,3 +1,6 @@
+/**
+ * Abstract Config for Deploying a Contract
+ */
 export abstract class BlockchainConfigDeployContract {
   private type: string;
 

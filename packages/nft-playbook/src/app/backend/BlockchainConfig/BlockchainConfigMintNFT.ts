@@ -1,3 +1,6 @@
+/**
+ * Abstract Config for Minting a NFT
+ */
 export abstract class BlockchainConfigMintNFT {
   private type: string;
   NFT_name: string;

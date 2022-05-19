@@ -1,3 +1,6 @@
+/**
+ * Abstract Config for Reading a Smart Contract
+ */
 export abstract class BlockchainConfigReadSmartContract {
   private type: string;
 

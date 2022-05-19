@@ -1,3 +1,6 @@
+/**
+ * Abstract Config for reading user data from a smart contract
+ */
 export abstract class BlockChainConfigReadUserDataFromSmartContract {
   private type: string;
 
