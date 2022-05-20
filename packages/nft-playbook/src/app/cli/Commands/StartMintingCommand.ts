@@ -1,13 +1,11 @@
 import inquirer = require('inquirer');
 import fs = require('fs');
 import { Command, sleep } from './Command';
-
-import { deploy_contract } from '../../backend/deploy_contract';
-import { mint_nft } from '../../backend/mint_nft';
-import {
-  read_smart_contract,
-  read_user_transactions_on_smart_contract,
-} from '../../backend/read_smart_contract';
+import { Ethereum } from '../../backend/Ethereum/Ethereum';
+import { EthereumConfigMintNFT } from '../../backend/Ethereum/EthereumConfig/EthereumConfigMintNFT';
+import { EthereumConfigDeployContract } from '../../backend/Ethereum/EthereumConfig/EthereumConfigDeployContract';
+import { EthereumConfigReadSmartContract } from '../../backend/Ethereum/EthereumConfig/EthereumConfigReadSmartContract';
+import { EthereumConfigReadUserDataFromSmartContract } from '../../backend/Ethereum/EthereumConfig/EthereumConfigReadUserDataFromSmartContract';
 
 let GAS_LIMIT;
 let server_uri;
@@ -76,36 +74,53 @@ export class StartMintingCommand implements Command {
 
     await sleep(5000);
 
-    // await this.mint();
-  }
-
-  async mint() {
-    let addr = undefined;
-    addr = await deploy_contract(
+    const ethereumConfigDeployContract = new EthereumConfigDeployContract(
       server_uri,
       './packages/nft-playbook/src/app/backend/contracts/ERC721PresetMinterPauserAutoId.sol',
       priv_key_contract_owner,
-      'NFT-DEMO',
+      'NFT-DEMO-CONTRACT',
       '🚀',
       'basis-uri'
     );
 
-    console.log('Deployment successfull!');
-    console.log('Deployment successfull!');
+    // create Ethereum object
+    const eth = new Ethereum();
 
-    await mint_nft(
+    // deploy contract on ethereum blockchain
+    const addr = await eth.deploy_contract(ethereumConfigDeployContract);
+
+    const ethereumConfigMintNFT = new EthereumConfigMintNFT(
+      'DEMO-NFT',
       server_uri,
       priv_key_NFT_transmitter,
       addr,
       pub_key_NFT_receiver,
+      'hash',
+      'url',
       GAS_LIMIT
     );
 
-    read_smart_contract(server_uri, addr);
-    read_user_transactions_on_smart_contract(
+    // mint nft on ethereum blockchain
+    await eth.mint_nft(ethereumConfigMintNFT);
+
+    const ethereumConfigReadSmartContract = new EthereumConfigReadSmartContract(
       server_uri,
-      addr,
-      pub_key_NFT_receiver
+      addr
     );
+
+    eth.read_smart_contract(ethereumConfigReadSmartContract);
+
+    const ethereumConfigReadUserDataFromSmartContract =
+      new EthereumConfigReadUserDataFromSmartContract(
+        server_uri,
+        addr,
+        pub_key_NFT_receiver
+      );
+
+    eth.read_user_data_from_smart_contract(
+      ethereumConfigReadUserDataFromSmartContract
+    );
+
+    await sleep(5000);
   }
 }
