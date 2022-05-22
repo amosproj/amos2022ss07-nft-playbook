@@ -1,80 +1,100 @@
 import inquirer = require('inquirer');
-import fs = require('fs');
 import { Command, sleep } from './Command';
 import { Ethereum } from '../../backend/Ethereum/Ethereum';
 import { EthereumConfigMintNFT } from '../../backend/Ethereum/EthereumConfig/EthereumConfigMintNFT';
 import { EthereumConfigDeployContract } from '../../backend/Ethereum/EthereumConfig/EthereumConfigDeployContract';
-import { EthereumConfigReadSmartContract } from '../../backend/Ethereum/EthereumConfig/EthereumConfigReadSmartContract';
-import { EthereumConfigReadUserDataFromSmartContract } from '../../backend/Ethereum/EthereumConfig/EthereumConfigReadUserDataFromSmartContract';
+import { SettingsData } from '../SettingsData';
 import { EthereumConfigReadTokenData } from '../../backend/Ethereum/EthereumConfig/EthereumConfigReadTokenData';
 
-let GAS_LIMIT;
-let server_uri;
-let priv_key_contract_owner;
-let priv_key_NFT_transmitter;
-let pub_key_NFT_receiver;
+let GAS_LIMIT: number;
+let server_uri: string;
+let priv_key_contract_owner: string;
+let priv_key_NFT_transmitter: string;
+let pub_key_NFT_receiver: string;
+let nft_name: string;
+let nft_symbol: string;
+let nft_link: string;
+let selectedBlockchains: string[];
 
 export class StartMintingCommand implements Command {
   name = 'Start Minting';
   help = `\tStart the minting process`;
 
   async execute() {
-    const promptQuestion: inquirer.QuestionCollection = [
-      {
-        type: 'input',
-        name: 'filename',
-        message: 'Please provide a settings.json',
-        default: './packages/nft-playbook/src/info.json',
-      },
-    ];
-    const answer = await inquirer.prompt(promptQuestion);
-
-    let file;
-    try {
-      file = fs.readFileSync(answer.filename, 'utf-8');
-    } catch (e) {
-      console.log('Please provide a valid filepath');
-      await sleep(5000);
-      return;
-    }
-
-    let info;
-    try {
-      info = JSON.parse(file);
-    } catch (error) {
-      console.log('Error parsing json file');
-      await sleep(5000);
-      return;
-    }
-
-    GAS_LIMIT = info.GAS_LIMIT;
-    server_uri = info.server_uri;
-    priv_key_contract_owner = info.priv_key_contract_owner;
-    priv_key_NFT_transmitter = info.priv_key_NFT_transmitter;
-    pub_key_NFT_receiver = info.pub_key_NFT_receiver;
+    GAS_LIMIT = SettingsData.GAS_LIMIT;
+    server_uri = SettingsData.server_uri;
+    priv_key_contract_owner = SettingsData.priv_key_contract_owner;
+    priv_key_NFT_transmitter = SettingsData.priv_key_NFT_transmitter;
+    pub_key_NFT_receiver = SettingsData.pub_key_NFT_receiver;
+    nft_name = SettingsData.nft_name;
+    nft_symbol = SettingsData.nft_symbol;
+    nft_link = SettingsData.nft_link;
+    selectedBlockchains = SettingsData.selectedBlockchains;
 
     if (
       GAS_LIMIT === undefined ||
       server_uri === undefined ||
       priv_key_contract_owner === undefined ||
       priv_key_NFT_transmitter === undefined ||
-      pub_key_NFT_receiver === undefined
+      pub_key_NFT_receiver === undefined ||
+      nft_name === undefined ||
+      nft_symbol === undefined ||
+      nft_link === undefined ||
+      selectedBlockchains.length === 0
     ) {
       console.log(
-        'Neccessary parameter missing. Please provide all required parameters in the json file.'
+        'Neccessary parameter missing. Please provide all required parameters.'
       );
       await sleep(5000);
       return;
     }
+    console.log(`You chose the following parameters: `);
+    console.log('#####################################');
+    console.log(`Selected blockchains: ${SettingsData.selectedBlockchains}`);
+    console.log('#####################################');
+    console.log(`Gas Limit: ${GAS_LIMIT}`);
+    console.log(`Server uri: ${server_uri}`);
+    console.log('#####################################');
+    console.log(`NFT Parameters: `);
+    console.log(`Key contract owner: ${priv_key_contract_owner}`);
+    console.log(`Key NFT transmitter: ${priv_key_NFT_transmitter}`);
+    console.log(`Key NFT receiver: ${pub_key_NFT_receiver}`);
+    console.log(`NFT Name: ${nft_name}`);
+    console.log(`NFT Symbol: ${nft_symbol}`);
+    console.log(`NFT Link: ${nft_link}`);
+    console.log('#####################################');
 
-    console.log(GAS_LIMIT);
-    console.log(server_uri);
-    console.log(priv_key_contract_owner);
-    console.log(priv_key_NFT_transmitter);
-    console.log(pub_key_NFT_receiver);
+    const promptQuestion: inquirer.QuestionCollection = [
+      {
+        type: 'confirm',
+        name: 'confirmed',
+        message: 'Are you sure you want to continue with these settings?',
+      },
+    ];
+    const answer = await inquirer.prompt(promptQuestion);
+    if (answer.confirmed) {
+      console.log('minting');
+      await this.start_minting(
+        GAS_LIMIT,
+        server_uri,
+        priv_key_contract_owner,
+        priv_key_NFT_transmitter,
+        pub_key_NFT_receiver
+      );
+    } else {
+      console.log('abort');
+    }
 
-    await sleep(5000);
+    await sleep(2000);
+  }
 
+  async start_minting(
+    GAS_LIMIT: number,
+    server_uri: string,
+    priv_key_contract_owner: string,
+    priv_key_NFT_transmitter: string,
+    pub_key_NFT_receiver: string
+  ) {
     const ethereumConfigDeployContract = new EthereumConfigDeployContract(
       server_uri,
       './packages/nft-playbook/src/app/backend/contracts/simple_amos_nft_contract.sol',
@@ -152,7 +172,5 @@ export class StartMintingCommand implements Command {
       ethereumConfigReadUserDataFromSmartContract
     );
     */
-
-    await sleep(5000);
   }
 }

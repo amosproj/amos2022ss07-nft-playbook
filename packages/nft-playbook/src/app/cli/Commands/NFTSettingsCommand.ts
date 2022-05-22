@@ -1,45 +1,62 @@
 import inquirer = require('inquirer');
 import { Command } from './Command';
-import { HelpCommand } from './HelpCommand';
-import { BackCommand } from './BackCommand';
-
-const NFTRun = {
-  run: false,
-};
-
-const helpCommand = new HelpCommand();
-helpCommand.help = `This is the help text for the NFT Settings menu`;
-const CommandIndex: Command[] = [helpCommand, new BackCommand(NFTRun)];
-helpCommand.commandIndex = CommandIndex;
+import { SettingsData } from '../SettingsData';
 
 export class NFTSettingsCommand implements Command {
   name = 'NFT Settings';
   help = `\tHere you can configure everything related to NFTs`;
 
   async execute() {
-    NFTRun.run = true;
+    SettingsData.nft_name = await this.getInput('Name', SettingsData.nft_name);
+    SettingsData.nft_symbol = await this.getInput(
+      'Symbol',
+      SettingsData.nft_symbol
+    );
+    SettingsData.nft_link = await this.getInput(
+      'NFT Link',
+      SettingsData.nft_link
+    );
+    SettingsData.priv_key_contract_owner = await this.getInput(
+      'Wallet that pays for gas fees',
+      SettingsData.priv_key_contract_owner
+    );
+    SettingsData.priv_key_NFT_transmitter =
+      SettingsData.priv_key_contract_owner; // TODO
+    SettingsData.pub_key_NFT_receiver = await this.getInput(
+      'Receiver',
+      SettingsData.pub_key_NFT_receiver
+    );
+  }
 
-    const commandChoices: string[] = [];
-
-    for (const command of CommandIndex) {
-      commandChoices.push(command.name);
-    }
-
-    const promptQuestions: inquirer.QuestionCollection = [
+  async getInput(promptMessage: string, prevAnswer: string): Promise<string> {
+    const inputQuestion: inquirer.QuestionCollection = [
       {
-        type: 'list',
-        name: 'selectedCommand',
-        message: 'Please select a command',
-        choices: commandChoices,
+        type: 'input',
+        name: 'input',
+        message: promptMessage,
+        default: prevAnswer,
       },
     ];
 
-    while (NFTRun.run) {
-      const answers = await inquirer.prompt(promptQuestions);
-      const index = commandChoices.indexOf(answers.selectedCommand);
-      console.clear();
-      await CommandIndex.at(index).execute();
-      console.clear();
+    const confirmQuestion: inquirer.QuestionCollection = [
+      {
+        type: 'confirm',
+        name: 'confirmed',
+        message: 'Would you like to continue with this input?',
+      },
+    ];
+
+    let input: string;
+    let showPrompt = true;
+    while (showPrompt) {
+      input = (await inquirer.prompt(inputQuestion)).input;
+      console.log(`Input: ${input}`);
+      const confirmAnswer = await inquirer.prompt(confirmQuestion);
+      if (confirmAnswer.confirmed) {
+        showPrompt = false;
+      }
     }
+
+    return input;
   }
 }

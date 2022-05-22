@@ -1,6 +1,7 @@
 import inquirer = require('inquirer');
 import { TopLevelCommandIndex } from './app/cli/Commands';
 import { MainRun } from './app/cli/Commands/Command';
+import { SettingsData } from './app/cli/SettingsData';
 
 export const program_information = {
   name: 'nft-playbook',
@@ -13,7 +14,9 @@ function greet() {
 }
 
 async function main() {
-  MainRun.run = true;
+  if (!SettingsData.readSettingsFile()) {
+    return;
+  }
 
   const commandChoices: string[] = [];
 
@@ -30,6 +33,7 @@ async function main() {
     },
   ];
 
+  MainRun.run = true;
   while (MainRun.run) {
     greet();
 

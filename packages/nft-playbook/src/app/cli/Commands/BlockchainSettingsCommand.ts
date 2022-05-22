@@ -3,6 +3,7 @@ import { Command } from './Command';
 import { HelpCommand } from './HelpCommand';
 import { BackCommand } from './BackCommand';
 import { BlockchainSelector } from './BlockchainSettingsCommands/BlockchainSelector';
+import { SettingsData } from '../SettingsData';
 
 const BSRun = {
   run: false,
@@ -40,11 +41,7 @@ export class BlockchainSettingsCommand implements Command {
     ];
 
     while (BSRun.run) {
-      console.log(
-        `Selected BlockChains: ${
-          (<BlockchainSelector>CommandIndex[1]).prevAnswers
-        }`
-      );
+      console.log(`Selected BlockChains: ${SettingsData.selectedBlockchains}`);
 
       const answers = await inquirer.prompt(promptQuestions);
       const index = commandChoices.indexOf(answers.selectedCommand);
