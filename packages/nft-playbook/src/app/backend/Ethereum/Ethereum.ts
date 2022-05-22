@@ -4,12 +4,27 @@ import { EthereumConfigDeployContract } from './EthereumConfig/EthereumConfigDep
 import { EthereumConfigMintNFT } from './EthereumConfig/EthereumConfigMintNFT';
 import { EthereumConfigReadSmartContract } from './EthereumConfig/EthereumConfigReadSmartContract';
 import { EthereumConfigReadUserDataFromSmartContract } from './EthereumConfig/EthereumConfigReadUserDataFromSmartContract';
-import { readFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 import { exit } from 'process';
 import { resolve, sep, posix } from 'path';
 import solc = require('solc');
+import { sleep } from '../../cli/Commands';
+import { EthereumConfigReadTokenData } from './EthereumConfig/EthereumConfigReadTokenData';
 
 export class Ethereum implements Blockchain {
+  /**
+   * ABI for Smart Contract
+   */
+  private SIMPLE_AMOS_NFT_CONTRACT_ABI = [
+    'function name() view returns (string)',
+    'function balanceOf(address) view returns (uint256)',
+    'function totalSupply() view returns (uint256)',
+    'function mint(address pub_key_receiver, string memory pic_uri, string memory pic_hash) returns (uint256)', // 'view' ist nur bei gettern
+    'function read_pic_uri(uint256 token_counter) view returns (string)',
+    'function read_pic_hash(uint256 token_counter) view returns (string)',
+    'event MintedEvent(uint256 token_counter)',
+  ];
+
   async deploy_contract(config: EthereumConfigDeployContract): Promise<string> {
     // get ABI and contract byte code
     const contractInfo = Ethereum._compile_contract(config.path_to_contract);
@@ -29,11 +44,7 @@ export class Ethereum implements Blockchain {
     // If your contract requires constructor args, you can specify them here
     let contract;
     try {
-      contract = await factory.deploy(
-        config.name_of_contract,
-        config.symbol_of_contract,
-        config.baseuri_of_contract
-      );
+      contract = await factory.deploy(config.name_of_contract);
     } catch (e) {
       console.log(e);
     }
@@ -41,82 +52,90 @@ export class Ethereum implements Blockchain {
     return contract.address;
   }
 
-  async mint_nft(config: EthereumConfigMintNFT): Promise<void> {
+  async mint_nft(config: EthereumConfigMintNFT): Promise<number> {
     const provider = ethers.providers.getDefaultProvider(config.server_uri);
 
     const wallet = new ethers.Wallet(config.private_key_transmitter, provider);
 
-    const ERC721_ABI = [
-      'function name() view returns (string)',
-      'function symbol() view returns (string)',
-      'function mint(address to) returns ()', // 'view' ist nur bei gettern
-    ];
-
     const contract = new ethers.Contract(
       config.address_of_contract,
-      ERC721_ABI,
+      this.SIMPLE_AMOS_NFT_CONTRACT_ABI,
       provider
     );
 
     const contractWithWallet = contract.connect(wallet);
 
-    const tx = await contractWithWallet.mint(config.pub_key_NFT_receiver, {
-      gasPrice: provider.getGasPrice(),
-      gasLimit: config.gas_limit,
-    });
-    await tx.wait();
+    const tx = await contractWithWallet.mint(
+      config.pub_key_NFT_receiver,
+      config.url_to_file,
+      config.hash,
+      {
+        gasPrice: provider.getGasPrice(),
+        gasLimit: config.gas_limit,
+      }
+    );
+
+    const receipt = await tx.wait();
+    const ret = receipt;
+    writeFileSync('./receipt_2.json', JSON.stringify(receipt));
+    const token_id = parseInt(ret['events'][1]['args'][0]['_hex']);
+    await sleep(5000);
+    return token_id;
   }
 
   async read_smart_contract(
     config: EthereumConfigReadSmartContract
   ): Promise<void> {
-    // change to ERC721
-    const ERC721_ABI = [
-      'function name() view returns (string)',
-      'function symbol() view returns (string)',
-      'function totalSupply() view returns (uint256)',
-    ];
-
     const provider = new ethers.providers.JsonRpcProvider(config.server_uri);
     const contract = new ethers.Contract(
       config.address_of_contract,
-      ERC721_ABI,
+      this.SIMPLE_AMOS_NFT_CONTRACT_ABI,
       provider
     );
     const name = await contract.name();
-    const symbol = await contract.symbol();
     const totalSupply = await contract.totalSupply();
-    console.log(`\nReading from ${contract.address}\n`);
-    console.log(`Name: ${name}`);
-    console.log(`Symbol: ${symbol}`);
+    console.log(`\nReading from Contract Address: ${contract.address}\n`);
+    console.log(`Contract Name: ${name}`);
     console.log(
       `Total number of minted NFTs (on this contract): ${totalSupply}`
     );
   }
+
   async read_user_data_from_smart_contract(
     config: EthereumConfigReadUserDataFromSmartContract
   ): Promise<void> {
-    // change to ERC721
-    const ERC20_ABI = [
-      'function name() view returns (string)',
-      'function symbol() view returns (string)',
-      'function balanceOf(address) view returns (uint256)',
-    ];
-
     const provider = new ethers.providers.JsonRpcProvider(config.server_uri);
     const contract = new ethers.Contract(
       config.address_of_contract,
-      ERC20_ABI,
+      this.SIMPLE_AMOS_NFT_CONTRACT_ABI,
       provider
     );
     const name = await contract.name();
-    const symbol = await contract.symbol();
     const balance = await contract.balanceOf(config.pub_key_user);
     console.log(`\nReading from ${contract.address}\n`);
     console.log(`Name: ${name}`);
-    console.log(`Symbol: ${symbol}`);
     console.log(
       `${balance} NFTs are belonging to user: ${config.pub_key_user}`
+    );
+  }
+
+  async read_pic_data_from_smart_contract(config: EthereumConfigReadTokenData) {
+    const provider = new ethers.providers.JsonRpcProvider(config.server_uri);
+    const contract = new ethers.Contract(
+      config.address_of_contract,
+      this.SIMPLE_AMOS_NFT_CONTRACT_ABI,
+      provider
+    );
+
+    console.log('TOKENID: ' + config.token_id);
+    await contract.read_pic_uri(config.token_id);
+
+    console.log(
+      `Picture URI: <${await contract.read_pic_uri(config.token_id)}>`
+    );
+
+    console.log(
+      `Picture hash: <${await contract.read_pic_hash(config.token_id)}>`
     );
   }
 
@@ -144,10 +163,18 @@ export class Ethereum implements Blockchain {
       },
     };
 
-    // compiling...
+    // compile and retrieve needed contract source
     const output = JSON.parse(solc.compile(JSON.stringify(input)));
 
-    // JSON work
+    // console.log(JSON.stringify(output['contracts'][
+    //   resolve(process.cwd(), path_to_contract_solidity)
+    //     .split(sep)
+    //     .join(posix.sep)
+    // ]));
+
+    // log output
+    // writeFileSync('./out_debugevent.json', JSON.stringify(output['contracts']));
+
     const contractJSON =
       output['contracts'][
         resolve(process.cwd(), path_to_contract_solidity)
