@@ -2,6 +2,7 @@ import { BlockchainConfigDeployContract } from './BlockchainConfig/BlockchainCon
 import { BlockchainConfigMintNFT } from './BlockchainConfig/BlockchainConfigMintNFT';
 import { BlockchainConfigReadSmartContract } from './BlockchainConfig/BlockchainConfigReadSmartContract';
 import { BlockChainConfigReadUserDataFromSmartContract } from './BlockchainConfig/BlockChainConfigReadUserDataFromSmartContract';
+import { BlockChainConfigReadTokenData } from './BlockchainConfig/BlockChainConfigReadTokenData';
 
 export interface Blockchain {
   /**
@@ -14,7 +15,7 @@ export interface Blockchain {
    * Mints an NFT to a smartcontract, which is defined in config
    * @param config
    */
-  mint_nft(config: BlockchainConfigMintNFT): Promise<void>;
+  mint_nft(config: BlockchainConfigMintNFT): Promise<number>;
 
   /**
    * Reads a smart contract, defined in config
@@ -28,5 +29,12 @@ export interface Blockchain {
    */
   read_user_data_from_smart_contract(
     config: BlockChainConfigReadUserDataFromSmartContract
+  ): Promise<void>;
+
+  /**
+   * Reads URL and hash from the picture of the NFT
+   */
+  read_pic_data_from_smart_contract(
+    config: BlockChainConfigReadTokenData
   ): Promise<void>;
 }

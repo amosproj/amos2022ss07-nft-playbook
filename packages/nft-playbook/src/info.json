@@ -1,7 +1,7 @@
 {
-    "GAS_LIMIT" : "200000",
+    "GAS_LIMIT" : "2000000",
     "server_uri" : "http://127.0.0.1:7545",
-    "priv_key_contract_owner" : "c4cf2e4b536dd08504fc30ebd8eaae4e80ae08af69e08307be20bf7d39d25001",
-    "priv_key_NFT_transmitter" : "c4cf2e4b536dd08504fc30ebd8eaae4e80ae08af69e08307be20bf7d39d25001",
-    "pub_key_NFT_receiver" : "0x8da0068ce5f741827607A80a734C29772AE95D43"
+    "priv_key_contract_owner" : "35689efbe70282c9f3daeef083b5075525278f55c9399506d7456ee8a0b0521e",
+    "priv_key_NFT_transmitter" : "35689efbe70282c9f3daeef083b5075525278f55c9399506d7456ee8a0b0521e",
+    "pub_key_NFT_receiver" : "0x249A20EeE2f66F979BbBCA119D6D864A84F21d82"
 }
