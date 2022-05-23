@@ -4,6 +4,7 @@ import { NFTSettingsCommand } from './NFTSettingsCommand';
 import { StartMintingCommand } from './StartMintingCommand';
 import { VersionCommand } from './VersionCommand';
 import { BackCommand } from './BackCommand';
+import { CliStrings } from '../CliStrings';
 
 export interface Command {
   name: string;
@@ -16,17 +17,17 @@ export const MainRun = {
 };
 
 const topLevelHelpCommand = new HelpCommand();
-topLevelHelpCommand.help = `Top Level Menu Help Text:
-  abc
-  def
-  ghi.`;
 export const TopLevelCommandIndex: Command[] = [
   topLevelHelpCommand,
   new BlockchainSettingsCommand(),
   new NFTSettingsCommand(),
   new StartMintingCommand(),
   new VersionCommand(),
-  new BackCommand(MainRun, 'Exit', '\tExit the program'),
+  new BackCommand(
+    MainRun,
+    CliStrings.MainMenuBackButtonLabel,
+    CliStrings.MainMenuBackButtonHelp
+  ),
 ];
 topLevelHelpCommand.commandIndex = TopLevelCommandIndex;
 

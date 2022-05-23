@@ -1,16 +1,15 @@
 import inquirer = require('inquirer');
+import { CliStrings } from './app/cli/CliStrings';
 import { TopLevelCommandIndex } from './app/cli/Commands';
 import { MainRun } from './app/cli/Commands/Command';
 import { SettingsData } from './app/cli/SettingsData';
 
-export const program_information = {
-  name: 'nft-playbook',
-  version: '0.0.1',
-};
-
 function greet() {
   console.clear();
-  console.log(`Welcome to ${program_information.name}`);
+
+  console.log(CliStrings.horizontalHashLine);
+  console.log(CliStrings.MainMenuHeader);
+  console.log(CliStrings.horizontalHashLine);
 }
 
 async function main() {
@@ -28,7 +27,7 @@ async function main() {
     {
       type: 'list',
       name: 'selectedCommand',
-      message: 'Please select a command',
+      message: CliStrings.MainMenuQuestion,
       choices: commandChoices,
     },
   ];

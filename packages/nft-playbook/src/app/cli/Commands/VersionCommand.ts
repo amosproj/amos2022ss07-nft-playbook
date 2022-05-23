@@ -1,19 +1,23 @@
 import { Command } from './Command';
-import { program_information } from '../../../main';
 import inquirer = require('inquirer');
+import { CliStrings } from '../CliStrings';
 
 export class VersionCommand implements Command {
-  name = 'Version';
-  help = '\tVersion will provide you with the current version of the program.';
+  name = CliStrings.VersionCommandLabel;
+  help = CliStrings.VersionCommandHelp;
   async execute() {
-    console.log(`${program_information.version}`);
+    console.log(CliStrings.horizontalHashLine);
+    console.log(CliStrings.VersionMenuHeader);
+    console.log(CliStrings.horizontalHashLine);
+
+    console.log(CliStrings.VersionCommandOutput);
 
     await inquirer.prompt([
       {
         type: 'list',
         name: 'selectedCommand',
-        message: 'Want to go back?',
-        choices: ['Back'],
+        message: CliStrings.VersionMenuQuestion,
+        choices: [CliStrings.VersionMenuBackButtonLabel],
       },
     ]);
   }

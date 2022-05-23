@@ -5,6 +5,7 @@ import { EthereumConfigMintNFT } from '../../backend/Ethereum/EthereumConfig/Eth
 import { EthereumConfigDeployContract } from '../../backend/Ethereum/EthereumConfig/EthereumConfigDeployContract';
 import { SettingsData } from '../SettingsData';
 import { EthereumConfigReadTokenData } from '../../backend/Ethereum/EthereumConfig/EthereumConfigReadTokenData';
+import { CliStrings } from '../CliStrings';
 
 let GAS_LIMIT: number;
 let server_uri: string;
@@ -17,8 +18,8 @@ let nft_link: string;
 let selectedBlockchains: string[];
 
 export class StartMintingCommand implements Command {
-  name = 'Start Minting';
-  help = `\tStart the minting process`;
+  name = CliStrings.StartMintingCommandLabel;
+  help = CliStrings.StartMintingCommandHelp;
 
   async execute() {
     GAS_LIMIT = SettingsData.GAS_LIMIT;
@@ -42,33 +43,31 @@ export class StartMintingCommand implements Command {
       nft_link === undefined ||
       selectedBlockchains.length === 0
     ) {
-      console.log(
-        'Neccessary parameter missing. Please provide all required parameters.'
-      );
+      console.log(CliStrings.StartMintingMenuMissingParameter);
       await sleep(5000);
       return;
     }
-    console.log(`You chose the following parameters: `);
-    console.log('#####################################');
-    console.log(`Selected blockchains: ${SettingsData.selectedBlockchains}`);
-    console.log('#####################################');
-    console.log(`Gas Limit: ${GAS_LIMIT}`);
-    console.log(`Server uri: ${server_uri}`);
-    console.log('#####################################');
-    console.log(`NFT Parameters: `);
-    console.log(`Key contract owner: ${priv_key_contract_owner}`);
-    console.log(`Key NFT transmitter: ${priv_key_NFT_transmitter}`);
-    console.log(`Key NFT receiver: ${pub_key_NFT_receiver}`);
-    console.log(`NFT Name: ${nft_name}`);
-    console.log(`NFT Symbol: ${nft_symbol}`);
-    console.log(`NFT Link: ${nft_link}`);
-    console.log('#####################################');
+    console.log(CliStrings.StartMintingFeedback01);
+    console.log(CliStrings.horizontalHashLine);
+    console.log(CliStrings.StartMintingFeedback02);
+    console.log(CliStrings.horizontalHashLine);
+    console.log(CliStrings.StartMintingFeedback03);
+    console.log(CliStrings.StartMintingFeedback04);
+    console.log(CliStrings.horizontalHashLine);
+    console.log(CliStrings.StartMintingFeedback05);
+    console.log(CliStrings.StartMintingFeedback06);
+    console.log(CliStrings.StartMintingFeedback07);
+    console.log(CliStrings.StartMintingFeedback08);
+    console.log(CliStrings.StartMintingFeedback09);
+    console.log(CliStrings.StartMintingFeedback10);
+    console.log(CliStrings.StartMintingFeedback11);
+    console.log(CliStrings.horizontalHashLine);
 
     const promptQuestion: inquirer.QuestionCollection = [
       {
         type: 'confirm',
         name: 'confirmed',
-        message: 'Are you sure you want to continue with these settings?',
+        message: CliStrings.StartMintingMenuConfirmationQuestion,
       },
     ];
     const answer = await inquirer.prompt(promptQuestion);
@@ -100,7 +99,7 @@ export class StartMintingCommand implements Command {
       './packages/nft-playbook/src/app/backend/contracts/simple_amos_nft_contract.sol',
       priv_key_contract_owner,
       'NFT-DEMO-CONTRACT',
-      '🚀',
+      nft_symbol, // TODO soll contract_symbol werden (POs fragen)
       'basis-uri'
     );
 
@@ -113,13 +112,13 @@ export class StartMintingCommand implements Command {
 
     // mint nft on ethereum blockchain
     const ethereumConfigMintNFT = new EthereumConfigMintNFT(
-      'DEMO-NFT',
+      nft_name,
       server_uri,
       priv_key_NFT_transmitter,
       addr,
       pub_key_NFT_receiver,
-      '0xBADFOOD',
-      'https://user-images.githubusercontent.com/92869397/166645877-e8570f35-82fd-41cb-a702-3b5d1a3068a0.JPG',
+      '0xBADF00D',
+      nft_link,
       GAS_LIMIT
     );
     const token_id = await eth.mint_nft(ethereumConfigMintNFT);
