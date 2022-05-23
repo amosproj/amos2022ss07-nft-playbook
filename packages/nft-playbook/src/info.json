@@ -1,7 +1,4 @@
 {
     "GAS_LIMIT" : "2000000",
-    "server_uri" : "http://127.0.0.1:7545",
-    "priv_key_contract_owner" : "35689efbe70282c9f3daeef083b5075525278f55c9399506d7456ee8a0b0521e",
-    "priv_key_NFT_transmitter" : "35689efbe70282c9f3daeef083b5075525278f55c9399506d7456ee8a0b0521e",
-    "pub_key_NFT_receiver" : "0x249A20EeE2f66F979BbBCA119D6D864A84F21d82"
+    "server_uri" : "http://127.0.0.1:7545"
 }

@@ -80,7 +80,9 @@ export const CliStrings = {
   get StartMintingFeedback09(): string {
     return `NFT Name: ${SettingsData.nft_name}`;
   },
-  StartMintingFeedback10: `NFT Symbol: ${SettingsData.nft_symbol}`,
+  get StartMintingFeedback10(): string {
+    return `NFT Symbol: ${SettingsData.nft_symbol}`;
+  },
   get StartMintingFeedback11(): string {
     return `NFT Link: ${SettingsData.nft_link}`;
   },
