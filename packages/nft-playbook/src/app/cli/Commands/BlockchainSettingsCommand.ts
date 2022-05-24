@@ -3,13 +3,14 @@ import { Command } from './Command';
 import { HelpCommand } from './HelpCommand';
 import { BackCommand } from './BackCommand';
 import { BlockchainSelector } from './BlockchainSettingsCommands/BlockchainSelector';
+import { SettingsData } from '../SettingsData';
+import { CliStrings } from '../CliStrings';
 
 const BSRun = {
   run: false,
 };
 
 const helpCommand = new HelpCommand();
-helpCommand.help = `This is the help text for the Blockchain Settings menu`;
 const CommandIndex: Command[] = [
   helpCommand,
   new BlockchainSelector(),
@@ -18,8 +19,8 @@ const CommandIndex: Command[] = [
 helpCommand.commandIndex = CommandIndex;
 
 export class BlockchainSettingsCommand implements Command {
-  name = 'Blockchain Settings';
-  help = `\tHere you can configure everything related to the used blockchains`;
+  name = CliStrings.BlockchainSettingsCommandLabel;
+  help = CliStrings.BlockchainSettingsCommandHelp;
 
   async execute() {
     BSRun.run = true;
@@ -34,17 +35,18 @@ export class BlockchainSettingsCommand implements Command {
       {
         type: 'list',
         name: 'selectedCommand',
-        message: 'Please select a command',
+        message: CliStrings.BlockchainSettingsMenuQuestion,
         choices: commandChoices,
       },
     ];
 
     while (BSRun.run) {
-      console.log(
-        `Selected BlockChains: ${
-          (<BlockchainSelector>CommandIndex[1]).prevAnswers
-        }`
-      );
+      console.log(CliStrings.horizontalHashLine);
+      console.log(CliStrings.BlockchainSettingsMenuHeader);
+      console.log(CliStrings.horizontalHashLine);
+      if (SettingsData.selectedBlockchains.length !== 0) {
+        console.log(CliStrings.BlockchainSettingsMenuSelectionInfo);
+      }
 
       const answers = await inquirer.prompt(promptQuestions);
       const index = commandChoices.indexOf(answers.selectedCommand);

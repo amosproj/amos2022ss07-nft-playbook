@@ -1,3 +1,4 @@
+import { CliStrings } from '../CliStrings';
 import { Command } from './Command';
 
 export class BackCommand implements Command {
@@ -6,7 +7,11 @@ export class BackCommand implements Command {
 
   private handler: { run: boolean };
 
-  constructor(handler: { run: boolean }, name = `Back`, help = `\tGo back`) {
+  constructor(
+    handler: { run: boolean },
+    name = CliStrings.BackCommandLabel,
+    help = CliStrings.BackCommandHelp
+  ) {
     this.handler = handler;
     this.name = name;
     this.help = help;
