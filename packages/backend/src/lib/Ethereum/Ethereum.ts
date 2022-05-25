@@ -7,7 +7,8 @@ import { EthereumConfigReadUserDataFromSmartContract } from './EthereumConfig/Et
 import { readFileSync, writeFileSync } from 'fs';
 import { exit } from 'process';
 import { resolve, sep, posix } from 'path';
-import solc = require('solc');
+import * as solc from 'solc';
+//import solc = require('solc');
 import { EthereumConfigReadTokenData } from './EthereumConfig/EthereumConfigReadTokenData';
 
 export class Ethereum implements Blockchain {
