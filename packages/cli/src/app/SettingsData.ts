@@ -1,7 +1,7 @@
 import fs = require('fs');
 
 export class SettingsData {
-  private static configFilePath = './packages/nft-playbook/src/info.json';
+  private static configFilePath = './packages/cli/src/info.json';
 
   private static _GAS_LIMIT: number;
   private static _server_uri: string;

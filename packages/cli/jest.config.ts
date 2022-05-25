@@ -1,5 +1,5 @@
 module.exports = {
-  displayName: 'nft-playbook',
+  displayName: 'cli',
   preset: '../../jest.preset.ts',
   globals: {
     'ts-jest': {
@@ -11,5 +11,5 @@ module.exports = {
     '^.+\\.[tj]s$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../coverage/packages/nft-playbook',
+  coverageDirectory: '../../coverage/packages/cli',
 };
