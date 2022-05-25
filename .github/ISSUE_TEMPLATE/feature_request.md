@@ -18,9 +18,11 @@ assignees: ''
 * ...
 
 ## Definition of done (DoD)
-* Added only after week 5
-* The same for all features
-* Here goes the project specific part
+* A Feature is Done when all its Acceptance criterias are fulfilled
+* A Feauture is Done when the code has been peer reviewed from the dedicated team
+* A Feature is Done when it has been tested
+* A Feature is Done when its core functionality has been commented properly
+* A Feature is Done when it can be fully integrated into the main branch without negative side effect
 
 ## DoD general criteria
 * Feature has been fully implemented
