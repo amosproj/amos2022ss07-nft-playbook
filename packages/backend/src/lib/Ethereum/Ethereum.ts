@@ -8,7 +8,6 @@ import { readFileSync, writeFileSync } from 'fs';
 import { exit } from 'process';
 import { resolve, sep, posix } from 'path';
 import solc = require('solc');
-import { sleep } from '../../cli/Commands';
 import { EthereumConfigReadTokenData } from './EthereumConfig/EthereumConfigReadTokenData';
 
 export class Ethereum implements Blockchain {
@@ -139,7 +138,7 @@ export class Ethereum implements Blockchain {
     );
   }
 
-  private static _compile_contract(path_to_contract_solidity) {
+  private static _compile_contract(path_to_contract_solidity: string) {
     const merged_sources = {}; // all dependencies in one sourcecode
 
     // bind all the necesarry sourcecode in one <merged_sources> variable
@@ -194,7 +193,7 @@ export class Ethereum implements Blockchain {
 
   // recursive function that iterates over all dependencies and merges them into @param merged_sources
   private static _rec_merge_all_solidity_sources(
-    current_file_path,
+    current_file_path: string,
     merged_sources
   ) {
     // read the content of the current file and append it to our merged_soruces
@@ -226,14 +225,14 @@ export class Ethereum implements Blockchain {
 
   // uses the parsed current_file_content to extract all dependencies e.g.'import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";'
   private static _retrieve_child_dependencies(
-    current_file_path,
+    current_file_path: string,
     current_file_content
   ) {
     const dependencies = [];
     current_file_content
       .toString()
       .split(/(\r\n|\r|\n)/)
-      .forEach((line) => {
+      .forEach((line: string) => {
         if (line.startsWith('import "')) {
           dependencies.push(line.replace('import "', '').replace('";', ''));
         }
@@ -247,4 +246,8 @@ export class Ethereum implements Blockchain {
     process.chdir(new_cwd);
     return dependencies;
   }
+}
+
+function sleep(ms: number) {
+  return new Promise((x) => setTimeout(x, ms));
 }
