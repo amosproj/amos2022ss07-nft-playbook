@@ -2,6 +2,7 @@
   "version": 2,
   "projects": {
     "backend": "packages/backend",
-    "cli": "packages/cli"
+    "cli": "packages/cli",
+    "middleware": "packages/middleware"
   }
 }

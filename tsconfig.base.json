@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@nft-playbook/backend": ["packages/backend/src/index.ts"]
+      "@nft-playbook/backend": ["packages/backend/src/index.ts"],
+      "@nft-playbook/middleware": ["packages/middleware/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
