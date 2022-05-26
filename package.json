@@ -12,8 +12,8 @@
   "private": true,
   "dependencies": {
     "ethers": "^5.6.5",
-    "solc": "^0.8.13",
     "inquirer": "^8.2.4",
+    "solc": "0.8.14-fixed",
     "tslib": "^2.3.0"
   },
   "devDependencies": {

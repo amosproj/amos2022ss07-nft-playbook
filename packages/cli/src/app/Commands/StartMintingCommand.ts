@@ -99,10 +99,10 @@ export class StartMintingCommand implements Command {
   ) {
     const ethereumConfigDeployContract = new EthereumConfigDeployContract(
       server_uri,
-      './packages/nft-playbook/src/app/backend/contracts/simple_amos_nft_contract.sol',
+      './packages/backend/src/lib/contracts/simple_amos_nft_contract.sol',
       priv_key_contract_owner,
       'NFT-DEMO-CONTRACT',
-      nft_symbol, // TODO soll contract_symbol werden (POs fragen)
+      nft_symbol, //TODO soll contract_symbol werden (POs fragen)
       'basis-uri'
     );
 

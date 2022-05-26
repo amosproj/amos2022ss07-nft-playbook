@@ -47,11 +47,17 @@ export class Ethereum implements Blockchain {
       contract = await factory.deploy(config.name_of_contract);
     } catch (e) {
       console.log(e);
+      exit(1);
     }
     //TODO: Introduce types for return objects
     return contract.address;
   }
 
+  /**
+   * Mints an NFT to Ethereum
+   * @param config
+   * @returns
+   */
   async mint_nft(config: EthereumConfigMintNFT): Promise<number> {
     const provider = ethers.providers.getDefaultProvider(config.server_uri);
 
@@ -83,6 +89,10 @@ export class Ethereum implements Blockchain {
     return token_id;
   }
 
+  /**
+   * Reads a smart contract from Ethereum
+   * @param config
+   */
   async read_smart_contract(
     config: EthereumConfigReadSmartContract
   ): Promise<void> {
@@ -101,6 +111,10 @@ export class Ethereum implements Blockchain {
     );
   }
 
+  /**
+   * Reads User data from Ethereum smart contract
+   * @param config
+   */
   async read_user_data_from_smart_contract(
     config: EthereumConfigReadUserDataFromSmartContract
   ): Promise<void> {
@@ -119,6 +133,10 @@ export class Ethereum implements Blockchain {
     );
   }
 
+  /**
+   * Reads pic data from Ethereum smart contract
+   * @param config
+   */
   async read_pic_data_from_smart_contract(config: EthereumConfigReadTokenData) {
     const provider = new ethers.providers.JsonRpcProvider(config.server_uri);
     const contract = new ethers.Contract(
@@ -139,8 +157,13 @@ export class Ethereum implements Blockchain {
     );
   }
 
+  /**
+   * Binds & Compiles a contract from .sol-file
+   * @param path_to_contract_solidity
+   * @returns
+   */
   private static _compile_contract(path_to_contract_solidity: string) {
-    const merged_sources = {}; // all dependencies in one sourcecode
+    const merged_sources = {}; //{ name: { content: string } }; // all dependencies in one sourcecode
 
     // bind all the necesarry sourcecode in one <merged_sources> variable
     const prev_cwd = process.cwd();
@@ -165,15 +188,6 @@ export class Ethereum implements Blockchain {
 
     // compile and retrieve needed contract source
     const output = JSON.parse(solc.compile(JSON.stringify(input)));
-
-    // console.log(JSON.stringify(output['contracts'][
-    //   resolve(process.cwd(), path_to_contract_solidity)
-    //     .split(sep)
-    //     .join(posix.sep)
-    // ]));
-
-    // log output
-    // writeFileSync('./out_debugevent.json', JSON.stringify(output['contracts']));
 
     const contractJSON =
       output['contracts'][
@@ -227,9 +241,9 @@ export class Ethereum implements Blockchain {
   // uses the parsed current_file_content to extract all dependencies e.g.'import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";'
   private static _retrieve_child_dependencies(
     current_file_path: string,
-    current_file_content
+    current_file_content: string
   ) {
-    const dependencies = [];
+    const dependencies: string[] = [];
     current_file_content
       .toString()
       .split(/(\r\n|\r|\n)/)
