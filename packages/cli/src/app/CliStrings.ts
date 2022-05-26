@@ -24,6 +24,17 @@ export const CliStrings = {
   HelpCommandMenuQuestion: `Want to go back?`,
   HelpCommandMenuBackButtonLabel: `Back`,
 
+  // Select Wallet
+  SelectWalletCommandLabel: `Select Wallet`,
+  SelectWalletCommandHelp: `\tCheck the Wallet you want to use`,
+  SelectWalletCommandMenuHeader: `Select Wallet`,
+  SelectWalletCommandMenuQuestion: `What would you like to do?`,
+
+  // Add Wallet
+  AddWalletCommandLabel: `Add Wallet`,
+  AddWalletCommandHelp: `\tCheck the wallet you want to add`,
+  AddWalletMenuQuestion: `Please select the wallet you want to add`,
+
   // Blockchain Settings
   BlockchainSettingsCommandLabel: `Blockchain Settings`,
   BlockchainSettingsCommandHelp: `\tHere you can configure everything related to the used blockchains`,
