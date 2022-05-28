@@ -1,6 +1,8 @@
 {
   "version": 2,
   "projects": {
-    "nft-playbook": "packages/nft-playbook"
+    "backend": "packages/backend",
+    "cli": "packages/cli",
+    "middleware": "packages/middleware"
   }
 }

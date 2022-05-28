@@ -1,8 +1,8 @@
 import inquirer = require('inquirer');
-import { CliStrings } from './app/cli/CliStrings';
-import { TopLevelCommandIndex } from './app/cli/Commands';
-import { MainRun } from './app/cli/Commands/Command';
-import { SettingsData } from './app/cli/SettingsData';
+import { CliStrings } from './app/CliStrings';
+import { TopLevelCommandIndex } from './app/Commands';
+import { MainRun } from './app/Commands/Command';
+import { SettingsData } from './app/SettingsData';
 
 function greet() {
   console.clear();

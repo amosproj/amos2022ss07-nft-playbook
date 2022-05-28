@@ -1,15 +1,15 @@
 {
-  "sourceRoot": "packages/nft-playbook/src",
+  "sourceRoot": "packages/cli/src",
   "projectType": "application",
   "targets": {
     "build": {
       "executor": "@nrwl/node:webpack",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/packages/nft-playbook",
-        "main": "packages/nft-playbook/src/main.ts",
-        "tsConfig": "packages/nft-playbook/tsconfig.app.json",
-        "assets": ["packages/nft-playbook/src/assets"]
+        "outputPath": "dist/packages/cli",
+        "main": "packages/cli/src/main.ts",
+        "tsConfig": "packages/cli/tsconfig.app.json",
+        "assets": ["packages/cli/src/assets"]
       },
       "configurations": {
         "production": {
@@ -18,8 +18,8 @@
           "inspect": false,
           "fileReplacements": [
             {
-              "replace": "packages/nft-playbook/src/environments/environment.ts",
-              "with": "packages/nft-playbook/src/environments/environment.prod.ts"
+              "replace": "packages/cli/src/environments/environment.ts",
+              "with": "packages/cli/src/environments/environment.prod.ts"
             }
           ]
         }
@@ -28,21 +28,21 @@
     "serve": {
       "executor": "@nrwl/node:node",
       "options": {
-        "buildTarget": "nft-playbook:build"
+        "buildTarget": "cli:build"
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["packages/nft-playbook/**/*.ts"]
+        "lintFilePatterns": ["packages/cli/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/packages/nft-playbook"],
+      "outputs": ["coverage/packages/cli"],
       "options": {
-        "jestConfig": "packages/nft-playbook/jest.config.ts",
+        "jestConfig": "packages/cli/jest.config.ts",
         "passWithNoTests": true
       }
     }

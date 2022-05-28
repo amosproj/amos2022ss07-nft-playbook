@@ -1,11 +1,14 @@
 import inquirer = require('inquirer');
 import { Command, sleep } from './Command';
-import { Ethereum } from '../../backend/Ethereum/Ethereum';
-import { EthereumConfigMintNFT } from '../../backend/Ethereum/EthereumConfig/EthereumConfigMintNFT';
-import { EthereumConfigDeployContract } from '../../backend/Ethereum/EthereumConfig/EthereumConfigDeployContract';
-import { SettingsData } from '../SettingsData';
-import { EthereumConfigReadTokenData } from '../../backend/Ethereum/EthereumConfig/EthereumConfigReadTokenData';
+
 import { CliStrings } from '../CliStrings';
+import { SettingsData } from '../SettingsData';
+import {
+  Ethereum,
+  EthereumConfigDeployContract,
+  EthereumConfigMintNFT,
+  EthereumConfigReadTokenData,
+} from '@nft-playbook/backend';
 
 let GAS_LIMIT: number;
 let server_uri: string;
@@ -96,10 +99,10 @@ export class StartMintingCommand implements Command {
   ) {
     const ethereumConfigDeployContract = new EthereumConfigDeployContract(
       server_uri,
-      './packages/nft-playbook/src/app/backend/contracts/simple_amos_nft_contract.sol',
+      './packages/backend/src/lib/contracts/simple_amos_nft_contract.sol',
       priv_key_contract_owner,
       'NFT-DEMO-CONTRACT',
-      nft_symbol, // TODO soll contract_symbol werden (POs fragen)
+      nft_symbol, //TODO soll contract_symbol werden (POs fragen)
       'basis-uri'
     );
 
