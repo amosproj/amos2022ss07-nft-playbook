@@ -5,6 +5,7 @@ import { StartMintingCommand } from './StartMintingCommand';
 import { VersionCommand } from './VersionCommand';
 import { BackCommand } from './BackCommand';
 import { CliStrings } from '../CliStrings';
+import { SelectWalletCommand } from './SelectWalletCommand';
 
 export interface Command {
   name: string;
@@ -19,6 +20,7 @@ export const MainRun = {
 const topLevelHelpCommand = new HelpCommand();
 export const TopLevelCommandIndex: Command[] = [
   topLevelHelpCommand,
+  new SelectWalletCommand(),
   new BlockchainSettingsCommand(),
   new NFTSettingsCommand(),
   new StartMintingCommand(),

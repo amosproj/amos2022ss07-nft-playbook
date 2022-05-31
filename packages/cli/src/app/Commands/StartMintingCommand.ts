@@ -102,7 +102,7 @@ export class StartMintingCommand implements Command {
       './packages/backend/src/lib/contracts/simple_amos_nft_contract.sol',
       priv_key_contract_owner,
       'NFT-DEMO-CONTRACT',
-      nft_symbol, //TODO soll contract_symbol werden (POs fragen)
+      '',
       'basis-uri'
     );
 
@@ -154,25 +154,5 @@ export class StartMintingCommand implements Command {
       token_id1
     );
     await eth.read_pic_data_from_smart_contract(ethereumConfigReadTokenData1);
-
-    /*
-    const ethereumConfigReadSmartContract = new EthereumConfigReadSmartContract(
-      server_uri,
-      addr,
-    );
-    await eth.read_smart_contract(ethereumConfigReadSmartContract);
-
-
-
-    const ethereumConfigReadUserDataFromSmartContract =
-      new EthereumConfigReadUserDataFromSmartContract(
-        server_uri,
-        addr,
-        pub_key_NFT_receiver
-      );
-    await eth.read_user_data_from_smart_contract(
-      ethereumConfigReadUserDataFromSmartContract
-    );
-    */
   }
 }
