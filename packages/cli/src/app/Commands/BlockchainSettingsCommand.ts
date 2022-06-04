@@ -1,4 +1,5 @@
-import inquirer = require('inquirer');
+import * as inquirer from 'inquirer';
+import { Chalk } from 'chalk';
 import { Command } from './Command';
 import { HelpCommand } from './HelpCommand';
 import { BackCommand } from './BackCommand';
@@ -6,6 +7,8 @@ import { BlockchainSelector } from './BlockchainSettingsCommands/BlockchainSelec
 import { SettingsData } from '../SettingsData';
 import { CliStrings } from '../CliStrings';
 
+
+const chalk = new Chalk();
 const BSRun = {
   run: false,
 };
@@ -35,17 +38,17 @@ export class BlockchainSettingsCommand implements Command {
       {
         type: 'list',
         name: 'selectedCommand',
-        message: CliStrings.BlockchainSettingsMenuQuestion,
+        message: chalk.yellow(CliStrings.BlockchainSettingsMenuQuestion),
         choices: commandChoices,
       },
     ];
 
     while (BSRun.run) {
-      console.log(CliStrings.horizontalHashLine);
-      console.log(CliStrings.BlockchainSettingsMenuHeader);
-      console.log(CliStrings.horizontalHashLine);
+      console.log(chalk.green(CliStrings.horizontalHashLine));
+      console.log(chalk.green(CliStrings.BlockchainSettingsMenuHeader));
+      console.log(chalk.green(CliStrings.horizontalHashLine));
       if (SettingsData.selectedBlockchains.length !== 0) {
-        console.log(CliStrings.BlockchainSettingsMenuSelectionInfo);
+        console.log(chalk.blue(CliStrings.BlockchainSettingsMenuSelectionInfo));
       }
 
       const answers = await inquirer.prompt(promptQuestions);

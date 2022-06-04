@@ -1,22 +1,26 @@
+import * as inquirer from 'inquirer';
+import { Chalk } from 'chalk';
 import { Command } from './Command';
-import inquirer = require('inquirer');
 import { CliStrings } from '../CliStrings';
+
+const chalk = new Chalk();
+
 
 export class VersionCommand implements Command {
   name = CliStrings.VersionCommandLabel;
   help = CliStrings.VersionCommandHelp;
   async execute() {
-    console.log(CliStrings.horizontalHashLine);
-    console.log(CliStrings.VersionMenuHeader);
-    console.log(CliStrings.horizontalHashLine);
+    console.log(chalk.green(CliStrings.horizontalHashLine));
+    console.log(chalk.green(CliStrings.VersionMenuHeader));
+    console.log(chalk.green(CliStrings.horizontalHashLine));
 
-    console.log(CliStrings.VersionCommandOutput);
+    console.log(chalk.blue(CliStrings.VersionCommandOutput));
 
     await inquirer.prompt([
       {
         type: 'list',
         name: 'selectedCommand',
-        message: CliStrings.VersionMenuQuestion,
+        message: chalk.yellow(CliStrings.VersionMenuQuestion),
         choices: [CliStrings.VersionMenuBackButtonLabel],
       },
     ]);

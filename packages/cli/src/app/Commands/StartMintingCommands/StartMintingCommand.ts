@@ -1,14 +1,17 @@
-import inquirer = require('inquirer');
-import { Command, sleep } from './Command';
-
-import { CliStrings } from '../CliStrings';
-import { SettingsData } from '../SettingsData';
+import * as inquirer from 'inquirer';
+import { Chalk } from 'chalk';
+import { Command, sleep } from '../Command';
+import { CliStrings } from '../../CliStrings';
+import { SettingsData } from '../../SettingsData';
 import {
   Ethereum,
   EthereumConfigDeployContract,
   EthereumConfigMintNFT,
   EthereumConfigReadTokenData,
 } from '@nft-playbook/backend';
+
+
+const chalk = new Chalk();
 
 let GAS_LIMIT: number;
 let server_uri: string;
@@ -46,7 +49,7 @@ export class StartMintingCommand implements Command {
       nft_link === undefined ||
       selectedBlockchains.length === 0
     ) {
-      console.log(CliStrings.StartMintingMenuMissingParameter);
+      console.log(chalk.red(CliStrings.StartMintingMenuMissingParameter));
       await sleep(5000);
       return;
     }
@@ -70,7 +73,7 @@ export class StartMintingCommand implements Command {
       {
         type: 'confirm',
         name: 'confirmed',
-        message: CliStrings.StartMintingMenuConfirmationQuestion,
+        message: chalk.yellow(CliStrings.StartMintingMenuConfirmationQuestion),
       },
     ];
     const answer = await inquirer.prompt(promptQuestion);
@@ -84,7 +87,7 @@ export class StartMintingCommand implements Command {
         pub_key_NFT_receiver
       );
     } else {
-      console.log('abort');
+      console.log(chalk.red('abort'));
     }
 
     await sleep(2000);
@@ -111,7 +114,7 @@ export class StartMintingCommand implements Command {
 
     // deploy contract on ethereum blockchain
     const addr = await eth.deploy_contract(ethereumConfigDeployContract);
-    console.log('contract deployed');
+    console.log(chalk.blue('contract deployed'));
 
     // mint nft on ethereum blockchain
     const ethereumConfigMintNFT = new EthereumConfigMintNFT(
@@ -125,7 +128,7 @@ export class StartMintingCommand implements Command {
       GAS_LIMIT
     );
     const token_id = await eth.mint_nft(ethereumConfigMintNFT);
-    console.log('first NFT minted');
+    console.log(chalk.blue('first NFT minted'));
 
     // mint second nft on ethereum blockchain
     const ethereumConfigMintNFT1 = new EthereumConfigMintNFT(
@@ -139,7 +142,7 @@ export class StartMintingCommand implements Command {
       GAS_LIMIT
     );
     const token_id1 = await eth.mint_nft(ethereumConfigMintNFT1);
-    console.log('second NFT minted');
+    console.log(chalk.blue('second NFT minted'));
 
     const ethereumConfigReadTokenData = new EthereumConfigReadTokenData(
       server_uri,

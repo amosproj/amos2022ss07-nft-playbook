@@ -1,16 +1,20 @@
-import inquirer = require('inquirer');
-import { Command } from './Command';
-import { SettingsData } from '../SettingsData';
-import { CliStrings } from '../CliStrings';
+import * as inquirer from 'inquirer';
+import { Chalk } from 'chalk';
+import { Command } from '../Command';
+import { SettingsData } from '../../SettingsData';
+import { CliStrings } from '../../CliStrings';
+
+const chalk = new Chalk();
+
 
 export class NFTSettingsCommand implements Command {
   name = CliStrings.NFTSettingsCommandLabel;
   help = CliStrings.NFTSettingsCommandHelp;
 
   async execute() {
-    console.log(CliStrings.horizontalHashLine);
-    console.log(CliStrings.NFTSettingsMenuHeader);
-    console.log(CliStrings.horizontalHashLine);
+    console.log(chalk.green(CliStrings.horizontalHashLine));
+    console.log(chalk.green(CliStrings.NFTSettingsMenuHeader));
+    console.log(chalk.green(CliStrings.horizontalHashLine));
 
     SettingsData.nft_name = await this.getInput(
       CliStrings.NFTSettingsQuestionName,
@@ -52,7 +56,7 @@ export class NFTSettingsCommand implements Command {
       {
         type: 'confirm',
         name: 'confirmed',
-        message: CliStrings.NFTSettingsMenuConfirmationQuestion,
+        message: chalk.yellow(CliStrings.NFTSettingsMenuConfirmationQuestion),
       },
     ];
 

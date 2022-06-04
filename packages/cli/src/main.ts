@@ -1,16 +1,20 @@
-import { PinataClient } from '@nft-playbook/middleware';
-import inquirer = require('inquirer');
+import * as inquirer from 'inquirer';
+import { Chalk } from 'chalk';
+
 import { CliStrings } from './app/CliStrings';
 import { TopLevelCommandIndex } from './app/Commands';
 import { MainRun } from './app/Commands/Command';
 import { SettingsData } from './app/SettingsData';
 
+const chalk = new Chalk();
+
+
 function greet() {
   console.clear();
 
-  console.log(CliStrings.horizontalHashLine);
-  console.log(CliStrings.MainMenuHeader);
-  console.log(CliStrings.horizontalHashLine);
+  console.log(chalk.green(CliStrings.horizontalHashLine));
+  console.log(chalk.green(CliStrings.MainMenuHeader));
+  console.log(chalk.green(CliStrings.horizontalHashLine));
 }
 
 async function main() {
@@ -21,14 +25,18 @@ async function main() {
   const commandChoices: string[] = [];
 
   for (const command of TopLevelCommandIndex) {
-    commandChoices.push(command.name);
+    if (command.name === `Exit`) {
+      commandChoices.push(chalk.red(command.name));
+    } else {
+      commandChoices.push(command.name);
+    }
   }
 
   const promptQuestions: inquirer.QuestionCollection = [
     {
       type: 'list',
       name: 'selectedCommand',
-      message: CliStrings.MainMenuQuestion,
+      message: chalk.yellow(CliStrings.MainMenuQuestion),
       choices: commandChoices,
     },
   ];

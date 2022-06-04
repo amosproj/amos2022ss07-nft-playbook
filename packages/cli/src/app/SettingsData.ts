@@ -1,4 +1,4 @@
-import fs = require('fs');
+import * as fs from 'fs';
 
 export class SettingsData {
   private static configFilePath = './packages/cli/src/info.json';

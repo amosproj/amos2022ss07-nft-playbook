@@ -1,7 +1,11 @@
-import inquirer = require('inquirer');
+import * as inquirer from 'inquirer';
+import { Chalk } from 'chalk';
 import { CliStrings } from '../../CliStrings';
 import { SettingsData } from '../../SettingsData';
 import { Command } from '../Command';
+
+const chalk = new Chalk();
+
 
 export class BlockchainSelector implements Command {
   name = CliStrings.BlockchainSelectorCommandLabel;
@@ -12,7 +16,7 @@ export class BlockchainSelector implements Command {
       {
         type: 'checkbox',
         name: 'selectedBlockchains',
-        message: CliStrings.BlockchainSelectorMenuQuestion,
+        message: chalk.yellow(CliStrings.BlockchainSelectorMenuQuestion),
         choices: ['Ethereum', 'Flow'], // TODO diese Infos sollten dynamisch aus dem Backend kommen
         default: SettingsData.selectedBlockchains,
       },

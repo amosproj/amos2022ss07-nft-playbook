@@ -1,31 +1,34 @@
-import { CliStrings } from '../CliStrings';
-import { BackCommand } from './BackCommand';
-import { Command } from './Command';
-import { HelpCommand } from './HelpCommand';
-import { AddWalletCommand } from './SelectWalletCommands/AddWalletCommand';
 import * as inquirer from 'inquirer';
 import { Chalk } from 'chalk';
+import { Command } from './Command';
+import { HelpCommand } from './HelpCommand';
+import { BackCommand } from './BackCommand';
+import { CliStrings } from '../CliStrings';
+import { NFTSettingsCommand } from './StartMintingCommands/NFTSettingsCommand';
+import { StartMintingCommand } from './StartMintingCommands/StartMintingCommand';
 
 const chalk = new Chalk();
 
 
-const SWRun = {
+const NMRun = {
   run: false,
 };
 
 const helpCommand = new HelpCommand();
 const CommandIndex: Command[] = [
   helpCommand,
-  new AddWalletCommand(),
-  new BackCommand(SWRun),
+  new NFTSettingsCommand(),
+  new StartMintingCommand(),
+  new BackCommand(NMRun),
 ];
 helpCommand.commandIndex = CommandIndex;
 
-export class SelectWalletCommand implements Command {
-  name: string = CliStrings.SelectWalletCommandLabel;
-  help: string = CliStrings.SelectWalletCommandHelp;
-  async execute(): Promise<void> {
-    SWRun.run = true;
+export class NFTMintingCommand implements Command {
+  name = CliStrings.NFTMintingCommandLabel;
+  help = CliStrings.NFTMintingCommandHelp;
+
+  async execute() {
+    NMRun.run = true;
 
     const commandChoices: string[] = [];
 
@@ -37,14 +40,14 @@ export class SelectWalletCommand implements Command {
       {
         type: 'list',
         name: 'selectedCommand',
-        message: chalk.yellow(CliStrings.SelectWalletCommandMenuQuestion),
+        message: chalk.yellow(CliStrings.NFTMintingCommandMenuQuestion),
         choices: commandChoices,
       },
     ];
 
-    while (SWRun.run) {
+    while (NMRun.run) {
       console.log(chalk.green(CliStrings.horizontalHashLine));
-      console.log(chalk.green(CliStrings.SelectWalletCommandMenuHeader));
+      console.log(chalk.green(CliStrings.NFTMintingCommandMenuHeader));
       console.log(chalk.green(CliStrings.horizontalHashLine));
 
       const answers = await inquirer.prompt(promptQuestions);

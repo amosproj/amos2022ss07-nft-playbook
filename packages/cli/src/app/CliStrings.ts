@@ -1,4 +1,8 @@
+import { Chalk } from 'chalk';
 import { SettingsData } from './SettingsData';
+
+const chalk = new Chalk();
+
 
 const program_information = {
   name: 'nft-playbook',
@@ -7,7 +11,9 @@ const program_information = {
 
 export const CliStrings = {
   // UNIVERSAL
-  horizontalHashLine: `##################################################`, // # x 50
+  horizontalHashLine: chalk.green(
+    `##################################################`
+  ), // # x 50
 
   // Main Menu
   get MainMenuHeader(): string {
@@ -26,9 +32,9 @@ export const CliStrings = {
 
   // Select Wallet
   SelectWalletCommandLabel: `Select Wallet`,
-  SelectWalletCommandHelp: `\tCheck the Wallet you want to use`,
+  SelectWalletCommandHelp: `\tPlease check the Wallet you'd like to use`,
   SelectWalletCommandMenuHeader: `Select Wallet`,
-  SelectWalletCommandMenuQuestion: `What would you like to do?`,
+  SelectWalletCommandMenuQuestion: `Which wallet would you like to use?`,
 
   // Add Wallet
   AddWalletCommandLabel: `Add Wallet`,
@@ -49,9 +55,15 @@ export const CliStrings = {
   BlockchainSelectorCommandHelp: `\tCheck the blockchains you want to use`,
   BlockchainSelectorMenuQuestion: `Please select the blockchains you want to use`,
 
+  // NFT Minting
+  NFTMintingCommandLabel: `NFT Minting`,
+  NFTMintingCommandHelp: `\tSelect your NFT settings and start minting`,
+  NFTMintingCommandMenuQuestion: `Please configure the settings of the NFT you'd like to mint`,
+  NFTMintingCommandMenuHeader: `NFT Minting`,
+
   // NFT Settings
   NFTSettingsCommandLabel: `NFT Settings`,
-  NFTSettingsCommandHelp: `\tHere you can configure everything related to NFTs`,
+  NFTSettingsCommandHelp: `\tUsing the 'NFT Setting' command, you can configure everything related to NFTs`,
   NFTSettingsMenuHeader: `NFT Settings`,
   NFTSettingsQuestionName: `Name`,
   NFTSettingsQuestionSymbol: `Symbol`,
@@ -64,10 +76,10 @@ export const CliStrings = {
 
   // Start Minting
   StartMintingCommandLabel: `Start Minting`,
-  StartMintingCommandHelp: `\tStart the minting process`,
+  StartMintingCommandHelp: `\tThe 'Start Minting' command starts the minting process`,
   StartMintingMenuHeader: `Start Minting`,
-  StartMintingMenuConfirmationQuestion: `Are you sure you want to continue with these settings?`,
-  StartMintingMenuMissingParameter: `Neccessary parameter missing. Please provide all required parameters.`,
+  StartMintingMenuConfirmationQuestion: `Are you sure you want to continue the minting process with these settings?`,
+  StartMintingMenuMissingParameter: `Neccessary parameter missing for the minting process. Please provide all required parameters. You can change your NFT Settings using the command 'NFT Settings'.`,
   StartMintingFeedback01: `You chose the following parameters: `,
   get StartMintingFeedback02(): string {
     return `Selected blockchains: ${SettingsData.selectedBlockchains}`;
@@ -100,13 +112,13 @@ export const CliStrings = {
 
   // Version
   VersionCommandLabel: `Version`,
-  VersionCommandHelp: `\tVersion will provide you with the current version of the program.`,
+  VersionCommandHelp: `\tThis will provide you with the current version of the program.`,
   get VersionCommandOutput(): string {
     return `${program_information.version}`;
   },
 
   VersionMenuHeader: `Version`,
-  VersionMenuQuestion: `Want to go back?`,
+  VersionMenuQuestion: `Would you like to display the program's most recent version?`,
   VersionMenuBackButtonLabel: `Back`,
 
   // Back
