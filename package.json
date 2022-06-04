@@ -11,6 +11,8 @@
   },
   "private": true,
   "dependencies": {
+    "@pinata/sdk": "^1.1.25",
+    "axios": "^0.27.2",
     "ethers": "^5.6.5",
     "inquirer": "^8.2.4",
     "solc": "0.8.14-fixed",
