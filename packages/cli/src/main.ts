@@ -1,3 +1,4 @@
+import { PinataClient } from '@nft-playbook/middleware';
 import inquirer = require('inquirer');
 import { CliStrings } from './app/CliStrings';
 import { TopLevelCommandIndex } from './app/Commands';
