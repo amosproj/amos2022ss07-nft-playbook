@@ -1,3 +1,4 @@
+import { PinataClient } from '@nft-playbook/middleware';
 import inquirer = require('inquirer');
 import { CliStrings } from './app/CliStrings';
 import { TopLevelCommandIndex } from './app/Commands';
@@ -44,4 +45,9 @@ async function main() {
   }
 }
 
-main();
+//main();
+PinataClient.uploadImage(
+  '/Users/johannesschilling/dev/amos2022ss07-nft-playbook/packages/cli/src/2022-06-03_12-29-44.png',
+  '2bcc686ad0caeacc139f',
+  '12e7ac0027a6edbbdcb48f21104f2694222461c134892dc7f33a78687a9e6fd8'
+);
