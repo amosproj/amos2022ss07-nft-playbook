@@ -222,15 +222,23 @@ export class Middleware {
   }
 
   public getPrivateKeyNftTransmitter(blockchain: string) {
-    this._selectedBlockchains[blockchain].priv_key_NFT_transmitter;
+    return this._selectedBlockchains[blockchain].priv_key_NFT_transmitter;
   }
 
   public getSmartContractAddress(blockchain: string) {
-    this._selectedBlockchains[blockchain].smart_contract_address;
+    return this._selectedBlockchains[blockchain].smart_contract_address;
   }
 
   public getPublicKeyNftReceiver(blockchain: string) {
-    this._selectedBlockchains[blockchain].pub_key_NFT_receiver;
+    return this._selectedBlockchains[blockchain].pub_key_NFT_receiver;
+  }
+
+  public getGasLimit(blockchain: string) {
+    return this._selectedBlockchains[blockchain].GAS_LIMIT;
+  }
+
+  public getServerUri(blockchain: string) {
+    return this._selectedBlockchains[blockchain].server_uri;
   }
 
   /* mint an NFT on Ethereum */

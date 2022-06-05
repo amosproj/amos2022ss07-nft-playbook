@@ -80,9 +80,15 @@ export const CliStrings = {
   NFTSettingsQuestionName: `Name`,
   NFTSettingsQuestionSymbol: `Symbol`,
   NFTSettingsQuestionLink: `NFT Link`,
-  NFTSettingsQuestionContractOwner: `Contract Owner`,
-  NFTSettingsQuestionNFTTransmitter: `NFT Transmitter`,
-  NFTSettingsQuestionNFTReceiver: 'NFT Receiver',
+  NFTSettingsQuestionContractOwner: (blockchain: string): string => {
+    return `${blockchain} Contract Owner`;
+  },
+  NFTSettingsQuestionNFTTransmitter: (blockchain: string): string => {
+    return `${blockchain} NFT Transmitter`;
+  },
+  NFTSettingsQuestionNFTReceiver: (blockchain: string): string => {
+    return `${blockchain} NFT Receiver`;
+  },
   NFTSettingsMenuConfirmationQuestion: chalk.yellow(
     `Would you like to continue with this input?`
   ),
@@ -99,46 +105,52 @@ export const CliStrings = {
     `Neccessary parameter missing for the minting process. Please provide all required parameters. You can configure your NFT settings using the command 'NFT Settings'.`
   ),
   StartMintingFeedback01: `You chose the following parameters: `,
-  get StartMintingFeedback02(): string {
+  get StartMintingFeedbackSelectedBlockchains(): string {
     return (
       `Selected blockchains: ` +
       chalk.cyan(`${middleware.getSelectedBlockchains()}`)
     );
   },
-  get StartMintingFeedback03(): string {
-    return `Gas Limit: ` + chalk.cyan(`2000000`); // TODO pls implement in middeleware
+  get StartMintingFeedbackNFTName(): string {
+    return `NFT Name: ` + chalk.cyan(`${middleware.getNftName()}`);
   },
-  get StartMintingFeedback04(): string {
-    return `Server uri: ` + chalk.cyan(`localhost:7545`); // TODO pls implement in middeleware
+  get StartMintingFeedbackNFTLink(): string {
+    return `NFT Link: ` + chalk.cyan(`${middleware.getNftLink()}`);
+  },
+  StartMintingFeedbackGasLimit: (blockchain: string): string => {
+    return (
+      `${blockchain} Gas Limit: ` +
+      chalk.cyan(`${middleware.getGasLimit(blockchain)}`)
+    );
+  },
+  StartMintingFeedbackServerUri: (blockchain: string): string => {
+    return (
+      `${blockchain} Server uri: ` +
+      chalk.cyan(`${middleware.getServerUri(blockchain)}`)
+    );
   },
   StartMintingFeedback05: `NFT Parameters: `,
-  get StartMintingFeedback06(): string {
+  StartMintingFeedbackContractOwner: (blockchain: string): string => {
     return (
-      `Key contract owner: ` +
-      chalk.cyan(`${middleware.getPrivateKeyContractOwner}`)
+      `${blockchain} Key contract owner: ` +
+      chalk.cyan(`${middleware.getPrivateKeyContractOwner(blockchain)}`)
     );
   },
-  get StartMintingFeedback07(): string {
+
+  StartMintingFeedbackNFTTransmitter: (blockchain: string): string => {
     return (
-      `Key NFT transmitter: ` +
-      chalk.cyan(`${middleware.getPrivateKeyNftTransmitter}`)
+      `${blockchain} Key NFT transmitter: ` +
+      chalk.cyan(`${middleware.getPrivateKeyNftTransmitter(blockchain)}`)
     );
   },
-  get StartMintingFeedback08(): string {
+
+  StartMintingFeedbackNFTReceiver: (blockchain: string): string => {
     return (
-      `Key NFT receiver: ` + chalk.cyan(`${middleware.getPublicKeyNftReceiver}`)
+      `${blockchain} Key NFT receiver: ` +
+      chalk.cyan(`${middleware.getPublicKeyNftReceiver(blockchain)}`)
     );
   },
-  get StartMintingFeedback09(): string {
-    return `NFT Name: ` + chalk.cyan(`${middleware.getNftName}`);
-  },
-  // get StartMintingFeedback10(): string {
-  //   return `NFT Symbol: ` + chalk.cyan(`${middleware.get}`);
-  // },
-  get StartMintingFeedback11(): string {
-    return `NFT Link: ` + chalk.cyan(`${middleware.getNftLink}`);
-  },
-  StartMintingFeedback12: chalk.red(`abort`),
+  StartMintingFeedbackAbort: chalk.red(`abort`),
   StartMintingFeedbackMinting: chalk.cyan(`minting`),
   StartMintingFeedbackFirstNFT: chalk.cyan(`first NFT minted`),
   StartMintingFeedbackSecondNFT: chalk.cyan(`second NFT minted`),

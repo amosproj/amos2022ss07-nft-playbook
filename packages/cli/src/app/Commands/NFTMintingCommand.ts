@@ -3,8 +3,8 @@ import { Command } from './Command';
 import { HelpCommand } from './HelpCommand';
 import { BackCommand } from './BackCommand';
 import { CliStrings } from '../CliStrings';
-import { NFTSettingsCommand } from './StartMintingCommands/NFTSettingsCommand';
-import { StartMintingCommand } from './StartMintingCommands/StartMintingCommand';
+import { NFTSettingsCommand } from './NFTMintingCommand/NFTSettingsCommand';
+import { StartMintingCommand } from './NFTMintingCommand/StartMintingCommand';
 
 const NMRun = {
   run: false,

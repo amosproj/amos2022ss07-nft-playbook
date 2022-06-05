@@ -24,18 +24,32 @@ export class NFTSettingsCommand implements Command {
         middleware.getNftLink()
       )
     );
-    /*SettingsData.priv_key_contract_owner = await this.getInput(
-      CliStrings.NFTSettingsQuestionContractOwner,
-      SettingsData.priv_key_contract_owner
-    );
-    SettingsData.priv_key_NFT_transmitter = await this.getInput(
-      CliStrings.NFTSettingsQuestionNFTTransmitter,
-      SettingsData.priv_key_NFT_transmitter
-    );
-    SettingsData.pub_key_NFT_receiver = await this.getInput(
-      CliStrings.NFTSettingsQuestionNFTReceiver,
-      SettingsData.pub_key_NFT_receiver
-    );*/
+
+    for (const blockchain of middleware.getSelectedBlockchains()) {
+      middleware.setPrivateKeyContractOwner(
+        await this.getInput(
+          CliStrings.NFTSettingsQuestionContractOwner(blockchain),
+          middleware.getPrivateKeyContractOwner(blockchain)
+        ),
+        blockchain
+      );
+      3;
+      middleware.setPrivateKeyNftTransmitter(
+        await this.getInput(
+          CliStrings.NFTSettingsQuestionNFTTransmitter(blockchain),
+          middleware.getPrivateKeyNftTransmitter(blockchain)
+        ),
+        blockchain
+      );
+
+      middleware.setPublicKeyNftReceiver(
+        await this.getInput(
+          CliStrings.NFTSettingsQuestionNFTReceiver(blockchain),
+          middleware.getPublicKeyNftReceiver(blockchain)
+        ),
+        blockchain
+      );
+    }
   }
 
   async getInput(promptMessage: string, prevAnswer: string): Promise<string> {
