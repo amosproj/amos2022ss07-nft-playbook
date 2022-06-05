@@ -2,7 +2,6 @@ import inquirer = require('inquirer');
 import { Command, sleep } from './Command';
 
 import { CliStrings } from '../CliStrings';
-import { SettingsData } from '../SettingsData';
 import {
   Ethereum,
   EthereumConfigDeployContract,
@@ -26,14 +25,16 @@ export class TestMintingCommand implements Command {
 
   async execute() {
     GAS_LIMIT = 2000000;
-    server_uri = "http://127.0.0.1:7545";
-    priv_key_contract_owner = "36b802d163dea869795fa3ebd5f671743038a4fc4f9d8b0e3538de4fc1a1d8e8";
-    priv_key_NFT_transmitter = "36b802d163dea869795fa3ebd5f671743038a4fc4f9d8b0e3538de4fc1a1d8e8";
-    pub_key_NFT_receiver = "0xA995ECea55f0739d07B8F3eEF8153E58C1e838C8";
-    nft_name = "name";
-    nft_symbol = "symbol";
-    nft_link = "link";
-    selectedBlockchains = ["Ethereum"];
+    server_uri = 'http://127.0.0.1:7545';
+    priv_key_contract_owner =
+      '36b802d163dea869795fa3ebd5f671743038a4fc4f9d8b0e3538de4fc1a1d8e8';
+    priv_key_NFT_transmitter =
+      '36b802d163dea869795fa3ebd5f671743038a4fc4f9d8b0e3538de4fc1a1d8e8';
+    pub_key_NFT_receiver = '0xA995ECea55f0739d07B8F3eEF8153E58C1e838C8';
+    nft_name = 'name';
+    nft_symbol = 'symbol';
+    nft_link = 'link';
+    selectedBlockchains = ['Ethereum'];
 
     if (
       GAS_LIMIT === undefined ||

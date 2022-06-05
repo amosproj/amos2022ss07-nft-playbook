@@ -72,7 +72,7 @@ export const CliStrings = {
 
   // Start Minting
   TestMintingCommandLabel: `Test Minting`,
-  TestMintingCommandHelp: `\Test the minting process`,
+  TestMintingCommandHelp: `Test the minting process`,
 
   get StartMintingFeedback02(): string {
     return `Selected blockchains: ${SettingsData.selectedBlockchains}`;

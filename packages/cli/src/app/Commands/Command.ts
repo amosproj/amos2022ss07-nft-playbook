@@ -31,8 +31,7 @@ export const TopLevelCommandIndex: Command[] = [
     MainRun,
     CliStrings.MainMenuBackButtonLabel,
     CliStrings.MainMenuBackButtonHelp
-  )
-
+  ),
 ];
 topLevelHelpCommand.commandIndex = TopLevelCommandIndex;
 
