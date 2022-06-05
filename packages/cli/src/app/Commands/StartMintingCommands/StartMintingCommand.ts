@@ -139,7 +139,7 @@ export class StartMintingCommand implements Command {
       GAS_LIMIT
     );
     const token_id1 = await eth.mint_nft(ethereumConfigMintNFT1);
-    console.log('second NFT minted');
+    console.log(CliStrings.StartMintingFeedbackSecondNFT);
 
     const ethereumConfigReadTokenData = new EthereumConfigReadTokenData(
       server_uri,

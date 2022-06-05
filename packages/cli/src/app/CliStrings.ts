@@ -112,6 +112,7 @@ export const CliStrings = {
   StartMintingFeedback12: chalk.red(`abort`),
   StartMintingFeedbackMinting: chalk.cyan(`minting`),
   StartMintingFeedbackFirstNFT: chalk.cyan(`first NFT minted`),
+  StartMintingFeedbackSecondNFT: chalk.cyan(`second NFT minted`),
   StartMintingFeedbackContractDeployed: chalk.cyan(`contract deployed`),
 
   // Version
