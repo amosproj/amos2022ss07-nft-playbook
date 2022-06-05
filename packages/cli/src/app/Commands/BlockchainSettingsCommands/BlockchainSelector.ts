@@ -1,7 +1,7 @@
 import * as inquirer from 'inquirer';
 import { CliStrings } from '../../CliStrings';
-import { SettingsData } from '../../SettingsData';
 import { Command } from '../Command';
+import { middleware } from '@nft-playbook/middleware';
 
 export class BlockchainSelector implements Command {
   name = CliStrings.BlockchainSelectorCommandLabel;
@@ -13,12 +13,20 @@ export class BlockchainSelector implements Command {
         type: 'checkbox',
         name: 'selectedBlockchains',
         message: CliStrings.BlockchainSelectorMenuQuestion,
-        choices: ['Ethereum', 'Flow'], // TODO diese Infos sollten dynamisch aus dem Backend kommen
-        default: SettingsData.selectedBlockchains,
+        choices: middleware.getAllBlockchains(),
+        default: middleware.getSelectedBlockchains(),
       },
     ];
-    SettingsData.selectedBlockchains = (
+    const selectedBlockchains: string[] = (
       await inquirer.prompt(promptQuestions)
     ).selectedBlockchains;
+
+    middleware.getAllBlockchains().forEach((blockchain) => {
+      if (selectedBlockchains.includes(blockchain)) {
+        middleware.selectBlockchain(blockchain);
+      } else {
+        middleware.deselectBlockchain(blockchain);
+      }
+    });
   }
 }

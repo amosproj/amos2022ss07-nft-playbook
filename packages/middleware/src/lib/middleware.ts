@@ -27,14 +27,26 @@ export class Middleware {
     this._selectedBlockchains[blockchain].isSelected = true;
   }
 
+  public deselectBlockchain(blockchain: string) {
+    this._selectedBlockchains[blockchain].isSelected = false;
+  }
+
   public getAllBlockchains(): string[] {
-    return Object.keys(this._selectedBlockchains);
+    try {
+      return Object.keys(this._selectedBlockchains);
+    } catch (e) {
+      return [];
+    }
   }
 
   public getSelectedBlockchains(): string[] {
-    return Object.keys(this._selectedBlockchains).filter(
-      (blockchain) => this._selectedBlockchains[blockchain].isSelected
-    );
+    try {
+      return Object.keys(this._selectedBlockchains).filter(
+        (blockchain) => this._selectedBlockchains[blockchain].isSelected
+      );
+    } catch (e) {
+      return [];
+    }
   }
 
   public mintNFT() {

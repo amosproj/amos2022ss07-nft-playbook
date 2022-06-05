@@ -1,10 +1,7 @@
+import chalk = require('chalk');
 import * as inquirer from 'inquirer';
-import { chalk } from '../CliStrings';
 import { CliStrings } from '../CliStrings';
 import { Command } from './Command';
-
-//const chalk = new Chalk();
-
 
 export class HelpCommand implements Command {
   name = CliStrings.HelpCommandLabel;
@@ -25,7 +22,7 @@ export class HelpCommand implements Command {
       {
         type: 'list',
         name: 'selectedCommand',
-        message: (CliStrings.HelpCommandMenuQuestion), //chalk.yellow(CliStrings.HelpCommandMenuQuestion),
+        message: CliStrings.HelpCommandMenuQuestion,
         choices: [CliStrings.HelpCommandMenuBackButtonLabel],
       },
     ]);

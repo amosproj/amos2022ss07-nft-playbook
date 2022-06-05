@@ -1,9 +1,7 @@
 import * as inquirer from 'inquirer';
 import { Command } from '../Command';
-import { SettingsData } from '../../SettingsData';
 import { CliStrings } from '../../CliStrings';
-
-
+import { middleware } from '@nft-playbook/middleware';
 
 export class NFTSettingsCommand implements Command {
   name = CliStrings.NFTSettingsCommandLabel;
@@ -14,19 +12,19 @@ export class NFTSettingsCommand implements Command {
     console.log(CliStrings.NFTSettingsMenuHeader);
     console.log(CliStrings.horizontalHashLine);
 
-    SettingsData.nft_name = await this.getInput(
-      CliStrings.NFTSettingsQuestionName,
-      SettingsData.nft_name
+    middleware.setNftName(
+      await this.getInput(
+        CliStrings.NFTSettingsQuestionName,
+        middleware.getNftName()
+      )
     );
-    SettingsData.nft_symbol = await this.getInput(
-      CliStrings.NFTSettingsQuestionSymbol,
-      SettingsData.nft_symbol
+    middleware.setNftLink(
+      await this.getInput(
+        CliStrings.NFTSettingsQuestionLink,
+        middleware.getNftLink()
+      )
     );
-    SettingsData.nft_link = await this.getInput(
-      CliStrings.NFTSettingsQuestionLink,
-      SettingsData.nft_link
-    );
-    SettingsData.priv_key_contract_owner = await this.getInput(
+    /*SettingsData.priv_key_contract_owner = await this.getInput(
       CliStrings.NFTSettingsQuestionContractOwner,
       SettingsData.priv_key_contract_owner
     );
@@ -37,7 +35,7 @@ export class NFTSettingsCommand implements Command {
     SettingsData.pub_key_NFT_receiver = await this.getInput(
       CliStrings.NFTSettingsQuestionNFTReceiver,
       SettingsData.pub_key_NFT_receiver
-    );
+    );*/
   }
 
   async getInput(promptMessage: string, prevAnswer: string): Promise<string> {
@@ -54,7 +52,7 @@ export class NFTSettingsCommand implements Command {
       {
         type: 'confirm',
         name: 'confirmed',
-        message: (CliStrings.NFTSettingsMenuConfirmationQuestion),
+        message: CliStrings.NFTSettingsMenuConfirmationQuestion,
       },
     ];
 

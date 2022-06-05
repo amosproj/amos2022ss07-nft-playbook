@@ -1,1 +1,3 @@
-export * from './lib';
+import { Middleware } from './lib/middleware';
+
+export const middleware = new Middleware();

@@ -1,14 +1,7 @@
 import * as inquirer from 'inquirer';
 import { Command, sleep } from '../Command';
 import { CliStrings } from '../../CliStrings';
-import { SettingsData } from '../../SettingsData';
-import {
-  Ethereum,
-  EthereumConfigDeployContract,
-  EthereumConfigMintNFT,
-  EthereumConfigReadTokenData,
-} from '@nft-playbook/backend';
-
+import { middleware } from '@nft-playbook/middleware';
 
 let GAS_LIMIT: number;
 let server_uri: string;
@@ -25,7 +18,7 @@ export class StartMintingCommand implements Command {
   help = CliStrings.StartMintingCommandHelp;
 
   async execute() {
-    GAS_LIMIT = SettingsData.GAS_LIMIT;
+    /*GAS_LIMIT = SettingsData.GAS_LIMIT;
     server_uri = SettingsData.server_uri;
     priv_key_contract_owner = SettingsData.priv_key_contract_owner;
     priv_key_NFT_transmitter = SettingsData.priv_key_NFT_transmitter;
@@ -62,97 +55,31 @@ export class StartMintingCommand implements Command {
     console.log(CliStrings.StartMintingFeedback07);
     console.log(CliStrings.StartMintingFeedback08);
     console.log(CliStrings.StartMintingFeedback09);
-    console.log(CliStrings.StartMintingFeedback10);
+    // console.log(CliStrings.StartMintingFeedback10);
     console.log(CliStrings.StartMintingFeedback11);
-    console.log(CliStrings.horizontalHashLine);
+    console.log(CliStrings.horizontalHashLine);*/
 
     const promptQuestion: inquirer.QuestionCollection = [
       {
         type: 'confirm',
         name: 'confirmed',
-        message: (CliStrings.StartMintingMenuConfirmationQuestion),
+        message: CliStrings.StartMintingMenuConfirmationQuestion,
       },
     ];
     const answer = await inquirer.prompt(promptQuestion);
     if (answer.confirmed) {
       console.log(CliStrings.StartMintingFeedbackMinting);
-      await this.start_minting(
+      /*await this.start_minting(
         GAS_LIMIT,
         server_uri,
         priv_key_contract_owner,
         priv_key_NFT_transmitter,
         pub_key_NFT_receiver
-      );
+      );*/
     } else {
       console.log(CliStrings.StartMintingFeedback12);
     }
 
     await sleep(2000);
-  }
-
-  async start_minting(
-    GAS_LIMIT: number,
-    server_uri: string,
-    priv_key_contract_owner: string,
-    priv_key_NFT_transmitter: string,
-    pub_key_NFT_receiver: string
-  ) {
-    const ethereumConfigDeployContract = new EthereumConfigDeployContract(
-      server_uri,
-      './packages/backend/src/lib/contracts/simple_amos_nft_contract.sol',
-      priv_key_contract_owner,
-      'NFT-DEMO-CONTRACT',
-      '',
-      'basis-uri'
-    );
-
-    // create Ethereum object
-    const eth = new Ethereum();
-
-    // deploy contract on ethereum blockchain
-    const addr = await eth.deploy_contract(ethereumConfigDeployContract);
-    console.log(CliStrings.StartMintingFeedbackContractDeployed);
-
-    // mint nft on ethereum blockchain
-    const ethereumConfigMintNFT = new EthereumConfigMintNFT(
-      nft_name,
-      server_uri,
-      priv_key_NFT_transmitter,
-      addr,
-      pub_key_NFT_receiver,
-      '0xBADF00D',
-      nft_link,
-      GAS_LIMIT
-    );
-    const token_id = await eth.mint_nft(ethereumConfigMintNFT);
-    console.log(CliStrings.StartMintingFeedbackFirstNFT);
-
-    // mint second nft on ethereum blockchain
-    const ethereumConfigMintNFT1 = new EthereumConfigMintNFT(
-      'DEMO-NFT',
-      server_uri,
-      priv_key_NFT_transmitter,
-      addr,
-      pub_key_NFT_receiver,
-      '0xCAFEE',
-      'https://user-images.githubusercontent.com/92869397/166645877-e8570f35-82fd-41cb-a702-3b5d1a3068a0.JPG',
-      GAS_LIMIT
-    );
-    const token_id1 = await eth.mint_nft(ethereumConfigMintNFT1);
-    console.log(CliStrings.StartMintingFeedbackSecondNFT);
-
-    const ethereumConfigReadTokenData = new EthereumConfigReadTokenData(
-      server_uri,
-      addr,
-      token_id
-    );
-    await eth.read_pic_data_from_smart_contract(ethereumConfigReadTokenData);
-
-    const ethereumConfigReadTokenData1 = new EthereumConfigReadTokenData(
-      server_uri,
-      addr,
-      token_id1
-    );
-    await eth.read_pic_data_from_smart_contract(ethereumConfigReadTokenData1);
   }
 }
