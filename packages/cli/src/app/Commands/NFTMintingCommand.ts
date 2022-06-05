@@ -1,5 +1,5 @@
 import * as inquirer from 'inquirer';
-import { Chalk } from 'chalk';
+//import { Chalk } from 'chalk';
 import { Command } from './Command';
 import { HelpCommand } from './HelpCommand';
 import { BackCommand } from './BackCommand';
@@ -7,7 +7,7 @@ import { CliStrings } from '../CliStrings';
 import { NFTSettingsCommand } from './StartMintingCommands/NFTSettingsCommand';
 import { StartMintingCommand } from './StartMintingCommands/StartMintingCommand';
 
-const chalk = new Chalk();
+//const chalk = new Chalk();
 
 
 const NMRun = {
@@ -40,15 +40,15 @@ export class NFTMintingCommand implements Command {
       {
         type: 'list',
         name: 'selectedCommand',
-        message: chalk.yellow(CliStrings.NFTMintingCommandMenuQuestion),
+        message: (CliStrings.NFTMintingCommandMenuQuestion),//chalk.yellow(CliStrings.NFTMintingCommandMenuQuestion),
         choices: commandChoices,
       },
     ];
 
     while (NMRun.run) {
-      console.log(chalk.green(CliStrings.horizontalHashLine));
-      console.log(chalk.green(CliStrings.NFTMintingCommandMenuHeader));
-      console.log(chalk.green(CliStrings.horizontalHashLine));
+      console.log((CliStrings.horizontalHashLine));//chalk.green(CliStrings.horizontalHashLine));
+      console.log((CliStrings.NFTMintingCommandMenuHeader));//chalk.green(CliStrings.NFTMintingCommandMenuHeader));
+      console.log((CliStrings.horizontalHashLine));//chalk.green(CliStrings.horizontalHashLine));
 
       const answers = await inquirer.prompt(promptQuestions);
       const index = commandChoices.indexOf(answers.selectedCommand);

@@ -4,9 +4,9 @@ import { Command } from './Command';
 import { HelpCommand } from './HelpCommand';
 import { AddWalletCommand } from './SelectWalletCommands/AddWalletCommand';
 import * as inquirer from 'inquirer';
-import { Chalk } from 'chalk';
+//import { Chalk } from 'chalk';
 
-const chalk = new Chalk();
+//const chalk = new Chalk();
 
 
 const SWRun = {
@@ -37,15 +37,15 @@ export class SelectWalletCommand implements Command {
       {
         type: 'list',
         name: 'selectedCommand',
-        message: chalk.yellow(CliStrings.SelectWalletCommandMenuQuestion),
+        message: (CliStrings.SelectWalletCommandMenuQuestion),//chalk.yellow(CliStrings.SelectWalletCommandMenuQuestion),
         choices: commandChoices,
       },
     ];
 
     while (SWRun.run) {
-      console.log(chalk.green(CliStrings.horizontalHashLine));
-      console.log(chalk.green(CliStrings.SelectWalletCommandMenuHeader));
-      console.log(chalk.green(CliStrings.horizontalHashLine));
+      console.log((CliStrings.horizontalHashLine));//chalk.green(CliStrings.horizontalHashLine));
+      console.log((CliStrings.SelectWalletCommandMenuHeader));//chalk.green(CliStrings.SelectWalletCommandMenuHeader));
+      console.log((CliStrings.horizontalHashLine));//chalk.green(CliStrings.horizontalHashLine));
 
       const answers = await inquirer.prompt(promptQuestions);
       const index = commandChoices.indexOf(answers.selectedCommand);

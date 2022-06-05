@@ -13,9 +13,10 @@
   "dependencies": {
     "@pinata/sdk": "^1.1.25",
     "axios": "^0.27.2",
-    "chalk": "^5.0.1",
+    "chalk": "4.1.2",
     "ethers": "^5.6.5",
     "inquirer": "^8.2.4",
+    "node-fetch": "^2.6.1",
     "solc": "0.8.14-fixed",
     "tslib": "^2.3.0"
   },

@@ -1,20 +1,20 @@
 import * as inquirer from 'inquirer';
-import { Chalk } from 'chalk';
+//import { Chalk } from 'chalk';
 
 import { CliStrings } from './app/CliStrings';
 import { TopLevelCommandIndex } from './app/Commands';
 import { MainRun } from './app/Commands/Command';
 import { SettingsData } from './app/SettingsData';
 
-const chalk = new Chalk();
+//const chalk = new Chalk();
 
 
 function greet() {
   console.clear();
 
-  console.log(chalk.green(CliStrings.horizontalHashLine));
-  console.log(chalk.green(CliStrings.MainMenuHeader));
-  console.log(chalk.green(CliStrings.horizontalHashLine));
+  console.log(CliStrings.horizontalHashLine);//chalk.green(CliStrings.horizontalHashLine));
+  console.log(CliStrings.MainMenuHeader);//chalk.green(CliStrings.MainMenuHeader));
+  console.log(CliStrings.horizontalHashLine);//chalk.green(CliStrings.horizontalHashLine));
 }
 
 async function main() {
@@ -26,7 +26,7 @@ async function main() {
 
   for (const command of TopLevelCommandIndex) {
     if (command.name === `Exit`) {
-      commandChoices.push(chalk.red(command.name));
+      commandChoices.push(command.name);//chalk.red(command.name));
     } else {
       commandChoices.push(command.name);
     }
@@ -36,7 +36,7 @@ async function main() {
     {
       type: 'list',
       name: 'selectedCommand',
-      message: chalk.yellow(CliStrings.MainMenuQuestion),
+      message: CliStrings.MainMenuQuestion,// chalk.yellow(CliStrings.MainMenuQuestion),
       choices: commandChoices,
     },
   ];
