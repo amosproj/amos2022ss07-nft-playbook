@@ -13,10 +13,9 @@ import { EthereumConfigReadTokenData } from './EthereumConfig/EthereumConfigRead
 import { BlockchainConfigMintNFT } from '../BlockchainConfig/BlockchainConfigMintNFT';
 
 export class Ethereum implements Blockchain {
-
   async estimate_gas_fee_mint(config: EthereumConfigMintNFT): Promise<number> {
     const provider = ethers.providers.getDefaultProvider(config.server_uri);
-    console.log("Gasprice: " + provider.getGasPrice());
+    console.log('Gasprice: ' + provider.getGasPrice());
 
     const contract = new ethers.Contract(
       config.address_of_contract,
@@ -35,7 +34,7 @@ export class Ethereum implements Blockchain {
       }
     );
 
-    console.log("GAS for mint: " + estimation)
+    console.log('GAS for mint: ' + estimation);
 
     return estimation.toNumber() * (await provider.getGasPrice()).toNumber();
   }
