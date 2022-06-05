@@ -2,7 +2,7 @@ import { Ethereum } from './Ethereum';
 import { EthereumConfigMintNFT } from './EthereumConfig/EthereumConfigMintNFT';
 
 describe('Ethereum', () => {
-  it('should estimate gas', async () => {
+  it.skip('should estimate gas', async () => {
     const ethereum = new Ethereum();
 
     const contract_adress = '0xB924387088C7c2961f3049002D9474b5F308F8c4';
