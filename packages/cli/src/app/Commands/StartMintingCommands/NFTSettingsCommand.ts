@@ -1,10 +1,8 @@
 import * as inquirer from 'inquirer';
-import { Chalk } from 'chalk';
 import { Command } from '../Command';
 import { SettingsData } from '../../SettingsData';
 import { CliStrings } from '../../CliStrings';
 
-const chalk = new Chalk();
 
 
 export class NFTSettingsCommand implements Command {
@@ -12,9 +10,9 @@ export class NFTSettingsCommand implements Command {
   help = CliStrings.NFTSettingsCommandHelp;
 
   async execute() {
-    console.log(chalk.green(CliStrings.horizontalHashLine));
-    console.log(chalk.green(CliStrings.NFTSettingsMenuHeader));
-    console.log(chalk.green(CliStrings.horizontalHashLine));
+    console.log(CliStrings.horizontalHashLine);
+    console.log(CliStrings.NFTSettingsMenuHeader);
+    console.log(CliStrings.horizontalHashLine);
 
     SettingsData.nft_name = await this.getInput(
       CliStrings.NFTSettingsQuestionName,
@@ -56,7 +54,7 @@ export class NFTSettingsCommand implements Command {
       {
         type: 'confirm',
         name: 'confirmed',
-        message: chalk.yellow(CliStrings.NFTSettingsMenuConfirmationQuestion),
+        message: (CliStrings.NFTSettingsMenuConfirmationQuestion),
       },
     ];
 
