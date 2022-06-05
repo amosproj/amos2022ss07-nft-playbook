@@ -8,7 +8,6 @@ import { SettingsData } from '../SettingsData';
 import { CliStrings } from '../CliStrings';
 
 
-//const chalk = new Chalk();
 const BSRun = {
   run: false,
 };
