@@ -12,6 +12,12 @@ export interface Blockchain {
   deploy_contract(config: BlockchainConfigDeployContract): Promise<string>;
 
   /**
+   * Estimate gas fee when minting an NFT
+   * @param config
+   */
+  estimate_gas_fee_mint(config: BlockchainConfigMintNFT) : Promise<number>;
+
+  /**
    * Mints an NFT to a smartcontract, which is defined in config
    * @param config
    */

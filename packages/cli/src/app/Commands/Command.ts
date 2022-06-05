@@ -6,6 +6,7 @@ import { VersionCommand } from './VersionCommand';
 import { BackCommand } from './BackCommand';
 import { CliStrings } from '../CliStrings';
 import { SelectWalletCommand } from './SelectWalletCommand';
+import { TestMintingCommand } from './TestMintingCommand';
 
 export interface Command {
   name: string;
@@ -25,11 +26,13 @@ export const TopLevelCommandIndex: Command[] = [
   new NFTSettingsCommand(),
   new StartMintingCommand(),
   new VersionCommand(),
+  new TestMintingCommand(),
   new BackCommand(
     MainRun,
     CliStrings.MainMenuBackButtonLabel,
     CliStrings.MainMenuBackButtonHelp
-  ),
+  )
+
 ];
 topLevelHelpCommand.commandIndex = TopLevelCommandIndex;
 

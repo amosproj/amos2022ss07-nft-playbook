@@ -10,8 +10,35 @@ import { resolve, sep, posix } from 'path';
 import * as solc from 'solc';
 //import solc = require('solc');
 import { EthereumConfigReadTokenData } from './EthereumConfig/EthereumConfigReadTokenData';
+import { BlockchainConfigMintNFT } from '../BlockchainConfig/BlockchainConfigMintNFT';
 
 export class Ethereum implements Blockchain {
+
+  async estimate_gas_fee_mint(config: EthereumConfigMintNFT): Promise<number> {
+    const provider = ethers.providers.getDefaultProvider(config.server_uri);
+    console.log("Gasprice: " + provider.getGasPrice());
+
+    const contract = new ethers.Contract(
+      config.address_of_contract,
+      this.SIMPLE_AMOS_NFT_CONTRACT_ABI,
+      provider
+    );
+
+    //Estimated Gas for mint()-call in Gas
+    const estimation = await contract.estimateGas.mint(
+      config.pub_key_NFT_receiver,
+      config.url_to_file,
+      config.hash,
+      {
+        gasPrice: provider.getGasPrice(),
+        gasLimit: config.gas_limit,
+      }
+    );
+
+    console.log("GAS for mint: " + estimation)
+
+    return estimation.toNumber() * (await provider.getGasPrice()).toNumber();
+  }
   /**
    * ABI for Smart Contract
    */
@@ -59,6 +86,8 @@ export class Ethereum implements Blockchain {
    * @returns
    */
   async mint_nft(config: EthereumConfigMintNFT): Promise<number> {
+    console.log(config);
+    await sleep(10000);
     const provider = ethers.providers.getDefaultProvider(config.server_uri);
 
     const wallet = new ethers.Wallet(config.private_key_transmitter, provider);
@@ -83,9 +112,8 @@ export class Ethereum implements Blockchain {
 
     const receipt = await tx.wait();
     const ret = receipt;
-    writeFileSync('./receipt_2.json', JSON.stringify(receipt));
+    //writeFileSync('./receipt_2.json', JSON.stringify(receipt));
     const token_id = parseInt(ret['events'][1]['args'][0]['_hex']);
-    await sleep(5000);
     return token_id;
   }
 

@@ -69,6 +69,11 @@ export const CliStrings = {
   StartMintingMenuConfirmationQuestion: `Are you sure you want to continue with these settings?`,
   StartMintingMenuMissingParameter: `Neccessary parameter missing. Please provide all required parameters.`,
   StartMintingFeedback01: `You chose the following parameters: `,
+
+  // Start Minting
+  TestMintingCommandLabel: `Test Minting`,
+  TestMintingCommandHelp: `\Test the minting process`,
+
   get StartMintingFeedback02(): string {
     return `Selected blockchains: ${SettingsData.selectedBlockchains}`;
   },
