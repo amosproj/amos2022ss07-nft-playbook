@@ -7,9 +7,6 @@ import {
   EthereumConfigReadUserDataFromSmartContract,
 } from '@nft-playbook/backend';
 import { SettingsData } from './SettingsData';
-export function middleware(): string {
-  return 'middleware';
-}
 
 export class Middleware {
   constructor() {
