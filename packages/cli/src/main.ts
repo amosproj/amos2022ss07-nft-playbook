@@ -3,6 +3,8 @@ import { CliStrings } from './app/CliStrings';
 import { TopLevelCommandIndex } from './app/Commands';
 import { MainRun } from './app/Commands/Command';
 
+// const inquirerFileTreeSelection = require('inquirer-file-tree-selection-prompt');
+
 function greet() {
   console.clear();
 
@@ -12,6 +14,8 @@ function greet() {
 }
 
 async function main() {
+  // inquirer.registerPrompt('file-tree-selection', inquirerFileTreeSelection);
+
   const commandChoices: string[] = [];
 
   for (const command of TopLevelCommandIndex) {

@@ -44,6 +44,11 @@ export const CliStrings = {
     `Please select the wallet you'd like to add`
   ),
 
+  // IPFS
+  IPFSCommandLabel: `IPFS/Pinata`,
+  IPFSCommandHelp: `\tUpload files to IPFS via pinata`,
+  IPFSQuestionSymbol: `DAS IST EIN TEST`, // FIXME
+
   // Blockchain Settings
   BlockchainSettingsCommandLabel: `Blockchain Settings`,
   BlockchainSettingsCommandHelp: `\tPLease use the 'Blockchain Settings' command to configure all settings related to your used blockchains.`,

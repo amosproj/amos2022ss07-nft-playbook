@@ -6,6 +6,7 @@ import { VersionCommand } from './VersionCommand';
 import { BackCommand } from './BackCommand';
 import { CliStrings } from '../CliStrings';
 import { NFTMintingCommand } from './NFTMintingCommand';
+import { IPFSCommand } from './IPFSCommand';
 // import { SelectWalletCommand } from './SelectWalletCommand';
 
 export interface Command {
@@ -22,6 +23,7 @@ const topLevelHelpCommand = new HelpCommand();
 export const TopLevelCommandIndex: Command[] = [
   topLevelHelpCommand,
   // new SelectWalletCommand(),
+  new IPFSCommand(),
   new BlockchainSettingsCommand(),
   // new NFTSettingsCommand(),
   new NFTMintingCommand(),
