@@ -16,7 +16,6 @@
     "chalk": "^4.1.2",
     "ethers": "^5.6.5",
     "inquirer": "^8.2.4",
-    "inquirer-file-tree-selection-prompt": "^1.0.19",
     "node-fetch": "^2.6.1",
     "solc": "0.8.14-fixed",
     "tslib": "^2.3.0"

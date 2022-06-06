@@ -42,7 +42,8 @@ export class BlockchainSettingsCommand implements Command {
         {
           type: 'rawlist',
           name: 'selectedContractMethod',
-          message: '2. Do you want to create a new contract or provide an existing contract address?',
+          message:
+            '2. Do you want to create a new contract or provide an existing contract address?',
           choices: [`Deploy new contract`, `Address of existing contract`],
         },
       ];
@@ -52,12 +53,15 @@ export class BlockchainSettingsCommand implements Command {
       ).selectedContractMethod;
 
       // for (const contractMethod of selectedContractMethod) {
-        if (selectedContractMethod === `Deploy new contract`) {
-          await middleware.deployContract(blockchain);
-        } else {
-          const contractAddress = await this.getInput(`Address of existing contract:`, ``);
-          middleware.setContractAddress(blockchain, contractAddress);
-        }
+      if (selectedContractMethod === `Deploy new contract`) {
+        await middleware.deployContract(blockchain);
+      } else {
+        const contractAddress = await this.getInput(
+          `Address of existing contract:`,
+          ``
+        );
+        middleware.setContractAddress(blockchain, contractAddress);
+      }
       // }
 
       console.clear();

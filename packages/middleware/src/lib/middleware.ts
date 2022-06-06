@@ -20,7 +20,9 @@ export class Middleware {
   private _selectedBlockchains = {};
 
   private addBlockchain(blockchain: string) {
-    this._selectedBlockchains[blockchain] = new SettingsData('packages/middleware/settings.json'); // TODO: Pfad pruefen
+    this._selectedBlockchains[blockchain] = new SettingsData(
+      'packages/middleware/settings.json'
+    ); // TODO: Pfad pruefen
   }
 
   public selectBlockchain(blockchain: string) {

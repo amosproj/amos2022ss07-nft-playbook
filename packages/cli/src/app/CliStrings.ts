@@ -47,7 +47,12 @@ export const CliStrings = {
   // IPFS
   IPFSCommandLabel: `IPFS/Pinata`,
   IPFSCommandHelp: `\tUpload files to IPFS via pinata`,
-  IPFSQuestionSymbol: `DAS IST EIN TEST`, // FIXME
+  IPFSQuestionApiKey: `Api-key`,
+  IPFSQuestionApiSec: `Api-sec`,
+  IPFSFileConfirmationQuestion: `Please provide the path to the file you want to upload.`,
+  IPFSErrorMessageNoAccess: chalk.red("No access or file doesn't exist!"),
+  IPFSErrorMessageNotFile: chalk.red(`Given path is not a file`),
+  IPFSErrorMessageUpload: chalk.red(`Upload failed`),
 
   // Blockchain Settings
   BlockchainSettingsCommandLabel: `Blockchain Settings`,
@@ -55,9 +60,6 @@ export const CliStrings = {
   BlockchainSelectorMenuQuestion: chalk.yellow(
     `Please select the blockchain(s) you'd like to use.`
   ),
-
-
-
 
   BlockchainSettingsMenuHeader: chalk.green(`Blockchain Settings`),
   BlockchainSettingsMenuQuestion: chalk.yellow(
