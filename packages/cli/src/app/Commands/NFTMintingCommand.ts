@@ -78,7 +78,7 @@ export class NFTMintingCommand implements Command {
       console.log(CliStrings.NFTMintingFeedbackAbort);
     }
 
-    sleep(2000);
+    await sleep(2000);
   }
 
   async getInput(promptMessage: string, prevAnswer: string): Promise<string> {

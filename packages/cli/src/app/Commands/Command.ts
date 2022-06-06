@@ -1,7 +1,5 @@
 import { HelpCommand } from './HelpCommand';
 import { BlockchainSettingsCommand } from './BlockchainSettingsCommand';
-// import { NFTSettingsCommand } from './NFTSettingsCommand';
-// import { StartMintingCommand } from './StartMintingCommands/StartMintingCommand';
 import { VersionCommand } from './VersionCommand';
 import { BackCommand } from './BackCommand';
 import { CliStrings } from '../CliStrings';
@@ -25,10 +23,9 @@ export const TopLevelCommandIndex: Command[] = [
   // new SelectWalletCommand(),
   new IPFSCommand(),
   new BlockchainSettingsCommand(),
-  // new NFTSettingsCommand(),
   new NFTMintingCommand(),
-  // new StartMintingCommand(),
   new VersionCommand(),
+  // new TestMintingCommand(),
   new BackCommand(
     MainRun,
     CliStrings.MainMenuBackButtonLabel,

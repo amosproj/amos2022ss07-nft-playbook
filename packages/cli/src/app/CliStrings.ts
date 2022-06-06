@@ -131,6 +131,10 @@ export const CliStrings = {
   ),
   NFTMintingConfirmationInput: `Input: `,
 
+  // Start Minting
+  TestMintingCommandLabel: `Test Minting`,
+  TestMintingCommandHelp: `Test the minting process`,
+
   // Version
   VersionCommandLabel: `Version`,
   VersionCommandHelp: `\tThe 'Version' command provides you with the current version number of the program.`,
