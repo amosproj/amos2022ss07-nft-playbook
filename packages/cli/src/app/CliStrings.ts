@@ -52,6 +52,13 @@ export const CliStrings = {
   // Blockchain Settings
   BlockchainSettingsCommandLabel: `Blockchain Settings`,
   BlockchainSettingsCommandHelp: `\tPLease use the 'Blockchain Settings' command to configure all settings related to your used blockchains.`,
+  BlockchainSelectorMenuQuestion: chalk.yellow(
+    `Please select the blockchain(s) you'd like to use.`
+  ),
+
+
+
+
   BlockchainSettingsMenuHeader: chalk.green(`Blockchain Settings`),
   BlockchainSettingsMenuQuestion: chalk.yellow(
     `Please select your desired blockchain(s), multiselection is possible.`
@@ -66,100 +73,61 @@ export const CliStrings = {
   // Blockchain Selector
   BlockchainSelectorCommandLabel: `Blockchain Selector`,
   BlockchainSelectorCommandHelp: `\tPlease select and check the blockchain(s) you'd like to use for the minting process.`,
-  BlockchainSelectorMenuQuestion: chalk.yellow(
-    `Please select the blockchain(s) you'd like to use.`
-  ),
 
   // NFT Minting
   NFTMintingCommandLabel: `NFT Minting`,
   NFTMintingCommandHelp: `\tThe 'NFT Minting' folder provides you with the 'NFT Settings' command to configure your NFT settings as well as the 'Start Minting' command to start your minting process.`,
-  NFTMintingCommandMenuQuestion: chalk.yellow(
-    `Please configure you NFT's settings if needed and proceed with the minting process.`
-  ),
   NFTMintingCommandMenuHeader: chalk.green(`NFT Minting`),
-
-  // NFT Settings
-  NFTSettingsCommandLabel: `NFT Settings`,
-  NFTSettingsCommandHelp: `\tUsing the 'NFT Setting' command, you can configure all settings related to your NFTs`,
-  NFTSettingsMenuHeader: chalk.green(`NFT Settings`),
-  NFTSettingsQuestionName: `Name`,
-  NFTSettingsQuestionSymbol: `Symbol`,
-  NFTSettingsQuestionLink: `NFT Link`,
-  NFTSettingsQuestionContractOwner: (blockchain: string): string => {
-    return `${blockchain} Contract Owner`;
-  },
-  NFTSettingsQuestionNFTTransmitter: (blockchain: string): string => {
-    return `${blockchain} NFT Transmitter`;
-  },
-  NFTSettingsQuestionNFTReceiver: (blockchain: string): string => {
+  NFTMintingQuestionName: `Name`,
+  NFTMintingQuestionLink: `NFT Link`,
+  NFTMintingQuestionNFTReceiver: (blockchain: string): string => {
     return `${blockchain} NFT Receiver`;
   },
-  NFTSettingsMenuConfirmationQuestion: chalk.yellow(
-    `Would you like to continue with this input?`
-  ),
-  NFTSettingsMenuConfirmationInput: `Input: `,
 
-  // Start Minting
-  StartMintingCommandLabel: `Start Minting`,
-  StartMintingCommandHelp: `\tThe 'Start Minting' command starts the minting process using the NFT settings priorly configured using the 'NFT Settings' command. `,
-  StartMintingMenuHeader: chalk.green(`Start Minting`),
-  StartMintingMenuConfirmationQuestion: chalk.yellow(
-    `Are you sure you want to continue the minting process with these settings?`
-  ),
-  StartMintingMenuMissingParameter: chalk.red(
-    `Neccessary parameter missing for the minting process. Please provide all required parameters. You can configure your NFT settings using the command 'NFT Settings'.`
-  ),
-  StartMintingFeedback01: `You chose the following parameters: `,
-  get StartMintingFeedbackSelectedBlockchains(): string {
+  get NFTMintingFeedbackSelectedBlockchains(): string {
     return (
       `Selected blockchains: ` +
       chalk.cyan(`${middleware.getSelectedBlockchains()}`)
     );
   },
-  get StartMintingFeedbackNFTName(): string {
+  get NFTMintingFeedbackNFTName(): string {
     return `NFT Name: ` + chalk.cyan(`${middleware.getNftName()}`);
   },
-  get StartMintingFeedbackNFTLink(): string {
+  get NFTMintingFeedbackNFTLink(): string {
     return `NFT Link: ` + chalk.cyan(`${middleware.getNftLink()}`);
   },
-  StartMintingFeedbackGasLimit: (blockchain: string): string => {
+  NFTMintingFeedbackGasLimit: (blockchain: string): string => {
     return (
       `${blockchain} Gas Limit: ` +
       chalk.cyan(`${middleware.getGasLimit(blockchain)}`)
     );
   },
-  StartMintingFeedbackServerUri: (blockchain: string): string => {
+  NFTMintingFeedbackServerUri: (blockchain: string): string => {
     return (
       `${blockchain} Server uri: ` +
       chalk.cyan(`${middleware.getServerUri(blockchain)}`)
     );
   },
-  StartMintingFeedback05: `NFT Parameters: `,
-  StartMintingFeedbackContractOwner: (blockchain: string): string => {
+  NFTMintingFeedbackPrivateKey: (blockchain: string): string => {
     return (
       `${blockchain} Key contract owner: ` +
-      chalk.cyan(`${middleware.getPrivateKeyContractOwner(blockchain)}`)
+      chalk.cyan(`${middleware.getPrivateKeyUser(blockchain)}`)
     );
   },
-
-  StartMintingFeedbackNFTTransmitter: (blockchain: string): string => {
-    return (
-      `${blockchain} Key NFT transmitter: ` +
-      chalk.cyan(`${middleware.getPrivateKeyNftTransmitter(blockchain)}`)
-    );
-  },
-
-  StartMintingFeedbackNFTReceiver: (blockchain: string): string => {
+  NFTMintingFeedbackNFTReceiver: (blockchain: string): string => {
     return (
       `${blockchain} Key NFT receiver: ` +
       chalk.cyan(`${middleware.getPublicKeyNftReceiver(blockchain)}`)
     );
   },
-  StartMintingFeedbackAbort: chalk.red(`abort`),
-  StartMintingFeedbackMinting: chalk.cyan(`minting`),
-  StartMintingFeedbackFirstNFT: chalk.cyan(`first NFT minted`),
-  StartMintingFeedbackSecondNFT: chalk.cyan(`second NFT minted`),
-  StartMintingFeedbackContractDeployed: chalk.cyan(`contract deployed`),
+  NFTMintingSummaryConfirmationQuestion: chalk.yellow(
+    `Are you sure you want to continue the minting process with these settings?`
+  ),
+  NFTMintingFeedbackAbort: chalk.red(`abort`),
+  NFTMintingInputConfirmationQuestion: chalk.yellow(
+    `Would you like to continue with this input?`
+  ),
+  NFTMintingConfirmationInput: `Input: `,
 
   // Version
   VersionCommandLabel: `Version`,

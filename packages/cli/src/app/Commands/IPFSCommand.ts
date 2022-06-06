@@ -40,7 +40,7 @@ export class IPFSCommand implements Command {
       {
         type: 'confirm',
         name: 'confirmed',
-        message: CliStrings.NFTSettingsMenuConfirmationQuestion,
+        message: CliStrings.NFTMintingInputConfirmationQuestion,
       },
     ];
 
@@ -48,7 +48,7 @@ export class IPFSCommand implements Command {
     let showPrompt = true;
     while (showPrompt) {
       input = (await inquirer.prompt(inputQuestion)).input;
-      console.log(CliStrings.NFTSettingsMenuConfirmationInput + input);
+      console.log(CliStrings.NFTMintingConfirmationInput + input);
       const confirmAnswer = await inquirer.prompt(confirmQuestion);
       if (confirmAnswer.confirmed) {
         showPrompt = false;

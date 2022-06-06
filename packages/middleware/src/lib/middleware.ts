@@ -20,7 +20,7 @@ export class Middleware {
   private _selectedBlockchains = {};
 
   private addBlockchain(blockchain: string) {
-    this._selectedBlockchains[blockchain] = new SettingsData('');
+    this._selectedBlockchains[blockchain] = new SettingsData('packages/middleware/settings.json'); // TODO: Pfad pruefen
   }
 
   public selectBlockchain(blockchain: string) {
@@ -58,8 +58,8 @@ export class Middleware {
           this._mintNftEthereum(
             SettingsData.nft_name,
             data.server_uri,
-            data.priv_key_NFT_transmitter,
-            'CONTRACT ADDRESS', //TODO
+            data.user_priv_key,
+            data.smart_contract_address,
             data.pub_key_NFT_receiver,
             'hash', //TODO
             SettingsData.nft_link,
@@ -76,37 +76,55 @@ export class Middleware {
         }
       }
 
-      this._selectedBlockchains[blockchain];
+      this._selectedBlockchains[blockchain] = data;
     });
   }
 
-  public deployContract() {
-    this.getSelectedBlockchains().forEach((blockchain) => {
-      const data: SettingsData = this._selectedBlockchains[blockchain];
-
-      switch (blockchain) {
-        case 'Ethereum': {
-          this._deployContractEthereum(
-            data.server_uri,
-            data.smart_contract_address,
-            data.priv_key_contract_owner,
-            'CONTRAC-NAME', //TODO
-            'CONTRACT-SYMBOL', //TODO
-            'BASE-URI' //TODO
-          );
-          break;
-        }
-        case 'Flow': {
-          //this._deployContractFlow();
-          break;
-        }
-        default: {
-          break;
-        }
+  /* deployContract will be called for each specific blockchain individually */
+  public async deployContract(blockchain: string) {
+    const data: SettingsData = this._selectedBlockchains[blockchain];
+    switch (blockchain) {
+      case 'Ethereum': {
+        data.smart_contract_address = await this._deployContractEthereum(
+          data.server_uri,
+          './packages/backend/src/lib/contracts/simple_amos_nft_contract.sol', // path to smart contract
+          data.user_priv_key,
+          'CONTRAC-NAME', //TODO
+          'CONTRACT-SYMBOL', //TODO
+          'BASE-URI' //TODO
+        );
+        break;
       }
+      case 'Flow': {
+        //this._deployContractFlow();
+        break;
+      }
+      default: {
+        break;
+      }
+    }
 
-      this._selectedBlockchains[blockchain];
-    });
+    this._selectedBlockchains[blockchain] = data;
+  }
+
+  public setContractAddress(blockchain: string, contract_addr: string) {
+    const data: SettingsData = this._selectedBlockchains[blockchain];
+
+    switch (blockchain) {
+      case 'Ethereum': {
+        data.smart_contract_address = contract_addr;
+        break;
+      }
+      case 'Flow': {
+        //this._deployContractFlow();
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+
+    this._selectedBlockchains[blockchain] = data;
   }
 
   public readUserData() {
@@ -131,7 +149,7 @@ export class Middleware {
         }
       }
 
-      this._selectedBlockchains[blockchain];
+      this._selectedBlockchains[blockchain] = data;
     });
   }
 
@@ -153,7 +171,7 @@ export class Middleware {
         }
       }
 
-      this._selectedBlockchains[blockchain];
+      this._selectedBlockchains[blockchain] = data;
     });
   }
 
@@ -179,7 +197,7 @@ export class Middleware {
         }
       }
 
-      this._selectedBlockchains[blockchain];
+      this._selectedBlockchains[blockchain] = data;
     });
   }
 
@@ -192,12 +210,8 @@ export class Middleware {
     SettingsData.nft_link = val;
   }
 
-  public setPrivateKeyContractOwner(val: string, blockchain: string) {
-    this._selectedBlockchains[blockchain].priv_key_contract_owner = val;
-  }
-
-  public setPrivateKeyNftTransmitter(val: string, blockchain: string) {
-    this._selectedBlockchains[blockchain].priv_key_NFT_transmitter = val;
+  public setPrivateKeyUser(val: string, blockchain: string) {
+    this._selectedBlockchains[blockchain].user_priv_key = val;
   }
 
   public setSmartContractAddress(val: string, blockchain: string) {
@@ -217,20 +231,16 @@ export class Middleware {
     return SettingsData.nft_link;
   }
 
-  public getPrivateKeyContractOwner(blockchain: string) {
-    return this._selectedBlockchains[blockchain].priv_key_contract_owner;
-  }
-
-  public getPrivateKeyNftTransmitter(blockchain: string) {
-    return this._selectedBlockchains[blockchain].priv_key_NFT_transmitter;
-  }
-
   public getSmartContractAddress(blockchain: string) {
     return this._selectedBlockchains[blockchain].smart_contract_address;
   }
 
   public getPublicKeyNftReceiver(blockchain: string) {
     return this._selectedBlockchains[blockchain].pub_key_NFT_receiver;
+  }
+
+  public getPrivateKeyUser(blockchain: string) {
+    return this._selectedBlockchains[blockchain].user_priv_key;
   }
 
   public getGasLimit(blockchain: string) {

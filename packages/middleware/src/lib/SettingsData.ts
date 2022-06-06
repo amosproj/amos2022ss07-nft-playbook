@@ -7,8 +7,7 @@ export class SettingsData {
   private _smart_contract_address: string;
   private _GAS_LIMIT: number;
   private _server_uri: string;
-  private _priv_key_contract_owner: string;
-  private _priv_key_NFT_transmitter: string;
+  private _user_priv_key: string;
   private _pub_key_NFT_receiver: string;
 
   private _isSelected = false;
@@ -17,6 +16,12 @@ export class SettingsData {
     //'./packages/cli/src/info.json'
     // if (configFilePath != undefined)
     this.readSettingsFile(configFilePath);
+    this.fillEmptySettings();
+  }
+  private fillEmptySettings() {
+    this._smart_contract_address = '';
+    this._user_priv_key = '';
+    this._pub_key_NFT_receiver = '';
   }
 
   private readSettingsFile(configFilePath: string): boolean {
@@ -64,20 +69,12 @@ export class SettingsData {
     return this._server_uri;
   }
 
-  public get priv_key_contract_owner(): string {
-    return this._priv_key_contract_owner;
+  public get user_priv_key(): string {
+    return this._user_priv_key;
   }
 
-  public set priv_key_contract_owner(v: string) {
-    this._priv_key_contract_owner = v;
-  }
-
-  public get priv_key_NFT_transmitter(): string {
-    return this._priv_key_NFT_transmitter;
-  }
-
-  public set priv_key_NFT_transmitter(v: string) {
-    this._priv_key_NFT_transmitter = v;
+  public set user_priv_key(v: string) {
+    this._user_priv_key = v;
   }
 
   public get smart_contract_address(): string {
