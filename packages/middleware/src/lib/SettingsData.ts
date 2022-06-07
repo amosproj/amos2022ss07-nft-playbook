@@ -5,7 +5,7 @@ export class SettingsData {
   private static _nft_name: string;
   private static _nft_link: string;
   private static _nft_hash: string;
-  
+
   // blockchain specific information
   private _smart_contract_address: string;
   private _GAS_LIMIT: number;

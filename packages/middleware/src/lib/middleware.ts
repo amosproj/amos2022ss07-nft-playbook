@@ -54,14 +54,14 @@ export class Middleware {
     switch (blockchain) {
       case 'Ethereum': {
         return await this._estimateGasFeeMintEthereum(
-            SettingsData.nft_name,
-            data.server_uri,
-            data.user_priv_key,
-            data.smart_contract_address,
-            data.pub_key_NFT_receiver,
-            SettingsData.nft_hash,
-            SettingsData.nft_link,
-            data.GAS_LIMIT
+          SettingsData.nft_name,
+          data.server_uri,
+          data.user_priv_key,
+          data.smart_contract_address,
+          data.pub_key_NFT_receiver,
+          SettingsData.nft_hash,
+          SettingsData.nft_link,
+          data.GAS_LIMIT
         );
         break;
       }
