@@ -57,7 +57,9 @@ export class NFTMintingCommand implements Command {
     for (const blockchain of middleware.getSelectedBlockchains()) {
       console.log();
       console.log(CliStrings.NFTMintingFeedbackGasLimit(blockchain));
-      console.log(await CliStrings.NFTMintingFeedbackEstimatedGasFeeGwei(blockchain));
+      console.log(
+        await CliStrings.NFTMintingFeedbackEstimatedGasFeeGwei(blockchain)
+      );
       console.log(CliStrings.NFTMintingFeedbackServerUri(blockchain));
       console.log(CliStrings.NFTMintingFeedbackPrivateKey(blockchain));
       console.log(CliStrings.NFTMintingFeedbackNFTReceiver(blockchain));

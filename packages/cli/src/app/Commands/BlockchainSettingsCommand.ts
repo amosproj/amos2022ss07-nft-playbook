@@ -44,7 +44,11 @@ export class BlockchainSettingsCommand implements Command {
           name: 'selectedContractMethod',
           message:
             '2. Do you want to create a new contract or provide an existing contract address?',
-          choices: [`Deploy new contract`, `Address of existing contract`, `Cancel`],
+          choices: [
+            `Deploy new contract`,
+            `Address of existing contract`,
+            `Cancel`,
+          ],
         },
       ];
 
