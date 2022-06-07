@@ -48,6 +48,33 @@ export class Middleware {
     }
   }
 
+  public async estimateGasFeeMint(blockchain: string): Promise<number> {
+    const data: SettingsData = this._selectedBlockchains[blockchain];
+
+    switch (blockchain) {
+      case 'Ethereum': {
+        return await this._estimateGasFeeMintEthereum(
+            SettingsData.nft_name,
+            data.server_uri,
+            data.user_priv_key,
+            data.smart_contract_address,
+            data.pub_key_NFT_receiver,
+            SettingsData.nft_hash,
+            SettingsData.nft_link,
+            data.GAS_LIMIT
+        );
+        break;
+      }
+      case 'Flow': {
+        //this._mintNftFlow();
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+  }
+
   public mintNFT() {
     this.getSelectedBlockchains().forEach((blockchain) => {
       const data: SettingsData = this._selectedBlockchains[blockchain];
@@ -60,7 +87,7 @@ export class Middleware {
             data.user_priv_key,
             data.smart_contract_address,
             data.pub_key_NFT_receiver,
-            'hash', //TODO
+            SettingsData.nft_hash,
             SettingsData.nft_link,
             data.GAS_LIMIT
           );
@@ -205,6 +232,10 @@ export class Middleware {
     SettingsData.nft_name = val;
   }
 
+  public setNftHash(val: string) {
+    SettingsData.nft_hash = val;
+  }
+
   public setNftLink(val: string) {
     SettingsData.nft_link = val;
   }
@@ -224,6 +255,10 @@ export class Middleware {
   // getter
   public getNftName() {
     return SettingsData.nft_name;
+  }
+
+  public getNftHash() {
+    return SettingsData.nft_hash;
   }
 
   public getNftLink() {
@@ -296,6 +331,31 @@ export class Middleware {
 
     // deploy contract on ethereum blockchain
     return await new Ethereum().deploy_contract(ethereumConfigDeployContract);
+  }
+
+  private async _estimateGasFeeMintEthereum(
+    nft_name: string,
+    server_uri: string,
+    priv_key_NFT_transmitter: string,
+    addr: string,
+    pub_key_NFT_receiver: string,
+    nft_hash: string,
+    nft_link: string,
+    GAS_LIMIT: number
+  ): Promise<number> {
+    const ethereumConfigMintNFT = new EthereumConfigMintNFT(
+      nft_name,
+      server_uri,
+      priv_key_NFT_transmitter,
+      addr,
+      pub_key_NFT_receiver,
+      nft_hash,
+      nft_link,
+      GAS_LIMIT
+    );
+
+    //mint nft on given contract
+    return await new Ethereum().estimate_gas_fee_mint(ethereumConfigMintNFT);
   }
 
   /* read token data from Ethereum */
