@@ -96,12 +96,19 @@ export const CliStrings = {
     return `NFT Name: ` + chalk.cyan(`${middleware.getNftName()}`);
   },
   get NFTMintingFeedbackNFTLink(): string {
-    return `NFT Link: ` + chalk.cyan(`${middleware.getNftLink()}`);
+    return `NFT Link: ` + chalk.cyan(`${middleware.getNftLink()}\n`
+      + `https://gateway.ipfs.io/ipfs/${middleware.getNftLink()}`);
   },
   NFTMintingFeedbackGasLimit: (blockchain: string): string => {
     return (
       `${blockchain} Gas Limit: ` +
       chalk.cyan(`${middleware.getGasLimit(blockchain)}`)
+    );
+  },
+  NFTMintingFeedbackEstimatedGasFeeGwei: async (blockchain: string): Promise<string> => {
+    return (
+      `${blockchain} Estimated gas fee: ` +
+      chalk.cyan(`${await middleware.estimateGasFeeMintGwei(blockchain)} Gwei`)
     );
   },
   NFTMintingFeedbackServerUri: (blockchain: string): string => {

@@ -31,6 +31,9 @@ export class NFTMintingCommand implements Command {
         middleware.getNftLink()
       )
     );
+    middleware.setNftHash(
+      middleware.getNftLink() // FIXME
+    );
     // get blockchain specific nft receiver
     for (const blockchain of middleware.getSelectedBlockchains()) {
       middleware.setPublicKeyNftReceiver(
@@ -41,7 +44,6 @@ export class NFTMintingCommand implements Command {
         blockchain
       );
     }
-
     // print summary
     this.print_header();
     console.log(CliStrings.NFTMintingFeedbackSelectedBlockchains);
@@ -55,6 +57,7 @@ export class NFTMintingCommand implements Command {
     for (const blockchain of middleware.getSelectedBlockchains()) {
       console.log();
       console.log(CliStrings.NFTMintingFeedbackGasLimit(blockchain));
+      console.log(await CliStrings.NFTMintingFeedbackEstimatedGasFeeGwei(blockchain));
       console.log(CliStrings.NFTMintingFeedbackServerUri(blockchain));
       console.log(CliStrings.NFTMintingFeedbackPrivateKey(blockchain));
       console.log(CliStrings.NFTMintingFeedbackNFTReceiver(blockchain));

@@ -48,12 +48,12 @@ export class Middleware {
     }
   }
 
-  public async estimateGasFeeMint(blockchain: string): Promise<number> {
+  public async estimateGasFeeMintGwei(blockchain: string): Promise<string> {
     const data: SettingsData = this._selectedBlockchains[blockchain];
 
     switch (blockchain) {
       case 'Ethereum': {
-        return await this._estimateGasFeeMintEthereum(
+        return (await this._estimateGasFeeMintEthereum(
           SettingsData.nft_name,
           data.server_uri,
           data.user_priv_key,
@@ -62,7 +62,7 @@ export class Middleware {
           SettingsData.nft_hash,
           SettingsData.nft_link,
           data.GAS_LIMIT
-        );
+        ) * Math.pow(10, -9)).toFixed(2);
         break;
       }
       case 'Flow': {
