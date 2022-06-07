@@ -1,9 +1,12 @@
 import fs = require('fs');
 
 export class SettingsData {
+  // overall blockchain information
   private static _nft_name: string;
   private static _nft_link: string;
+  private static _nft_hash: string;
 
+  // blockchain specific information
   private _smart_contract_address: string;
   private _GAS_LIMIT: number;
   private _server_uri: string;
@@ -43,6 +46,14 @@ export class SettingsData {
     this._GAS_LIMIT = info.GAS_LIMIT;
     this._server_uri = info.server_uri;
     return true;
+  }
+
+  public static get nft_hash(): string {
+    return SettingsData._nft_hash;
+  }
+
+  public static set nft_hash(v: string) {
+    SettingsData._nft_hash = v;
   }
 
   public static get nft_name(): string {
