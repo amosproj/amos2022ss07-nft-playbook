@@ -1,9 +1,7 @@
-import { PinataClient } from '@nft-playbook/middleware';
-import inquirer = require('inquirer');
+import * as inquirer from 'inquirer';
 import { CliStrings } from './app/CliStrings';
 import { TopLevelCommandIndex } from './app/Commands';
 import { MainRun } from './app/Commands/Command';
-import { SettingsData } from './app/SettingsData';
 
 function greet() {
   console.clear();
@@ -14,14 +12,14 @@ function greet() {
 }
 
 async function main() {
-  if (!SettingsData.readSettingsFile()) {
-    return;
-  }
-
   const commandChoices: string[] = [];
 
   for (const command of TopLevelCommandIndex) {
-    commandChoices.push(command.name);
+    if (command.name === `Exit`) {
+      commandChoices.push(command.name);
+    } else {
+      commandChoices.push(command.name);
+    }
   }
 
   const promptQuestions: inquirer.QuestionCollection = [

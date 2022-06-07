@@ -1,4 +1,5 @@
-import inquirer = require('inquirer');
+import chalk = require('chalk');
+import * as inquirer from 'inquirer';
 import { CliStrings } from '../CliStrings';
 import { Command } from './Command';
 
@@ -11,7 +12,7 @@ export class HelpCommand implements Command {
   async execute() {
     this.commandIndex.forEach((command) => {
       if (command !== this) {
-        console.log(`${command.name}:`);
+        console.log(chalk.green(`${command.name}:`));
         console.log(command.help);
         console.log();
       }

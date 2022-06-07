@@ -1,4 +1,5 @@
-import { SettingsData } from './SettingsData';
+import { middleware } from '@nft-playbook/middleware';
+import chalk = require('chalk');
 
 const program_information = {
   name: 'nft-playbook',
@@ -7,114 +8,147 @@ const program_information = {
 
 export const CliStrings = {
   // UNIVERSAL
-  horizontalHashLine: `##################################################`, // # x 50
+  horizontalHashLine: chalk.green(
+    `##################################################`
+  ), // # x 50
 
   // Main Menu
   get MainMenuHeader(): string {
-    return `The ${program_information.name} is an easy tool to mint your NFT.`;
+    return chalk.green(
+      `The ${program_information.name} is an easy tool to mint your NFT.`
+    );
   },
-  MainMenuQuestion: `What would you like to do?`,
-  MainMenuBackButtonLabel: `Exit`,
+  MainMenuQuestion: chalk.yellow(
+    `Welcome to the ${program_information.name}! Please select your desired action.`
+  ),
+  MainMenuBackButtonLabel: chalk.red(`Exit`),
   MainMenuBackButtonHelp: `\tExit the program`,
 
   // COMMANDS
 
   // Help
   HelpCommandLabel: `Help`,
-  HelpCommandMenuQuestion: `Want to go back?`,
+  HelpCommandMenuQuestion: chalk.yellow(`Would you like to go back?`),
   HelpCommandMenuBackButtonLabel: `Back`,
 
   // Select Wallet
   SelectWalletCommandLabel: `Select Wallet`,
-  SelectWalletCommandHelp: `\tCheck the Wallet you want to use`,
-  SelectWalletCommandMenuHeader: `Select Wallet`,
-  SelectWalletCommandMenuQuestion: `What would you like to do?`,
+  SelectWalletCommandHelp: `\tPlease select and check the wallet you'd like to use.`,
+  SelectWalletCommandMenuHeader: chalk.green(`Select Wallet`),
+  SelectWalletCommandMenuQuestion: `Please select the wallet you'd like to use.`, //`Which wallet would you like to use?`,
 
   // Add Wallet
   AddWalletCommandLabel: `Add Wallet`,
-  AddWalletCommandHelp: `\tCheck the wallet you want to add`,
-  AddWalletMenuQuestion: `Please select the wallet you want to add`,
+  AddWalletCommandHelp: `\tPlease check the wallet you'd like to add and use for the minting process.`,
+  AddWalletMenuQuestion: chalk.yellow(
+    `Please select the wallet you'd like to add`
+  ),
+
+  // IPFS
+  IPFSCommandLabel: `IPFS/Pinata`,
+  IPFSCommandHelp: `\tUpload files to IPFS via pinata`,
+  IPFSQuestionApiKey: `Api-key`,
+  IPFSQuestionApiSec: `Api-sec`,
+  IPFSFileConfirmationQuestion: `Please provide the path to the file you want to upload.`,
+  IPFSErrorMessageNoAccess: chalk.red("No access or file doesn't exist!"),
+  IPFSErrorMessageNotFile: chalk.red(`Given path is not a file`),
+  IPFSErrorMessageUpload: chalk.red(`Upload failed`),
 
   // Blockchain Settings
   BlockchainSettingsCommandLabel: `Blockchain Settings`,
-  BlockchainSettingsCommandHelp: `\tHere you can configure everything related to the used blockchains`,
-  BlockchainSettingsMenuHeader: `Blockchain Settings`,
-  BlockchainSettingsMenuQuestion: `Select blockchain(s), multiselect possible:`,
+  BlockchainSettingsCommandHelp: `\tPLease use the 'Blockchain Settings' command to configure all settings related to your used blockchains.`,
+  BlockchainSelectorMenuQuestion: chalk.yellow(
+    `Please select the blockchain(s) you'd like to use.`
+  ),
+
+  BlockchainSettingsMenuHeader: chalk.green(`Blockchain Settings`),
+  BlockchainSettingsMenuQuestion: chalk.yellow(
+    `Please select your desired blockchain(s), multiselection is possible.`
+  ),
   get BlockchainSettingsMenuSelectionInfo(): string {
-    return `Selected BlockChains: ${SettingsData.selectedBlockchains}`;
+    return (
+      `Selected BlockChain(s): ` +
+      chalk.cyan(`${middleware.getSelectedBlockchains()}`)
+    );
   },
 
   // Blockchain Selector
   BlockchainSelectorCommandLabel: `Blockchain Selector`,
-  BlockchainSelectorCommandHelp: `\tCheck the blockchains you want to use`,
-  BlockchainSelectorMenuQuestion: `Please select the blockchains you want to use`,
+  BlockchainSelectorCommandHelp: `\tPlease select and check the blockchain(s) you'd like to use for the minting process.`,
 
-  // NFT Settings
-  NFTSettingsCommandLabel: `NFT Settings`,
-  NFTSettingsCommandHelp: `\tHere you can configure everything related to NFTs`,
-  NFTSettingsMenuHeader: `NFT Settings`,
-  NFTSettingsQuestionName: `Name`,
-  NFTSettingsQuestionSymbol: `Symbol`,
-  NFTSettingsQuestionLink: `NFT Link`,
-  NFTSettingsQuestionContractOwner: `Contract Owner`,
-  NFTSettingsQuestionNFTTransmitter: `NFT Transmitter`,
-  NFTSettingsQuestionNFTReceiver: 'NFT Receiver',
-  NFTSettingsMenuConfirmationQuestion: `Would you like to continue with this input?`,
-  NFTSettingsMenuConfirmationInput: `Input: `,
+  // NFT Minting
+  NFTMintingCommandLabel: `NFT Minting`,
+  NFTMintingCommandHelp: `\tThe 'NFT Minting' folder provides you with the 'NFT Settings' command to configure your NFT settings as well as the 'Start Minting' command to start your minting process.`,
+  NFTMintingCommandMenuHeader: chalk.green(`NFT Minting`),
+  NFTMintingQuestionName: `Name`,
+  NFTMintingQuestionLink: `NFT Link`,
+  NFTMintingQuestionNFTReceiver: (blockchain: string): string => {
+    return `${blockchain} NFT Receiver`;
+  },
 
-  // Start Minting
-  StartMintingCommandLabel: `Start Minting`,
-  StartMintingCommandHelp: `\tStart the minting process`,
-  StartMintingMenuHeader: `Start Minting`,
-  StartMintingMenuConfirmationQuestion: `Are you sure you want to continue with these settings?`,
-  StartMintingMenuMissingParameter: `Neccessary parameter missing. Please provide all required parameters.`,
-  StartMintingFeedback01: `You chose the following parameters: `,
+  get NFTMintingFeedbackSelectedBlockchains(): string {
+    return (
+      `Selected blockchains: ` +
+      chalk.cyan(`${middleware.getSelectedBlockchains()}`)
+    );
+  },
+  get NFTMintingFeedbackNFTName(): string {
+    return `NFT Name: ` + chalk.cyan(`${middleware.getNftName()}`);
+  },
+  get NFTMintingFeedbackNFTLink(): string {
+    return `NFT Link: ` + chalk.cyan(`${middleware.getNftLink()}`);
+  },
+  NFTMintingFeedbackGasLimit: (blockchain: string): string => {
+    return (
+      `${blockchain} Gas Limit: ` +
+      chalk.cyan(`${middleware.getGasLimit(blockchain)}`)
+    );
+  },
+  NFTMintingFeedbackServerUri: (blockchain: string): string => {
+    return (
+      `${blockchain} Server uri: ` +
+      chalk.cyan(`${middleware.getServerUri(blockchain)}`)
+    );
+  },
+  NFTMintingFeedbackPrivateKey: (blockchain: string): string => {
+    return (
+      `${blockchain} Key contract owner: ` +
+      chalk.cyan(`${middleware.getPrivateKeyUser(blockchain)}`)
+    );
+  },
+  NFTMintingFeedbackNFTReceiver: (blockchain: string): string => {
+    return (
+      `${blockchain} Key NFT receiver: ` +
+      chalk.cyan(`${middleware.getPublicKeyNftReceiver(blockchain)}`)
+    );
+  },
+  NFTMintingSummaryConfirmationQuestion: chalk.yellow(
+    `Are you sure you want to continue the minting process with these settings?`
+  ),
+  NFTMintingFeedbackAbort: chalk.red(`abort`),
+  NFTMintingInputConfirmationQuestion: chalk.yellow(
+    `Would you like to continue with this input?`
+  ),
+  NFTMintingConfirmationInput: `Input: `,
 
   // Start Minting
   TestMintingCommandLabel: `Test Minting`,
   TestMintingCommandHelp: `Test the minting process`,
 
-  get StartMintingFeedback02(): string {
-    return `Selected blockchains: ${SettingsData.selectedBlockchains}`;
-  },
-  get StartMintingFeedback03(): string {
-    return `Gas Limit: ${SettingsData.GAS_LIMIT}`;
-  },
-  get StartMintingFeedback04(): string {
-    return `Server uri: ${SettingsData.server_uri}`;
-  },
-  StartMintingFeedback05: `NFT Parameters: `,
-  get StartMintingFeedback06(): string {
-    return `Key contract owner: ${SettingsData.priv_key_contract_owner}`;
-  },
-  get StartMintingFeedback07(): string {
-    return `Key NFT transmitter: ${SettingsData.priv_key_NFT_transmitter}`;
-  },
-  get StartMintingFeedback08(): string {
-    return `Key NFT receiver: ${SettingsData.pub_key_NFT_receiver}`;
-  },
-  get StartMintingFeedback09(): string {
-    return `NFT Name: ${SettingsData.nft_name}`;
-  },
-  get StartMintingFeedback10(): string {
-    return `NFT Symbol: ${SettingsData.nft_symbol}`;
-  },
-  get StartMintingFeedback11(): string {
-    return `NFT Link: ${SettingsData.nft_link}`;
-  },
-
   // Version
   VersionCommandLabel: `Version`,
-  VersionCommandHelp: `\tVersion will provide you with the current version of the program.`,
+  VersionCommandHelp: `\tThe 'Version' command provides you with the current version number of the program.`,
   get VersionCommandOutput(): string {
     return `${program_information.version}`;
   },
 
-  VersionMenuHeader: `Version`,
-  VersionMenuQuestion: `Want to go back?`,
+  VersionMenuHeader: chalk.green(`Version`),
+  VersionMenuQuestion: chalk.yellow(
+    `Would you like to display the program's most recent version number?`
+  ),
   VersionMenuBackButtonLabel: `Back`,
 
   // Back
   BackCommandLabel: `Back`,
-  BackCommandHelp: `\tGo back`,
+  BackCommandHelp: `\tReturn to the last page.`,
 };

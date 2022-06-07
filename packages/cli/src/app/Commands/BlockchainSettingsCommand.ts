@@ -1,58 +1,102 @@
-import inquirer = require('inquirer');
+import * as inquirer from 'inquirer';
 import { Command } from './Command';
-import { HelpCommand } from './HelpCommand';
-import { BackCommand } from './BackCommand';
-import { BlockchainSelector } from './BlockchainSettingsCommands/BlockchainSelector';
-import { SettingsData } from '../SettingsData';
 import { CliStrings } from '../CliStrings';
-
-const BSRun = {
-  run: false,
-};
-
-const helpCommand = new HelpCommand();
-const CommandIndex: Command[] = [
-  helpCommand,
-  new BlockchainSelector(),
-  new BackCommand(BSRun),
-];
-helpCommand.commandIndex = CommandIndex;
+import { middleware } from '@nft-playbook/middleware';
 
 export class BlockchainSettingsCommand implements Command {
   name = CliStrings.BlockchainSettingsCommandLabel;
   help = CliStrings.BlockchainSettingsCommandHelp;
 
   async execute() {
-    BSRun.run = true;
-
-    const commandChoices: string[] = [];
-
-    for (const command of CommandIndex) {
-      commandChoices.push(command.name);
-    }
-
     const promptQuestions: inquirer.QuestionCollection = [
       {
-        type: 'list',
-        name: 'selectedCommand',
-        message: CliStrings.BlockchainSettingsMenuQuestion,
-        choices: commandChoices,
+        type: 'checkbox',
+        name: 'selectedBlockchains',
+        message: CliStrings.BlockchainSelectorMenuQuestion,
+        choices: middleware.getAllBlockchains(),
+        default: middleware.getSelectedBlockchains(),
+      },
+    ];
+    const selectedBlockchains: string[] = (
+      await inquirer.prompt(promptQuestions)
+    ).selectedBlockchains;
+
+    middleware.getAllBlockchains().forEach((blockchain) => {
+      if (selectedBlockchains.includes(blockchain)) {
+        middleware.selectBlockchain(blockchain);
+      } else {
+        middleware.deselectBlockchain(blockchain);
+      }
+    });
+
+    for (const blockchain of selectedBlockchains) {
+      middleware.setPrivateKeyUser(
+        await this.getInput(
+          `1. Please provide your private key for ${blockchain}`,
+          middleware.getPrivateKeyUser(blockchain)
+        ),
+        blockchain
+      );
+
+      const promptQuestions: inquirer.QuestionCollection = [
+        {
+          type: 'rawlist',
+          name: 'selectedContractMethod',
+          message:
+            '2. Do you want to create a new contract or provide an existing contract address?',
+          choices: [`Deploy new contract`, `Address of existing contract`],
+        },
+      ];
+
+      const selectedContractMethod: string = (
+        await inquirer.prompt(promptQuestions)
+      ).selectedContractMethod;
+
+      // for (const contractMethod of selectedContractMethod) {
+      if (selectedContractMethod === `Deploy new contract`) {
+        await middleware.deployContract(blockchain);
+      } else {
+        const contractAddress = await this.getInput(
+          `Address of existing contract:`,
+          ``
+        );
+        middleware.setContractAddress(blockchain, contractAddress);
+      }
+      // }
+
+      console.clear();
+    }
+  }
+
+  async getInput(promptMessage: string, prevAnswer: string): Promise<string> {
+    const inputQuestion: inquirer.QuestionCollection = [
+      {
+        type: 'input',
+        name: 'input',
+        message: promptMessage,
+        default: prevAnswer,
       },
     ];
 
-    while (BSRun.run) {
-      console.log(CliStrings.horizontalHashLine);
-      console.log(CliStrings.BlockchainSettingsMenuHeader);
-      console.log(CliStrings.horizontalHashLine);
-      if (SettingsData.selectedBlockchains.length !== 0) {
-        console.log(CliStrings.BlockchainSettingsMenuSelectionInfo);
-      }
+    const confirmQuestion: inquirer.QuestionCollection = [
+      {
+        type: 'confirm',
+        name: 'confirmed',
+        message: CliStrings.NFTMintingInputConfirmationQuestion,
+      },
+    ];
 
-      const answers = await inquirer.prompt(promptQuestions);
-      const index = commandChoices.indexOf(answers.selectedCommand);
-      console.clear();
-      await CommandIndex.at(index).execute();
-      console.clear();
+    let input: string;
+    let showPrompt = true;
+    while (showPrompt) {
+      input = (await inquirer.prompt(inputQuestion)).input;
+      console.log(CliStrings.NFTMintingConfirmationInput + input);
+      const confirmAnswer = await inquirer.prompt(confirmQuestion);
+      if (confirmAnswer.confirmed) {
+        showPrompt = false;
+      }
     }
+
+    return input;
   }
 }

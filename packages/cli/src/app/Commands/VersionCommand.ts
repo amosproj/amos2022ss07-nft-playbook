@@ -1,5 +1,5 @@
+import * as inquirer from 'inquirer';
 import { Command } from './Command';
-import inquirer = require('inquirer');
 import { CliStrings } from '../CliStrings';
 
 export class VersionCommand implements Command {

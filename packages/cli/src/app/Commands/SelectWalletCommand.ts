@@ -1,9 +1,9 @@
-import inquirer = require('inquirer');
 import { CliStrings } from '../CliStrings';
 import { BackCommand } from './BackCommand';
 import { Command } from './Command';
 import { HelpCommand } from './HelpCommand';
 import { AddWalletCommand } from './SelectWalletCommands/AddWalletCommand';
+import * as inquirer from 'inquirer';
 
 const SWRun = {
   run: false,

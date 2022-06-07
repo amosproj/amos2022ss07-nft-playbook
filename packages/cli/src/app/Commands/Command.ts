@@ -1,12 +1,11 @@
 import { HelpCommand } from './HelpCommand';
 import { BlockchainSettingsCommand } from './BlockchainSettingsCommand';
-import { NFTSettingsCommand } from './NFTSettingsCommand';
-import { StartMintingCommand } from './StartMintingCommand';
 import { VersionCommand } from './VersionCommand';
 import { BackCommand } from './BackCommand';
 import { CliStrings } from '../CliStrings';
-import { SelectWalletCommand } from './SelectWalletCommand';
-import { TestMintingCommand } from './TestMintingCommand';
+import { NFTMintingCommand } from './NFTMintingCommand';
+import { IPFSCommand } from './IPFSCommand';
+// import { SelectWalletCommand } from './SelectWalletCommand';
 
 export interface Command {
   name: string;
@@ -21,12 +20,12 @@ export const MainRun = {
 const topLevelHelpCommand = new HelpCommand();
 export const TopLevelCommandIndex: Command[] = [
   topLevelHelpCommand,
-  new SelectWalletCommand(),
+  // new SelectWalletCommand(),
+  new IPFSCommand(),
   new BlockchainSettingsCommand(),
-  new NFTSettingsCommand(),
-  new StartMintingCommand(),
+  new NFTMintingCommand(),
   new VersionCommand(),
-  new TestMintingCommand(),
+  // new TestMintingCommand(),
   new BackCommand(
     MainRun,
     CliStrings.MainMenuBackButtonLabel,

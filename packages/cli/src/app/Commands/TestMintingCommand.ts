@@ -47,31 +47,31 @@ export class TestMintingCommand implements Command {
       nft_link === undefined ||
       selectedBlockchains.length === 0
     ) {
-      console.log(CliStrings.StartMintingMenuMissingParameter);
+      // console.log(CliStrings.StartMintingMenuMissingParameter);
       await sleep(5000);
       return;
     }
-    console.log(CliStrings.StartMintingFeedback01);
-    console.log(CliStrings.horizontalHashLine);
-    console.log(CliStrings.StartMintingFeedback02);
-    console.log(CliStrings.horizontalHashLine);
-    console.log(CliStrings.StartMintingFeedback03);
-    console.log(CliStrings.StartMintingFeedback04);
-    console.log(CliStrings.horizontalHashLine);
-    console.log(CliStrings.StartMintingFeedback05);
-    console.log(CliStrings.StartMintingFeedback06);
-    console.log(CliStrings.StartMintingFeedback07);
-    console.log(CliStrings.StartMintingFeedback08);
-    console.log(CliStrings.StartMintingFeedback09);
-    console.log(CliStrings.StartMintingFeedback10);
-    console.log(CliStrings.StartMintingFeedback11);
-    console.log(CliStrings.horizontalHashLine);
+    // console.log(CliStrings.StartMintingFeedback01);
+    // console.log(CliStrings.horizontalHashLine);
+    // console.log(CliStrings.StartMintingFeedback02);
+    // console.log(CliStrings.horizontalHashLine);
+    // console.log(CliStrings.StartMintingFeedback03);
+    // console.log(CliStrings.StartMintingFeedback04);
+    // console.log(CliStrings.horizontalHashLine);
+    // console.log(CliStrings.StartMintingFeedback05);
+    // console.log(CliStrings.StartMintingFeedback06);
+    // console.log(CliStrings.StartMintingFeedback07);
+    // console.log(CliStrings.StartMintingFeedback08);
+    // console.log(CliStrings.StartMintingFeedback09);
+    // console.log(CliStrings.StartMintingFeedback10);
+    // console.log(CliStrings.StartMintingFeedback11);
+    // console.log(CliStrings.horizontalHashLine);
 
     const promptQuestion: inquirer.QuestionCollection = [
       {
         type: 'confirm',
         name: 'confirmed',
-        message: CliStrings.StartMintingMenuConfirmationQuestion,
+        // message: CliStrings.StartMintingMenuConfirmationQuestion,
       },
     ];
     const answer = await inquirer.prompt(promptQuestion);
