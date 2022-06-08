@@ -36,16 +36,17 @@ export class IPFSCommand implements Command {
       return;
     }
 
-    let hash: string;
+    let link: string;
     try {
-      hash = await PinataClient.uploadImage(path, api_key, api_sec);
+      link = await PinataClient.uploadImage(path, api_key, api_sec);
     } catch (err) {
       console.error(CliStrings.IPFSErrorMessageUpload);
       await sleep(2000);
       return;
     }
-    middleware.setNftLink(hash);
-    console.log(hash);
+    middleware.setNftLink(link);
+    middleware.setNftHash(link);
+    console.log(link);
     await sleep(2000);
   }
 
