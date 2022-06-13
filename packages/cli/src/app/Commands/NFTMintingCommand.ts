@@ -77,7 +77,7 @@ export class NFTMintingCommand implements Command {
     const answer = await inquirer.prompt(promptQuestion);
     if (answer.confirmed) {
       // prompt accepted
-      middleware.mintNFT();
+      middleware.mintNft();
     } else {
       // prompt denied
       console.log(CliStrings.NFTMintingFeedbackAbort);

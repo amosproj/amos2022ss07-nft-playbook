@@ -1,2 +1,2 @@
-export * from './middleware';
-export * from './pinataClient';
+export * from './Middleware';
+export * from './PinataClient';

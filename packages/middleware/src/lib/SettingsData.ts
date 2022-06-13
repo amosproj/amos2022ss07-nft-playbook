@@ -2,16 +2,16 @@ import fs = require('fs');
 
 export class SettingsData {
   // overall blockchain information
-  private static _nft_name: string;
-  private static _nft_link: string;
-  private static _nft_hash: string;
+  private static _nftName: string;
+  private static _nftLink: string;
+  private static _nftHash: string;
 
   // blockchain specific information
-  private _smart_contract_address: string;
+  private _smartContractAddress: string;
   private _GAS_LIMIT: number;
-  private _server_uri: string;
-  private _user_priv_key: string;
-  private _pub_key_NFT_receiver: string;
+  private _SERVER_URI: string;
+  private _userPrivKey: string;
+  private _pubKeyNftReceiver: string;
 
   private _isSelected = false;
 
@@ -22,86 +22,75 @@ export class SettingsData {
     this.fillEmptySettings();
   }
   private fillEmptySettings() {
-    this._smart_contract_address = '';
-    this._user_priv_key = '';
-    this._pub_key_NFT_receiver = '';
+    this._smartContractAddress = '';
+    this._userPrivKey = '';
+    this._pubKeyNftReceiver = '';
   }
 
   private readSettingsFile(configFilePath: string): boolean {
-    let file: string;
-    try {
-      file = fs.readFileSync(configFilePath, 'utf-8');
-    } catch (e) {
-      console.error(`Error reading config file: ${configFilePath}`);
-      return false;
-    }
-    let info: { GAS_LIMIT: number; server_uri: string };
-    try {
-      info = JSON.parse(file);
-    } catch (error) {
-      console.error('Error parsing json file');
-      return false;
-    }
+    const file: string = fs.readFileSync(configFilePath, 'utf-8');
+
+    const info: { GAS_LIMIT: number; server_uri: string } = JSON.parse(file);
 
     this._GAS_LIMIT = info.GAS_LIMIT;
-    this._server_uri = info.server_uri;
+    this._SERVER_URI = info.server_uri;
     return true;
   }
 
-  public static get nft_hash(): string {
-    return SettingsData._nft_hash;
+  public static get nftHash(): string {
+    return SettingsData._nftHash;
   }
 
-  public static set nft_hash(v: string) {
-    SettingsData._nft_hash = v;
+  public static set nftHash(v: string) {
+    SettingsData._nftHash = v;
   }
 
-  public static get nft_name(): string {
-    return SettingsData._nft_name;
+  public static get nftName(): string {
+    return SettingsData._nftName;
   }
 
-  public static set nft_name(v: string) {
-    SettingsData._nft_name = v;
+  public static set nftName(v: string) {
+    SettingsData._nftName = v;
   }
 
-  public static get nft_link(): string {
-    return SettingsData._nft_link;
+  public static get nftLink(): string {
+    return SettingsData._nftLink;
   }
 
-  public static set nft_link(v: string) {
-    SettingsData._nft_link = v;
+  public static set nftLink(v: string) {
+    SettingsData._nftLink = v;
   }
 
   public get GAS_LIMIT(): number {
     return this._GAS_LIMIT;
   }
 
-  public get server_uri(): string {
-    return this._server_uri;
+  public get SERVER_URI(): string {
+    return this._SERVER_URI;
   }
 
-  public get user_priv_key(): string {
-    return this._user_priv_key;
+  public get userPrivKey(): string {
+    return this._userPrivKey;
   }
 
-  public set user_priv_key(v: string) {
-    this._user_priv_key = v;
+  public set userPrivKey(v: string) {
+    this._userPrivKey = v;
   }
 
-  public get smart_contract_address(): string {
-    return this._smart_contract_address;
+  public get smartContractAddress(): string {
+    return this._smartContractAddress;
   }
 
-  public set smart_contract_address(v: string) {
-    this._smart_contract_address = v;
+  public set smartContractAddress(v: string) {
+    this._smartContractAddress = v;
   }
 
-  public get pub_key_NFT_receiver(): string {
-    return this._pub_key_NFT_receiver;
+  public get pubKeyNftReceiver(): string {
+    return this._pubKeyNftReceiver;
   }
 
-  public set pub_key_NFT_receiver(v: string) {
-    this._pub_key_NFT_receiver = v;
+  public set pubKeyNftReceiver(v: string) {
+    this._pubKeyNftReceiver = v;
   }
 
   public get isSelected(): boolean {

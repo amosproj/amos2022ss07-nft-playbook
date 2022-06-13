@@ -1,3 +1,4 @@
+import { middleware } from '@nft-playbook/middleware';
 import * as inquirer from 'inquirer';
 import { CliStrings } from './app/CliStrings';
 import { TopLevelCommandIndex } from './app/Commands';
@@ -12,6 +13,14 @@ function greet() {
 }
 
 async function main() {
+  // `Error reading config file: ${configFilePath}.`
+  try {
+    middleware.init('packages/middleware/settings.json');
+  } catch (e) {
+    console.error(e);
+    process.exit(1);
+  }
+
   const commandChoices: string[] = [];
 
   for (const command of TopLevelCommandIndex) {
