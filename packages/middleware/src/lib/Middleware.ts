@@ -89,40 +89,42 @@ export class Middleware {
     }
   }
 
-  public mintNft() {
+  public async mintNft() {
     const nftPlaybookExceptions: NftPlaybookException[] = [];
 
-    this.getSelectedBlockchains().forEach(async (blockchain) => {
-      const data: SettingsData = this._selectedBlockchains[blockchain];
-      try {
-        switch (blockchain) {
-          case 'Ethereum': {
-            await this._mintNftEthereum(
-              SettingsData.nftName,
-              data.SERVER_URI,
-              data.userPrivKey,
-              data.smartContractAddress,
-              data.pubKeyNftReceiver,
-              SettingsData.nftHash,
-              SettingsData.nftLink,
-              data.GAS_LIMIT
-            );
-            break;
+    await Promise.all(
+      this.getSelectedBlockchains().map(async (blockchain) => {
+        const data: SettingsData = this._selectedBlockchains[blockchain];
+        try {
+          switch (blockchain) {
+            case 'Ethereum': {
+              await this._mintNftEthereum(
+                SettingsData.nftName,
+                data.SERVER_URI,
+                data.userPrivKey,
+                data.smartContractAddress,
+                data.pubKeyNftReceiver,
+                SettingsData.nftHash,
+                SettingsData.nftLink,
+                data.GAS_LIMIT
+              );
+              break;
+            }
+            case 'Flow': {
+              //this._mintNftFlow();
+              break;
+            }
+            default: {
+              break;
+            }
           }
-          case 'Flow': {
-            //this._mintNftFlow();
-            break;
-          }
-          default: {
-            break;
-          }
+        } catch (e) {
+          nftPlaybookExceptions.push(new NftPlaybookException(blockchain, e));
         }
-      } catch (e) {
-        nftPlaybookExceptions.push(new NftPlaybookException(blockchain, e));
-      }
 
-      this._selectedBlockchains[blockchain] = data;
-    });
+        this._selectedBlockchains[blockchain] = data;
+      })
+    );
     if (nftPlaybookExceptions.length !== 0) {
       throw new NftPlaybookException('Mint NFT Error', nftPlaybookExceptions);
     }
@@ -162,7 +164,7 @@ export class Middleware {
     this._selectedBlockchains[blockchain] = data;
   }
 
-  public readUserData() {
+  /* public readUserData() {
     const nftPlaybookExceptions: NftPlaybookException[] = [];
 
     this.getSelectedBlockchains().forEach((blockchain) => {
@@ -267,7 +269,7 @@ export class Middleware {
         nftPlaybookExceptions
       );
     }
-  }
+  }*/
 
   // setter
   public setNftName(val: string) {

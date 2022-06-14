@@ -13,10 +13,9 @@ function greet() {
 }
 
 async function main() {
-  // `Error reading config file: ${configFilePath}.`
   try {
-    middleware.init('packages/middleware/settings.json');
-  } catch (e) {
+    middleware.init('./settings.json');
+  } catch (e: unknown) {
     console.error(e);
     process.exit(1);
   }

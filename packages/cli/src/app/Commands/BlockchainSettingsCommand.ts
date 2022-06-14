@@ -1,7 +1,7 @@
 import * as inquirer from 'inquirer';
-import { Command } from './Command';
+import { Command, getInput, showException } from './Command';
 import { CliStrings } from '../CliStrings';
-import { middleware } from '@nft-playbook/middleware';
+import { middleware, NftPlaybookException } from '@nft-playbook/middleware';
 
 export class BlockchainSettingsCommand implements Command {
   name = CliStrings.BlockchainSettingsCommandLabel;
@@ -12,7 +12,7 @@ export class BlockchainSettingsCommand implements Command {
       {
         type: 'checkbox',
         name: 'selectedBlockchains',
-        message: CliStrings.BlockchainSelectorMenuQuestion,
+        message: CliStrings.BlockchainSettingsMenuQuestion01,
         choices: middleware.getAllBlockchains(),
         default: middleware.getSelectedBlockchains(),
       },
@@ -31,8 +31,8 @@ export class BlockchainSettingsCommand implements Command {
 
     for (const blockchain of selectedBlockchains) {
       middleware.setPrivateKeyUser(
-        await this.getInput(
-          `1. Please provide your private key for ${blockchain}`,
+        await getInput(
+          CliStrings.BlockchainSettingsMenuQuestion02(blockchain),
           middleware.getPrivateKeyUser(blockchain)
         ),
         blockchain
@@ -42,12 +42,11 @@ export class BlockchainSettingsCommand implements Command {
         {
           type: 'rawlist',
           name: 'selectedContractMethod',
-          message:
-            '2. Do you want to create a new contract or provide an existing contract address?',
+          message: CliStrings.BlockchainSettingsMenuQuestion03,
           choices: [
-            `Deploy new contract`,
-            `Address of existing contract`,
-            `Cancel`,
+            CliStrings.BlockchainSettingsMenuQuestionChoices01,
+            CliStrings.BlockchainSettingsMenuQuestionChoices02,
+            CliStrings.BlockchainSettingsMenuQuestionChoices03,
           ],
         },
       ];
@@ -57,50 +56,29 @@ export class BlockchainSettingsCommand implements Command {
       ).selectedContractMethod;
 
       // for (const contractMethod of selectedContractMethod) {
-      if (selectedContractMethod === `Deploy new contract`) {
-        await middleware.deployContract(blockchain);
-      } else if (selectedContractMethod === `Address of existing contract`) {
-        const contractAddress = await this.getInput(
-          `Address of existing contract:`,
+      if (
+        selectedContractMethod ===
+        CliStrings.BlockchainSettingsMenuQuestionChoices01
+      ) {
+        try {
+          await middleware.deployContract(blockchain);
+        } catch (e: unknown) {
+          if (await showException(<NftPlaybookException>e)) {
+            return;
+          }
+        }
+      } else if (
+        selectedContractMethod ===
+        CliStrings.BlockchainSettingsMenuQuestionChoices02
+      ) {
+        const contractAddress = await getInput(
+          CliStrings.BlockchainSettingsEnterContractAddress,
           ``
         );
         middleware.setContractAddress(blockchain, contractAddress);
       }
       // }
-
       console.clear();
     }
-  }
-
-  async getInput(promptMessage: string, prevAnswer: string): Promise<string> {
-    const inputQuestion: inquirer.QuestionCollection = [
-      {
-        type: 'input',
-        name: 'input',
-        message: promptMessage,
-        default: prevAnswer,
-      },
-    ];
-
-    const confirmQuestion: inquirer.QuestionCollection = [
-      {
-        type: 'confirm',
-        name: 'confirmed',
-        message: CliStrings.NFTMintingInputConfirmationQuestion,
-      },
-    ];
-
-    let input: string;
-    let showPrompt = true;
-    while (showPrompt) {
-      input = (await inquirer.prompt(inputQuestion)).input;
-      console.log(CliStrings.NFTMintingConfirmationInput + input);
-      const confirmAnswer = await inquirer.prompt(confirmQuestion);
-      if (confirmAnswer.confirmed) {
-        showPrompt = false;
-      }
-    }
-
-    return input;
   }
 }
