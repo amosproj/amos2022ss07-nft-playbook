@@ -6,20 +6,26 @@ import {
   EthereumConfigReadSmartContract,
   EthereumConfigReadUserDataFromSmartContract,
 } from '@nft-playbook/backend';
+import { NftPlaybookException } from './NftPlaybookException';
 import { SettingsData } from './SettingsData';
 
 export class Middleware {
-  constructor() {
-    this.addBlockchain('Ethereum');
-    this.addBlockchain('Flow');
-  }
-
   private _selectedBlockchains = {};
 
-  private addBlockchain(blockchain: string) {
-    this._selectedBlockchains[blockchain] = new SettingsData(
-      'packages/middleware/settings.json'
-    ); // TODO: Pfad pruefen
+  public init(configFilePath: string) {
+    this.addBlockchain('Ethereum', configFilePath);
+    this.addBlockchain('Flow', configFilePath);
+  }
+
+  private addBlockchain(blockchain: string, configFilePath: string) {
+    try {
+      this._selectedBlockchains[blockchain] = new SettingsData(configFilePath);
+    } catch (e) {
+      throw new NftPlaybookException(
+        `Error reading config for ${blockchain}`,
+        e
+      );
+    }
   }
 
   public selectBlockchain(blockchain: string) {
@@ -51,49 +57,21 @@ export class Middleware {
   public async estimateGasFeeMintGwei(blockchain: string): Promise<string> {
     const data: SettingsData = this._selectedBlockchains[blockchain];
 
-    switch (blockchain) {
-      case 'Ethereum': {
-        return (
-          (await this._estimateGasFeeMintEthereum(
-            SettingsData.nft_name,
-            data.server_uri,
-            data.user_priv_key,
-            data.smart_contract_address,
-            data.pub_key_NFT_receiver,
-            SettingsData.nft_hash,
-            SettingsData.nft_link,
-            data.GAS_LIMIT
-          )) * Math.pow(10, -9)
-        ).toFixed(2);
-        break;
-      }
-      case 'Flow': {
-        //this._mintNftFlow();
-        break;
-      }
-      default: {
-        break;
-      }
-    }
-  }
-
-  public mintNFT() {
-    this.getSelectedBlockchains().forEach((blockchain) => {
-      const data: SettingsData = this._selectedBlockchains[blockchain];
-
+    try {
       switch (blockchain) {
         case 'Ethereum': {
-          this._mintNftEthereum(
-            SettingsData.nft_name,
-            data.server_uri,
-            data.user_priv_key,
-            data.smart_contract_address,
-            data.pub_key_NFT_receiver,
-            SettingsData.nft_hash,
-            SettingsData.nft_link,
-            data.GAS_LIMIT
-          );
-          break;
+          const estimateGasFeeMintEthereum =
+            await this._estimateGasFeeMintEthereum(
+              SettingsData.nftName,
+              data.SERVER_URI,
+              data.userPrivKey,
+              data.smartContractAddress,
+              data.pubKeyNftReceiver,
+              SettingsData.nftHash,
+              SettingsData.nftLink,
+              data.GAS_LIMIT
+            );
+          return (estimateGasFeeMintEthereum * Math.pow(10, -9)).toFixed(2);
         }
         case 'Flow': {
           //this._mintNftFlow();
@@ -103,143 +81,207 @@ export class Middleware {
           break;
         }
       }
+    } catch (e) {
+      throw new NftPlaybookException(
+        `Error estimating gas fee on ${blockchain}`,
+        e
+      );
+    }
+  }
 
-      this._selectedBlockchains[blockchain] = data;
-    });
+  public async mintNft() {
+    const nftPlaybookExceptions: NftPlaybookException[] = [];
+
+    await Promise.all(
+      this.getSelectedBlockchains().map(async (blockchain) => {
+        const data: SettingsData = this._selectedBlockchains[blockchain];
+        try {
+          switch (blockchain) {
+            case 'Ethereum': {
+              await this._mintNftEthereum(
+                SettingsData.nftName,
+                data.SERVER_URI,
+                data.userPrivKey,
+                data.smartContractAddress,
+                data.pubKeyNftReceiver,
+                SettingsData.nftHash,
+                SettingsData.nftLink,
+                data.GAS_LIMIT
+              );
+              break;
+            }
+            case 'Flow': {
+              //this._mintNftFlow();
+              break;
+            }
+            default: {
+              break;
+            }
+          }
+        } catch (e) {
+          nftPlaybookExceptions.push(new NftPlaybookException(blockchain, e));
+        }
+
+        this._selectedBlockchains[blockchain] = data;
+      })
+    );
+    if (nftPlaybookExceptions.length !== 0) {
+      throw new NftPlaybookException('Mint NFT Error', nftPlaybookExceptions);
+    }
   }
 
   /* deployContract will be called for each specific blockchain individually */
   public async deployContract(blockchain: string) {
     const data: SettingsData = this._selectedBlockchains[blockchain];
-    switch (blockchain) {
-      case 'Ethereum': {
-        data.smart_contract_address = await this._deployContractEthereum(
-          data.server_uri,
-          './packages/backend/src/lib/contracts/simple_amos_nft_contract.sol', // path to smart contract
-          data.user_priv_key,
-          'CONTRAC-NAME', //TODO
-          'CONTRACT-SYMBOL', //TODO
-          'BASE-URI' //TODO
-        );
-        break;
-      }
-      case 'Flow': {
-        //this._deployContractFlow();
-        break;
-      }
-      default: {
-        break;
-      }
-    }
 
-    this._selectedBlockchains[blockchain] = data;
-  }
-
-  public setContractAddress(blockchain: string, contract_addr: string) {
-    const data: SettingsData = this._selectedBlockchains[blockchain];
-
-    switch (blockchain) {
-      case 'Ethereum': {
-        data.smart_contract_address = contract_addr;
-        break;
-      }
-      case 'Flow': {
-        //this._deployContractFlow();
-        break;
-      }
-      default: {
-        break;
-      }
-    }
-
-    this._selectedBlockchains[blockchain] = data;
-  }
-
-  public readUserData() {
-    this.getSelectedBlockchains().forEach((blockchain) => {
-      const data: SettingsData = this._selectedBlockchains[blockchain];
-
+    try {
       switch (blockchain) {
         case 'Ethereum': {
-          this._readUserData(
-            data.server_uri,
-            data.smart_contract_address,
-            'User-Private-Key' //TODO
+          data.smartContractAddress = await this._deployContractEthereum(
+            data.SERVER_URI,
+            './packages/backend/src/lib/contracts/simple_amos_nft_contract.sol', // path to smart contract
+            data.userPrivKey,
+            'CONTRAC-NAME', // TODO
+            'CONTRACT-SYMBOL', // TODO
+            'BASE-URI' // TODO
           );
           break;
         }
         case 'Flow': {
-          //this._deployContractFlow();
+          // this._deployContractFlow();
           break;
         }
         default: {
           break;
         }
       }
+    } catch (e) {
+      throw new NftPlaybookException(
+        `Error deploying contract on ${blockchain}`,
+        e
+      );
+    }
+    this._selectedBlockchains[blockchain] = data;
+  }
 
+  /* public readUserData() {
+    const nftPlaybookExceptions: NftPlaybookException[] = [];
+
+    this.getSelectedBlockchains().forEach((blockchain) => {
+      const data: SettingsData = this._selectedBlockchains[blockchain];
+
+      try {
+        switch (blockchain) {
+          case 'Ethereum': {
+            this._readUserData(
+              data.SERVER_URI,
+              data.smartContractAddress,
+              'User-Private-Key' //TODO
+            );
+            break;
+          }
+          case 'Flow': {
+            //this._deployContractFlow();
+            break;
+          }
+          default: {
+            break;
+          }
+        }
+      } catch (e) {
+        nftPlaybookExceptions.push(new NftPlaybookException(blockchain, e));
+      }
       this._selectedBlockchains[blockchain] = data;
     });
+
+    if (nftPlaybookExceptions.length !== 0) {
+      throw new NftPlaybookException(
+        'Error reading user data',
+        nftPlaybookExceptions
+      );
+    }
   }
 
   public readSmartContract() {
+    const nftPlaybookExceptions: NftPlaybookException[] = [];
+
     this.getSelectedBlockchains().forEach((blockchain) => {
       const data: SettingsData = this._selectedBlockchains[blockchain];
-
-      switch (blockchain) {
-        case 'Ethereum': {
-          this._readSmartContract(data.server_uri, data.smart_contract_address);
-          break;
+      try {
+        switch (blockchain) {
+          case 'Ethereum': {
+            this._readSmartContract(data.SERVER_URI, data.smartContractAddress);
+            break;
+          }
+          case 'Flow': {
+            //this._deployContractFlow();
+            break;
+          }
+          default: {
+            break;
+          }
         }
-        case 'Flow': {
-          //this._deployContractFlow();
-          break;
-        }
-        default: {
-          break;
-        }
+      } catch (e) {
+        nftPlaybookExceptions.push(new NftPlaybookException(blockchain, e));
       }
-
       this._selectedBlockchains[blockchain] = data;
     });
+    if (nftPlaybookExceptions.length !== 0) {
+      throw new NftPlaybookException(
+        'Error reading smart contract',
+        nftPlaybookExceptions
+      );
+    }
   }
 
   public readTokenData() {
+    const nftPlaybookExceptions: NftPlaybookException[] = [];
+
     this.getSelectedBlockchains().forEach((blockchain) => {
       const data: SettingsData = this._selectedBlockchains[blockchain];
 
-      switch (blockchain) {
-        case 'Ethereum': {
-          this._readTokenData(
-            data.server_uri,
-            data.smart_contract_address,
-            -1 // Token-ID --> TODO
-          );
-          break;
+      try {
+        switch (blockchain) {
+          case 'Ethereum': {
+            this._readTokenData(
+              data.SERVER_URI,
+              data.smartContractAddress,
+              -1 // Token-ID --> TODO
+            );
+            break;
+          }
+          case 'Flow': {
+            //this._deployContractFlow();
+            break;
+          }
+          default: {
+            break;
+          }
         }
-        case 'Flow': {
-          //this._deployContractFlow();
-          break;
-        }
-        default: {
-          break;
-        }
+      } catch (e) {
+        nftPlaybookExceptions.push(new NftPlaybookException(blockchain, e));
       }
-
       this._selectedBlockchains[blockchain] = data;
     });
-  }
+    if (nftPlaybookExceptions.length !== 0) {
+      throw new NftPlaybookException(
+        'Error reading token data',
+        nftPlaybookExceptions
+      );
+    }
+  }*/
 
   // setter
   public setNftName(val: string) {
-    SettingsData.nft_name = val;
+    SettingsData.nftName = val;
   }
 
   public setNftHash(val: string) {
-    SettingsData.nft_hash = val;
+    SettingsData.nftHash = val;
   }
 
   public setNftLink(val: string) {
-    SettingsData.nft_link = val;
+    SettingsData.nftLink = val;
   }
 
   public setPrivateKeyUser(val: string, blockchain: string) {
@@ -254,17 +296,37 @@ export class Middleware {
     this._selectedBlockchains[blockchain].pub_key_NFT_receiver = val;
   }
 
+  public setContractAddress(blockchain: string, contract_addr: string) {
+    const data: SettingsData = this._selectedBlockchains[blockchain];
+
+    switch (blockchain) {
+      case 'Ethereum': {
+        data.smartContractAddress = contract_addr;
+        break;
+      }
+      case 'Flow': {
+        //this._deployContractFlow();
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+
+    this._selectedBlockchains[blockchain] = data;
+  }
+
   // getter
   public getNftName() {
-    return SettingsData.nft_name;
+    return SettingsData.nftName;
   }
 
   public getNftHash() {
-    return SettingsData.nft_hash;
+    return SettingsData.nftHash;
   }
 
   public getNftLink() {
-    return SettingsData.nft_link;
+    return SettingsData.nftLink;
   }
 
   public getSmartContractAddress(blockchain: string) {

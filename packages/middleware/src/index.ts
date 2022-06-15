@@ -1,4 +1,4 @@
-import { Middleware } from './lib/middleware';
+import { Middleware } from './lib/Middleware';
 
 export const middleware = new Middleware();
 

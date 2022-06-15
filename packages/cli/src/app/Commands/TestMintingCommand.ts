@@ -1,4 +1,4 @@
-import inquirer = require('inquirer');
+/*import inquirer = require('inquirer');
 import { Command, sleep } from './Command';
 
 import { CliStrings } from '../CliStrings';
@@ -156,4 +156,4 @@ export class TestMintingCommand implements Command {
     );
     await eth.read_pic_data_from_smart_contract(ethereumConfigReadTokenData1);
   }
-}
+}*/

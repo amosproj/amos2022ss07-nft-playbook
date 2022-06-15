@@ -1,4 +1,4 @@
-import { CliStrings } from '../CliStrings';
+/*import { CliStrings } from '../CliStrings';
 import { BackCommand } from './BackCommand';
 import { Command } from './Command';
 import { HelpCommand } from './HelpCommand';
@@ -50,4 +50,4 @@ export class SelectWalletCommand implements Command {
       console.clear();
     }
   }
-}
+}*/

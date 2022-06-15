@@ -1,7 +1,7 @@
 import * as inquirer from 'inquirer';
-import { Command, sleep } from './Command';
+import { Command, getInput, showException, sleep } from './Command';
 import { CliStrings } from '../CliStrings';
-import { middleware } from '@nft-playbook/middleware';
+import { middleware, NftPlaybookException } from '@nft-playbook/middleware';
 
 export class NFTMintingCommand implements Command {
   name = CliStrings.NFTMintingCommandLabel;
@@ -19,17 +19,11 @@ export class NFTMintingCommand implements Command {
 
     // get name
     middleware.setNftName(
-      await this.getInput(
-        CliStrings.NFTMintingQuestionName,
-        middleware.getNftName()
-      )
+      await getInput(CliStrings.NFTMintingQuestionName, middleware.getNftName())
     );
     // get link
     middleware.setNftLink(
-      await this.getInput(
-        CliStrings.NFTMintingQuestionLink,
-        middleware.getNftLink()
-      )
+      await getInput(CliStrings.NFTMintingQuestionLink, middleware.getNftLink())
     );
     middleware.setNftHash(
       middleware.getNftLink() // FIXME
@@ -37,7 +31,7 @@ export class NFTMintingCommand implements Command {
     // get blockchain specific nft receiver
     for (const blockchain of middleware.getSelectedBlockchains()) {
       middleware.setPublicKeyNftReceiver(
-        await this.getInput(
+        await getInput(
           CliStrings.NFTMintingQuestionNFTReceiver(blockchain),
           middleware.getPublicKeyNftReceiver(blockchain)
         ),
@@ -57,9 +51,16 @@ export class NFTMintingCommand implements Command {
     for (const blockchain of middleware.getSelectedBlockchains()) {
       console.log();
       console.log(CliStrings.NFTMintingFeedbackGasLimit(blockchain));
-      console.log(
-        await CliStrings.NFTMintingFeedbackEstimatedGasFeeGwei(blockchain)
-      );
+      try {
+        console.log(
+          await CliStrings.NFTMintingFeedbackEstimatedGasFeeGwei(blockchain)
+        );
+      } catch (e: unknown) {
+        if (await showException(<NftPlaybookException>e)) {
+          return;
+        }
+      }
+
       console.log(CliStrings.NFTMintingFeedbackServerUri(blockchain));
       console.log(CliStrings.NFTMintingFeedbackPrivateKey(blockchain));
       console.log(CliStrings.NFTMintingFeedbackNFTReceiver(blockchain));
@@ -77,44 +78,17 @@ export class NFTMintingCommand implements Command {
     const answer = await inquirer.prompt(promptQuestion);
     if (answer.confirmed) {
       // prompt accepted
-      middleware.mintNFT();
+      try {
+        await middleware.mintNft();
+      } catch (e: unknown) {
+        if (await showException(<NftPlaybookException>e)) {
+          return;
+        }
+      }
     } else {
       // prompt denied
       console.log(CliStrings.NFTMintingFeedbackAbort);
+      await sleep(2000);
     }
-
-    await sleep(2000);
-  }
-
-  async getInput(promptMessage: string, prevAnswer: string): Promise<string> {
-    const inputQuestion: inquirer.QuestionCollection = [
-      {
-        type: 'input',
-        name: 'input',
-        message: promptMessage,
-        default: prevAnswer,
-      },
-    ];
-
-    const confirmQuestion: inquirer.QuestionCollection = [
-      {
-        type: 'confirm',
-        name: 'confirmed',
-        message: CliStrings.NFTMintingInputConfirmationQuestion,
-      },
-    ];
-
-    let input: string;
-    let showPrompt = true;
-    while (showPrompt) {
-      input = (await inquirer.prompt(inputQuestion)).input;
-      console.log(CliStrings.NFTMintingConfirmationInput + input);
-      const confirmAnswer = await inquirer.prompt(confirmQuestion);
-      if (confirmAnswer.confirmed) {
-        showPrompt = false;
-      }
-    }
-
-    return input;
   }
 }

@@ -49,7 +49,9 @@ export const CliStrings = {
   IPFSCommandHelp: `\tUpload files to IPFS via pinata`,
   IPFSQuestionApiKey: `Api-key`,
   IPFSQuestionApiSec: `Api-sec`,
-  IPFSFileConfirmationQuestion: `Please provide the path to the file you want to upload.`,
+  IPFSFileConfirmationQuestion: chalk.yellow(
+    `Please provide the path to the file you want to upload.`
+  ),
   IPFSErrorMessageNoAccess: chalk.red("No access or file doesn't exist!"),
   IPFSErrorMessageNotFile: chalk.red(`Given path is not a file`),
   IPFSErrorMessageUpload: chalk.red(`Upload failed`),
@@ -57,24 +59,28 @@ export const CliStrings = {
   // Blockchain Settings
   BlockchainSettingsCommandLabel: `Blockchain Settings`,
   BlockchainSettingsCommandHelp: `\tPLease use the 'Blockchain Settings' command to configure all settings related to your used blockchains.`,
-  BlockchainSelectorMenuQuestion: chalk.yellow(
-    `Please select the blockchain(s) you'd like to use.`
-  ),
-
   BlockchainSettingsMenuHeader: chalk.green(`Blockchain Settings`),
-  BlockchainSettingsMenuQuestion: chalk.yellow(
+  BlockchainSettingsMenuQuestion01: chalk.yellow(
     `Please select your desired blockchain(s), multiselection is possible.`
   ),
+  BlockchainSettingsMenuQuestion02(blockchain: string): string {
+    return `Please provide your private key for ${blockchain}`;
+  },
+  BlockchainSettingsMenuQuestion03: chalk.yellow(
+    'Do you want to create a new contract or provide an existing contract address?'
+  ),
+  BlockchainSettingsMenuQuestionChoices01: `Deploy new contract`,
+  BlockchainSettingsMenuQuestionChoices02: `Address of existing contract`,
+  BlockchainSettingsMenuQuestionChoices03: `Cancel`,
+
+  BlockchainSettingsEnterContractAddress: `Address of existing contract:`,
+
   get BlockchainSettingsMenuSelectionInfo(): string {
     return (
       `Selected BlockChain(s): ` +
       chalk.cyan(`${middleware.getSelectedBlockchains()}`)
     );
   },
-
-  // Blockchain Selector
-  BlockchainSelectorCommandLabel: `Blockchain Selector`,
-  BlockchainSelectorCommandHelp: `\tPlease select and check the blockchain(s) you'd like to use for the minting process.`,
 
   // NFT Minting
   NFTMintingCommandLabel: `NFT Minting`,
@@ -140,10 +146,10 @@ export const CliStrings = {
     `Are you sure you want to continue the minting process with these settings?`
   ),
   NFTMintingFeedbackAbort: chalk.red(`abort`),
-  NFTMintingInputConfirmationQuestion: chalk.yellow(
+  GetInputConfirmationQuestion: chalk.yellow(
     `Would you like to continue with this input?`
   ),
-  NFTMintingConfirmationInput: `Input: `,
+  GetInputConfirmationInput: `Input: `,
 
   // Start Minting
   TestMintingCommandLabel: `Test Minting`,
