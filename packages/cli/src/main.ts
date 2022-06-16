@@ -22,11 +22,11 @@ async function main() {
   }
   dotenv.config();
 
-  middleware.nftLog(CliStrings.horizontalHashLine, false);
-  middleware.nftLog(CliStrings.horizontalHashLine, false);
+  middleware.nftLog(`##################################################`, false);
+  middleware.nftLog(`##################################################`, false);
   middleware.nftLog(`Hallo USER`);
-  middleware.nftLog(CliStrings.horizontalHashLine, false);
-  middleware.nftLog(CliStrings.horizontalHashLine, false);
+  middleware.nftLog(`##################################################`, false);
+  middleware.nftLog(`##################################################`, false);
 
   const commandChoices: string[] = [];
 
