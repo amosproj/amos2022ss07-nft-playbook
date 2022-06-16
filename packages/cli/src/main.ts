@@ -3,6 +3,7 @@ import * as inquirer from 'inquirer';
 import { CliStrings } from './app/CliStrings';
 import { TopLevelCommandIndex } from './app/Commands';
 import { MainRun } from './app/Commands/Command';
+import dotenv = require('dotenv');
 
 function greet() {
   console.clear();
@@ -19,6 +20,13 @@ async function main() {
     console.error(e);
     process.exit(1);
   }
+  dotenv.config();
+
+  middleware.nftLog(CliStrings.horizontalHashLine, false);
+  middleware.nftLog(CliStrings.horizontalHashLine, false);
+  middleware.nftLog(`Hallo USER`);
+  middleware.nftLog(CliStrings.horizontalHashLine, false);
+  middleware.nftLog(CliStrings.horizontalHashLine, false);
 
   const commandChoices: string[] = [];
 

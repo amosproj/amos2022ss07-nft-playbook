@@ -1,4 +1,7 @@
+import chalk = require('chalk');
 import fs = require('fs');
+import { NftPlaybookException } from './NftPlaybookException';
+import { middleware } from '../';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const pinataSDK = require('@pinata/sdk');
 
@@ -10,8 +13,13 @@ export class PinataClient {
   ): Promise<string> {
     const pinata = pinataSDK(api_key, api_sec);
     console.log('Upload Image started');
-
-    const res = await pinata.pinFileToIPFS(fs.createReadStream(path));
-    return res['IpfsHash'];
+    try {
+      const res = await pinata.pinFileToIPFS(fs.createReadStream(path));
+      middleware.nftLog(`[pinata] upload successfull: ${res['IpfsHash']}`);
+      return res['IpfsHash'];
+    } catch (e) {
+      middleware.nftLog(`[pinata] upload failed`);
+      throw new NftPlaybookException(chalk.red(`Upload failed`), e);
+    }
   }
 }

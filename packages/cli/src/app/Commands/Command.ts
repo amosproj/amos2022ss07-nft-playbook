@@ -8,6 +8,7 @@ import { IPFSCommand } from './IPFSCommand';
 import inquirer = require('inquirer');
 import chalk = require('chalk');
 import { NftPlaybookException } from '@nft-playbook/middleware';
+
 // import { SelectWalletCommand } from './SelectWalletCommand';
 
 export interface Command {
@@ -49,7 +50,7 @@ export async function showException(e: NftPlaybookException) {
     {
       type: 'confirm',
       name: 'confirmed',
-      message: chalk.red(`Go back to previous Menu`),
+      message: chalk.red(`Go back to previous Menu.`),
     },
   ];
   const confirmAnswer = await inquirer.prompt(confirmQuestion);

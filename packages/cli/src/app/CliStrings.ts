@@ -55,6 +55,9 @@ export const CliStrings = {
   IPFSErrorMessageNoAccess: chalk.red("No access or file doesn't exist!"),
   IPFSErrorMessageNotFile: chalk.red(`Given path is not a file`),
   IPFSErrorMessageUpload: chalk.red(`Upload failed`),
+  IPFSSuccessMessage(link: string): string {
+    return chalk.blue(`Upload successful: ${link}`);
+  },
 
   // Blockchain Settings
   BlockchainSettingsCommandLabel: `Blockchain Settings`,

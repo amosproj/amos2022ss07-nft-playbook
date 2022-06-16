@@ -8,6 +8,7 @@ import {
 } from '@nft-playbook/backend';
 import { NftPlaybookException } from './NftPlaybookException';
 import { SettingsData } from './SettingsData';
+import fs = require('fs');
 
 export class Middleware {
   private _selectedBlockchains = {};
@@ -118,7 +119,12 @@ export class Middleware {
               break;
             }
           }
+
+          this.nftLog(
+            `[mint] [${blockchain}:${data.SERVER_URI}] mint successfull ${SettingsData.nftName} on ${data.smartContractAddress}`
+          );
         } catch (e) {
+          this.nftLog(`[mint] [${blockchain}:${data.SERVER_URI}] mint failed`);
           nftPlaybookExceptions.push(new NftPlaybookException(blockchain, e));
         }
 
@@ -155,7 +161,12 @@ export class Middleware {
           break;
         }
       }
+
+      this.nftLog(
+        `[deploy] [${blockchain}:${data.SERVER_URI}] deoplyed contract ${data.smartContractAddress}`
+      );
     } catch (e) {
+      this.nftLog(`[deploy] [${blockchain}:${data.SERVER_URI}] deoply failed`);
       throw new NftPlaybookException(
         `Error deploying contract on ${blockchain}`,
         e
@@ -347,6 +358,19 @@ export class Middleware {
 
   public getServerUri(blockchain: string) {
     return this._selectedBlockchains[blockchain].server_uri;
+  }
+
+  public getLogFile(): string {
+    return SettingsData.logFile;
+  }
+
+  public nftLog(input: string, date = true) {
+    if (date) {
+      fs.appendFileSync(this.getLogFile(), `${Date()}: ${input}`);
+    } else {
+      fs.appendFileSync(this.getLogFile(), input);
+    }
+    fs.appendFileSync(this.getLogFile(), '\n');
   }
 
   /* mint an NFT on Ethereum */
