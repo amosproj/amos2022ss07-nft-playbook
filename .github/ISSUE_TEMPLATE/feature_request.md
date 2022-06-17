@@ -23,6 +23,7 @@ assignees: ''
 * A Feature is Done when it has been tested
 * A Feature is Done when its core functionality has been commented properly
 * A Feature is Done when it can be fully integrated into the main branch without negative side effect
+* A Feature is Done when its core functionality has been documented properly
 
 ## DoD general criteria
 * Feature has been fully implemented
