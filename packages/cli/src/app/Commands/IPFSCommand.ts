@@ -12,14 +12,16 @@ export class IPFSCommand implements Command {
     let apiKey: string;
     let apiSec: string;
     if (
-      process.env.API_KEY === undefined ||
-      process.env.API_KEY === undefined
+      process.env.PINATA_API_KEY === undefined ||
+      process.env.PINATA_API_KEY.length === 0 ||
+      process.env.PINATA_API_SEC === undefined ||
+      process.env.PINATA_API_SEC.length === 0
     ) {
       apiKey = await getInput(CliStrings.IPFSQuestionApiKey, undefined);
       apiSec = await getInput(CliStrings.IPFSQuestionApiSec, undefined);
     } else {
-      apiKey = process.env.API_KEY;
-      apiSec = process.env.API_SEC;
+      apiKey = process.env.PINATA_API_KEY;
+      apiSec = process.env.PINATA_API_SEC;
     }
     const path = await getInput(
       CliStrings.IPFSFileConfirmationQuestion,

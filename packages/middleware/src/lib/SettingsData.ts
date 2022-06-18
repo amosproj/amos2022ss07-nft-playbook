@@ -31,12 +31,12 @@ export class SettingsData {
   private readSettingsFile(configFilePath: string): boolean {
     const file: string = fs.readFileSync(configFilePath, 'utf-8');
 
-    const info: { GAS_LIMIT: number; server_uri: string; logFile: string } =
+    const info: { GAS_LIMIT: number; server_uri: string; log_file: string } =
       JSON.parse(file);
 
     this._GAS_LIMIT = info.GAS_LIMIT;
     this._SERVER_URI = info.server_uri;
-    SettingsData._logFile = info.logFile;
+    SettingsData._logFile = info.log_file;
     return true;
   }
 
