@@ -12,6 +12,7 @@
   "private": true,
   "dependencies": {
     "@pinata/sdk": "^1.1.25",
+    "@solana/solidity": "^0.0.20",
     "@solana/spl-token": "^0.2.0",
     "@solana/web3.js": "^1.44.0",
     "axios": "^0.27.2",
