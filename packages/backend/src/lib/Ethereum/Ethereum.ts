@@ -14,7 +14,6 @@ import { BlockchainConfigMintNFT } from '../BlockchainConfig/BlockchainConfigMin
 
 // TODO: Check the type of the ConfigArguments!!!!!
 
-
 export class Ethereum implements Blockchain {
   async estimate_gas_fee_mint(config: EthereumConfigMintNFT): Promise<number> {
     const provider = ethers.providers.getDefaultProvider(config.server_uri);
