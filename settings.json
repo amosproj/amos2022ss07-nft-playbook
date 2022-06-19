@@ -1,4 +1,5 @@
 {
   "GAS_LIMIT": "2000000",
-  "server_uri": "http://localhost:7545"
+  "server_uri": "http://localhost:7545",
+  "log_file": "log.txt"
 }

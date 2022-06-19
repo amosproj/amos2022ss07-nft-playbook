@@ -5,6 +5,7 @@ export class SettingsData {
   private static _nftName: string;
   private static _nftLink: string;
   private static _nftHash: string;
+  private static _logFile: string;
 
   // blockchain specific information
   private _smartContractAddress: string;
@@ -30,11 +31,17 @@ export class SettingsData {
   private readSettingsFile(configFilePath: string): boolean {
     const file: string = fs.readFileSync(configFilePath, 'utf-8');
 
-    const info: { GAS_LIMIT: number; server_uri: string } = JSON.parse(file);
+    const info: { GAS_LIMIT: number; server_uri: string; log_file: string } =
+      JSON.parse(file);
 
     this._GAS_LIMIT = info.GAS_LIMIT;
     this._SERVER_URI = info.server_uri;
+    SettingsData._logFile = info.log_file;
     return true;
+  }
+
+  public static get logFile(): string {
+    return SettingsData._logFile;
   }
 
   public static get nftHash(): string {

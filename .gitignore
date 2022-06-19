@@ -33,3 +33,9 @@ bin/
 
 # MacOS
 .DS_Store
+
+# ENV
+/.env
+
+# Log
+/log.txt
