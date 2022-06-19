@@ -1,9 +1,11 @@
 import { Blockchain } from '../Blockchain';
 import { BlockchainConfigDeployContract } from '../BlockchainConfig/BlockchainConfigDeployContract';
-import { BlockchainConfigMintNFT } from '../BlockchainConfig/BlockchainConfigMintNFT';
+import { SolanaConfigMintNFT } from './SolanaConfig/SolanaConfigMintNFT';
 import { BlockchainConfigReadSmartContract } from '../BlockchainConfig/BlockchainConfigReadSmartContract';
 import { BlockChainConfigReadTokenData } from '../BlockchainConfig/BlockChainConfigReadTokenData';
 import { BlockChainConfigReadUserDataFromSmartContract } from '../BlockchainConfig/BlockChainConfigReadUserDataFromSmartContract';
+
+// TODO: Check the type of the ConfigArguments!!!!!
 
 import {
   clusterApiUrl,
@@ -12,6 +14,8 @@ import {
   LAMPORTS_PER_SOL,
   PublicKey,
 } from '@solana/web3.js';
+import { bundlrStorage, keypairIdentity, Metaplex } from "@metaplex-foundation/js";
+
 import {
   createMint,
   getOrCreateAssociatedTokenAccount,
@@ -19,17 +23,48 @@ import {
   setAuthority,
   transfer,
 } from '@solana/spl-token';
-import { connect } from 'http2';
+import InputPrompt = require('inquirer/lib/prompts/input');
 
 export class Solana implements Blockchain {
   deploy_contract(config: BlockchainConfigDeployContract): Promise<string> {
     throw new Error('Method not implemented.');
   }
-  estimate_gas_fee_mint(config: BlockchainConfigMintNFT): Promise<number> {
+  estimate_gas_fee_mint(config: SolanaConfigMintNFT): Promise<number> {
     throw new Error('Method not implemented.');
   }
-  mint_nft(config: BlockchainConfigMintNFT): Promise<number> {
-    throw new Error('Method not implemented.');
+ async mint_nft(config: SolanaConfigMintNFT): Promise<string> {
+    const connection = new Connection(config.server_uri, 'confirmed');
+    const privKey : Uint8Array  = Uint8Array.from(config.private_key_transmitter.split(",").map(s=> Number(s)));
+    const wallet = Keypair.fromSecretKey(privKey);
+
+    // (only for testing purposes) -> add some SOL to the user wallet
+    const fromAirDropSignature = await connection.requestAirdrop(
+      wallet.publicKey,
+      LAMPORTS_PER_SOL //lamport: A fractional native token with the value of 0.000000001 sol.
+    );
+     //Wait for airdrop confirmation
+     await connection.confirmTransaction(fromAirDropSignature);   
+    
+     const metaplex = Metaplex.make(connection)
+     .use(keypairIdentity(wallet)).use(bundlrStorage({
+       address: 'https://devnet.bundlr.network',
+       providerUrl: config.server_uri,
+       timeout: 60000,
+    }));
+
+    const { uri } = await metaplex.nfts().uploadMetadata({
+      name: "My NFT",
+      description: "My description",
+      image: "IPFS://DASKLAPPT",
+    });
+
+    console.log(JSON.stringify(uri));
+
+    const {nft} = await metaplex.nfts().create({uri: uri});
+
+    console.log("NFT minted: " + nft.metadata.image);
+    return null;
+
   }
   read_smart_contract(
     config: BlockchainConfigReadSmartContract
@@ -46,6 +81,15 @@ export class Solana implements Blockchain {
   ): Promise<void> {
     throw new Error('Method not implemented.');
   }
+
+
+
+
+
+
+
+
+  
 
   //Tutorial from https://www.quicknode.com/guides/web3-sdks/how-to-mint-an-nft-on-solana
   //Usefull solana terminology https://docs.solana.com/de/terminology

@@ -12,6 +12,9 @@ import * as solc from 'solc';
 import { EthereumConfigReadTokenData } from './EthereumConfig/EthereumConfigReadTokenData';
 import { BlockchainConfigMintNFT } from '../BlockchainConfig/BlockchainConfigMintNFT';
 
+// TODO: Check the type of the ConfigArguments!!!!!
+
+
 export class Ethereum implements Blockchain {
   async estimate_gas_fee_mint(config: EthereumConfigMintNFT): Promise<number> {
     const provider = ethers.providers.getDefaultProvider(config.server_uri);
@@ -84,7 +87,7 @@ export class Ethereum implements Blockchain {
    * @param config
    * @returns
    */
-  async mint_nft(config: EthereumConfigMintNFT): Promise<number> {
+  async mint_nft(config: EthereumConfigMintNFT): Promise<string> {
     await sleep(10000);
     const provider = ethers.providers.getDefaultProvider(config.server_uri);
 
@@ -112,7 +115,7 @@ export class Ethereum implements Blockchain {
     const ret = receipt;
     //writeFileSync('./receipt_2.json', JSON.stringify(receipt));
     const token_id = parseInt(ret['events'][1]['args'][0]['_hex']);
-    return token_id;
+    return token_id.toString();
   }
 
   /**
