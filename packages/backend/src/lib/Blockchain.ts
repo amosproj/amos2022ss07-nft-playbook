@@ -21,7 +21,7 @@ export interface Blockchain {
    * Mints an NFT to a smartcontract, which is defined in config
    * @param config
    */
-  mint_nft(config: BlockchainConfigMintNFT): Promise<number>;
+  mint_nft(config: BlockchainConfigMintNFT): Promise<string>;
 
   /**
    * Reads a smart contract, defined in config

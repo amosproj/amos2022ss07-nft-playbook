@@ -383,7 +383,7 @@ export class Middleware {
     nft_hash: string,
     nft_link: string,
     GAS_LIMIT: number
-  ): Promise<number> {
+  ): Promise<string> {
     const ethereumConfigMintNFT = new EthereumConfigMintNFT(
       nft_name,
       server_uri,
