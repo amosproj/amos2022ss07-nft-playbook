@@ -296,15 +296,15 @@ export class Middleware {
   }
 
   public setPrivateKeyUser(val: string, blockchain: string) {
-    this._selectedBlockchains[blockchain].user_priv_key = val;
+    this._selectedBlockchains[blockchain].userPrivKey = val;
   }
 
   public setSmartContractAddress(val: string, blockchain: string) {
-    this._selectedBlockchains[blockchain].smart_contract_address = val;
+    this._selectedBlockchains[blockchain].smartContractAddress = val;
   }
 
   public setPublicKeyNftReceiver(val: string, blockchain: string) {
-    this._selectedBlockchains[blockchain].pub_key_NFT_receiver = val;
+    this._selectedBlockchains[blockchain].pubKeyNftReceiver = val;
   }
 
   public setContractAddress(blockchain: string, contract_addr: string) {
@@ -341,15 +341,15 @@ export class Middleware {
   }
 
   public getSmartContractAddress(blockchain: string) {
-    return this._selectedBlockchains[blockchain].smart_contract_address;
+    return this._selectedBlockchains[blockchain].smartContractAddress;
   }
 
   public getPublicKeyNftReceiver(blockchain: string) {
-    return this._selectedBlockchains[blockchain].pub_key_NFT_receiver;
+    return this._selectedBlockchains[blockchain].pubKeyNftReceiver;
   }
 
   public getPrivateKeyUser(blockchain: string) {
-    return this._selectedBlockchains[blockchain].user_priv_key;
+    return this._selectedBlockchains[blockchain].userPrivKey;
   }
 
   public getGasLimit(blockchain: string) {
@@ -357,7 +357,7 @@ export class Middleware {
   }
 
   public getServerUri(blockchain: string) {
-    return this._selectedBlockchains[blockchain].server_uri;
+    return this._selectedBlockchains[blockchain].SERVER_URI;
   }
 
   public getLogFile(): string {
