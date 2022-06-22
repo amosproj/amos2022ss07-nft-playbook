@@ -8,7 +8,6 @@ pids
 *.pid
 *.seed
 *.pid.lock
-yarn.lock
 
 # Gradle
 .gradle
@@ -40,5 +39,3 @@ bin/
 
 # Log
 /log.txt
-
-/receipt_2.json
