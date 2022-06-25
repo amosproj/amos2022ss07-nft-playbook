@@ -51,6 +51,9 @@ export class BlockchainSettingsCommand implements Command {
         },
       ];
 
+      if (blockchain === 'Solana') {
+        return;
+      }
       const selectedContractMethod: string = (
         await inquirer.prompt(promptQuestions)
       ).selectedContractMethod;

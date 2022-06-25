@@ -1,6 +1,8 @@
 import fs = require('fs');
 
 export class SettingsData {
+  private _blockchain: string;
+
   // overall blockchain information
   private static _nftName: string;
   private static _nftLink: string;
@@ -16,7 +18,8 @@ export class SettingsData {
 
   private _isSelected = false;
 
-  constructor(configFilePath: string) {
+  constructor(blockchain: string, configFilePath: string) {
+    this._blockchain = blockchain;
     //'./packages/cli/src/info.json'
     // if (configFilePath != undefined)
     this.readSettingsFile(configFilePath);
@@ -31,11 +34,23 @@ export class SettingsData {
   private readSettingsFile(configFilePath: string): boolean {
     const file: string = fs.readFileSync(configFilePath, 'utf-8');
 
-    const info: { GAS_LIMIT: number; server_uri: string; log_file: string } =
-      JSON.parse(file);
+    const info: {
+      config: [
+        {
+          blockchain: string;
+          settings: { GAS_LIMIT: number; server_uri: string };
+        }
+      ];
+      log_file: string;
+    } = JSON.parse(file);
 
-    this._GAS_LIMIT = info.GAS_LIMIT;
-    this._SERVER_URI = info.server_uri;
+    info.config.forEach((entry) => {
+      if (entry.blockchain == this._blockchain) {
+        this._GAS_LIMIT = entry.settings.GAS_LIMIT;
+        this._SERVER_URI = entry.settings.server_uri;
+      }
+    });
+
     SettingsData._logFile = info.log_file;
     return true;
   }
