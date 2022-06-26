@@ -16,7 +16,7 @@ import { BlockchainConfigMintNFT } from '../BlockchainConfig/BlockchainConfigMin
 
 export class Ethereum implements Blockchain {
   async estimate_gas_fee_mint(config: EthereumConfigMintNFT): Promise<number> {
-    const provider = ethers.providers.getDefaultProvider(config.server_uri);
+    const provider = ethers.providers.getDefaultProvider(isNaN(Number(config.server_uri)) ? config.server_uri : Number(config.server_uri));
     // console.log('Gasprice: ' + provider.getGasPrice());
 
     const contract = new ethers.Contract(
@@ -56,7 +56,7 @@ export class Ethereum implements Blockchain {
   async deploy_contract(config: EthereumConfigDeployContract): Promise<string> {
     // get ABI and contract byte code
     const contractInfo = Ethereum._compile_contract(config.path_to_contract);
-    const provider = ethers.providers.getDefaultProvider(config.server_uri);
+    const provider = ethers.providers.getDefaultProvider(isNaN(Number(config.server_uri)) ? config.server_uri : Number(config.server_uri));
 
     // Use your wallet's private key to deploy the contract, private key of content owner
     const wallet = new ethers.Wallet(
@@ -88,7 +88,7 @@ export class Ethereum implements Blockchain {
    */
   async mint_nft(config: EthereumConfigMintNFT): Promise<string> {
     await sleep(10000);
-    const provider = ethers.providers.getDefaultProvider(config.server_uri);
+    const provider = ethers.providers.getDefaultProvider(isNaN(Number(config.server_uri)) ? config.server_uri : Number(config.server_uri));
 
     const wallet = new ethers.Wallet(config.private_key_transmitter, provider);
 

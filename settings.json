@@ -1,5 +1,5 @@
 {
   "GAS_LIMIT": "2000000",
-  "server_uri": "HTTP://127.0.0.1:7545",
+  "server_uri": "3",
   "log_file": "log.txt"
 }
