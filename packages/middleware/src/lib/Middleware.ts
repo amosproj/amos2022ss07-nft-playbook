@@ -5,6 +5,8 @@ import {
   EthereumConfigReadTokenData,
   EthereumConfigReadSmartContract,
   EthereumConfigReadUserDataFromSmartContract,
+  SolanaConfigMintNFT,
+  Solana,
 } from '@nft-playbook/backend';
 import { NftPlaybookException } from './NftPlaybookException';
 import { SettingsData } from './SettingsData';
@@ -15,12 +17,15 @@ export class Middleware {
 
   public init(configFilePath: string) {
     this.addBlockchain('Ethereum', configFilePath);
-    this.addBlockchain('Flow', configFilePath);
+    this.addBlockchain('Solana', configFilePath);
   }
 
   private addBlockchain(blockchain: string, configFilePath: string) {
     try {
-      this._selectedBlockchains[blockchain] = new SettingsData(configFilePath);
+      this._selectedBlockchains[blockchain] = new SettingsData(
+        blockchain,
+        configFilePath
+      );
     } catch (e) {
       throw new NftPlaybookException(
         `Error reading config for ${blockchain}`,
@@ -111,8 +116,15 @@ export class Middleware {
               );
               break;
             }
-            case 'Flow': {
-              //this._mintNftFlow();
+            case 'Solana': {
+              await this._mintNftSolana(
+                SettingsData.nftName,
+                data.SERVER_URI,
+                data.userPrivKey,
+                data.pubKeyNftReceiver,
+                SettingsData.nftHash,
+                SettingsData.nftLink
+              );
               break;
             }
             default: {
@@ -489,5 +501,26 @@ export class Middleware {
     await new Ethereum().read_user_data_from_smart_contract(
       ethereumConfigReadUserDataFromSmartContract
     );
+  }
+
+  /* mint an NFT on Solana*/
+  private async _mintNftSolana(
+    nft_name: string,
+    server_uri: string,
+    priv_key_NFT_transmitter: string,
+    pub_key_NFT_receiver: string,
+    nft_hash: string,
+    nft_link: string
+  ): Promise<string> {
+    const solanaConfigMintNFT = new SolanaConfigMintNFT(
+      nft_name,
+      server_uri,
+      priv_key_NFT_transmitter,
+      pub_key_NFT_receiver,
+      nft_hash,
+      nft_link
+    );
+
+    return await new Solana().mint_nft(solanaConfigMintNFT);
   }
 }

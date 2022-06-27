@@ -28,8 +28,8 @@ export class Ethereum implements Blockchain {
     //Estimated Gas for mint()-call in Gas
     const estimation = await contract.estimateGas.mint(
       config.pub_key_NFT_receiver,
-      config.url_to_file,
-      config.hash,
+      config.nftLink,
+      config.nftHash,
       {
         gasPrice: provider.getGasPrice(),
         gasLimit: config.gas_limit,
@@ -102,8 +102,8 @@ export class Ethereum implements Blockchain {
 
     const tx = await contractWithWallet.mint(
       config.pub_key_NFT_receiver,
-      config.url_to_file,
-      config.hash,
+      config.nftLink,
+      config.nftHash,
       {
         gasPrice: provider.getGasPrice(),
         gasLimit: config.gas_limit,

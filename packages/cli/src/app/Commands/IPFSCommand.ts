@@ -41,15 +41,16 @@ export class IPFSCommand implements Command {
       return;
     }
 
-    let link: string;
+    let hash: string;
     try {
-      link = await PinataClient.uploadImage(path, apiKey, apiSec);
+      hash = await PinataClient.uploadImage(path, apiKey, apiSec);
     } catch (e: unknown) {
       await showException(<NftPlaybookException>e);
       return;
     }
+    middleware.setNftHash(hash);
+    const link = `https://gateway.ipfs.io/ipfs/${hash}`;
     middleware.setNftLink(link);
-    middleware.setNftHash(link);
     console.log(CliStrings.IPFSSuccessMessage(link));
 
     await sleep(5000);
