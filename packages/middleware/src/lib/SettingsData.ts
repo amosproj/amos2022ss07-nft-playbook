@@ -38,7 +38,7 @@ export class SettingsData {
       config: [
         {
           blockchain: string;
-          settings: { GAS_LIMIT: number; server_uri: string };
+          settings: { GAS_LIMIT: number; end_point: string };
         }
       ];
       log_file: string;
@@ -47,7 +47,7 @@ export class SettingsData {
     info.config.forEach((entry) => {
       if (entry.blockchain == this._blockchain) {
         this._GAS_LIMIT = entry.settings.GAS_LIMIT;
-        this._SERVER_URI = entry.settings.server_uri;
+        this._SERVER_URI = entry.settings.end_point;
       }
     });
 
