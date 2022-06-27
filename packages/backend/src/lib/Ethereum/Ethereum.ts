@@ -5,16 +5,121 @@ import { EthereumConfigMintNFT } from './EthereumConfig/EthereumConfigMintNFT';
 import { EthereumConfigReadSmartContract } from './EthereumConfig/EthereumConfigReadSmartContract';
 import { EthereumConfigReadUserDataFromSmartContract } from './EthereumConfig/EthereumConfigReadUserDataFromSmartContract';
 import { readFileSync, writeFileSync } from 'fs';
-import { exit } from 'process';
+import { exit, listenerCount } from 'process';
 import { resolve, sep, posix } from 'path';
 import * as solc from 'solc';
 //import solc = require('solc');
 import { EthereumConfigReadTokenData } from './EthereumConfig/EthereumConfigReadTokenData';
 import { BlockchainConfigMintNFT } from '../BlockchainConfig/BlockchainConfigMintNFT';
+const open = require('open');
+const fs = require('fs');
+const jc = require('json-cycle');
+import * as http from 'http'; //ES 6
 
 // TODO: Check the type of the ConfigArguments!!!!!
 
 export class Ethereum implements Blockchain {
+  retrocycle($) {
+    var px = /^\$(?:\[(?:\d+|\"(?:[^\\\"\u0000-\u001f]|\\([\\\"\/bfnrt]|u[0-9a-zA-Z]{4}))*\")\])*$/;
+
+    (function rez(value) {
+      // The rez function walks recursively through the object looking for $ref
+      // properties. When it finds one that has a value that is a path, then it
+      // replaces the $ref object with a reference to the value that is found by
+      // the path.
+
+      var i, item, name, path;
+      if (value && typeof value === 'object') {
+        if (Object.prototype.toString.apply(value) === '[object Array]') {
+          for (i = 0; i < value.length; i += 1) {
+            item = value[i];
+            if (item && typeof item === 'object') {
+              path = item.$ref;
+              if (typeof path === 'string' && px.test(path)) {
+                value[i] = eval(path);
+              } else {
+                rez(item);
+              }
+            }
+          }
+        } else {
+          for (name in value) {
+            if (typeof value[name] === 'object') {
+              item = value[name];
+              if (item) {
+                path = item.$ref;
+                if (typeof path === 'string' && px.test(path)) {
+                  value[name] = eval(path);
+                } else {
+                  rez(item);
+                }
+              }
+            }
+          }
+        }
+      }
+    }($));
+    return $;
+  }
+
+
+  decycle(object) {
+    var objects = [],   // Keep a reference to each unique object or array
+      paths = [];     // Keep the path to each unique object or array
+
+    return (function derez(value, path) {
+      // The derez recurses through the object, producing the deep copy.
+
+      var i,          // The loop counter
+        name,       // Property name
+        nu;         // The new object or array
+
+      var _value = value && value.toJSON instanceof Function ? value.toJSON() : value;
+      // typeof null === 'object', so go on if this value is really an object but not
+      // one of the weird builtin objects.
+
+      if (typeof _value === 'object' && _value !== null) {
+
+        // If the value is an object or array, look to see if we have already
+        // encountered it. If so, return a $ref/path object. This is a hard way,
+        // linear search that will get slower as the number of unique objects grows.
+
+        for (i = 0; i < objects.length; i += 1) {
+          if (objects[i] === _value) {
+            return { $ref: paths[i] };
+          }
+        }
+
+        // Otherwise, accumulate the unique value and its path.
+
+        objects.push(_value);
+        paths.push(path);
+
+        // If it is an array, replicate the array.
+
+        if (Object.prototype.toString.apply(_value) === '[object Array]') {
+          nu = [];
+          for (i = 0; i < _value.length; i += 1) {
+            nu[i] = derez(_value[i], path + '[' + i + ']');
+          }
+        } else {
+
+          // If it is an object, replicate the object.
+
+          nu = {};
+          for (name in _value) {
+            if (Object.prototype.hasOwnProperty.call(_value, name)) {
+              nu[name] = derez(_value[name],
+                path + '[' + JSON.stringify(name) + ']');
+            }
+          }
+        }
+        return nu;
+      }
+      return _value;
+    }(object, '$'));
+  }
+
   async estimate_gas_fee_mint(config: EthereumConfigMintNFT): Promise<number> {
     const provider = ethers.providers.getDefaultProvider(isNaN(Number(config.server_uri)) ? config.server_uri : Number(config.server_uri));
     // console.log('Gasprice: ' + provider.getGasPrice());
@@ -56,17 +161,71 @@ export class Ethereum implements Blockchain {
   async deploy_contract(config: EthereumConfigDeployContract): Promise<string> {
     // get ABI and contract byte code
     const contractInfo = Ethereum._compile_contract(config.path_to_contract);
+
+
     const provider = ethers.providers.getDefaultProvider(isNaN(Number(config.server_uri)) ? config.server_uri : Number(config.server_uri));
 
     // Use your wallet's private key to deploy the contract, private key of content owner
-    const wallet = new ethers.Wallet(
+    /*const wallet = new ethers.Wallet(
       config.private_key_of_contract_owner,
       provider
     );
+    console.log(wallet);
+    */
+
+
+
+    let html_content;
+    fs.readFile('packages/backend/src/lib/Ethereum/wallet_integration.html', (err, html) => {
+      if (err) {
+        console.log("missing html file that should contain the ethereum - metamask integration\n" + err);
+      } else {
+        html_content = html;
+      }
+    });
+
+    let server = http.createServer(async (request, response) => {
+      console.log("\nRequest Path: " + request.url);
+      // initial http request from browser (html file containing the eth wallet integration)
+      if (request.url == "/ethereum_wallet_service") {
+        response.writeHead(200, { "Content-Type": "text/html" });
+        response.write(html_content);
+        response.end();
+
+        // secondary answer containing the necessary and serialized objects
+      } else if (request.url == "/ethereum_data_receiver") {
+        const buffers = [];
+        for await (const chunk of request) {
+          buffers.push(chunk);
+        }
+
+        const data = Buffer.concat(buffers).toString();
+        let signer = this.retrocycle(JSON.parse(data));
+        console.log(JSON.stringify(this.decycle(signer)));
+
+        const factory = new ethers.ContractFactory(
+          contractInfo['abi'],
+          contractInfo['bytecode'],
+          signer
+        );
+
+        let contract = await factory.deploy(config.name_of_contract);
+
+        response.end();
+      }
+    }).listen(8000);
+
+    open('http://localhost:8000/ethereum_wallet_service');
+
+    await sleep(20000);
+    return "asdf";
+
+
+
     const factory = new ethers.ContractFactory(
       contractInfo['abi'],
       contractInfo['bytecode'],
-      wallet
+      // wallet
     );
 
     // If your contract requires constructor args, you can specify them here
@@ -219,13 +378,13 @@ export class Ethereum implements Blockchain {
 
     const contractJSON =
       output['contracts'][
-        resolve(process.cwd(), path_to_contract_solidity)
-          .split(sep)
-          .join(posix.sep)
+      resolve(process.cwd(), path_to_contract_solidity)
+        .split(sep)
+        .join(posix.sep)
       ][
-        path_to_contract_solidity
-          .substr(path_to_contract_solidity.lastIndexOf('/') + 1)
-          .split('.')[0]
+      path_to_contract_solidity
+        .substr(path_to_contract_solidity.lastIndexOf('/') + 1)
+        .split('.')[0]
       ];
 
     return {
