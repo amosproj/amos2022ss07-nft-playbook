@@ -104,6 +104,9 @@ export const CliStrings = {
   get NFTMintingFeedbackNFTName(): string {
     return `NFT Name: ` + chalk.cyan(`${middleware.getNftName()}`);
   },
+  get NFTMintingFeedbackNFTHash(): string {
+    return `NFT Hash: ` + chalk.cyan(`${middleware.getNftHash()}`);
+  },
   get NFTMintingFeedbackNFTLink(): string {
     return `NFT Link: ` + chalk.cyan(`${middleware.getNftLink()}\n`);
   },

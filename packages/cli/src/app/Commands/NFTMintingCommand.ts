@@ -21,15 +21,11 @@ export class NFTMintingCommand implements Command {
     middleware.setNftName(
       await getInput(CliStrings.NFTMintingQuestionName, middleware.getNftName())
     );
+    // get hash
+    middleware.setNftHash(middleware.getNftHash());
     // get link
     middleware.setNftLink(
-      `https://gateway.ipfs.io/ipfs/${await getInput(
-        CliStrings.NFTMintingQuestionLink,
-        middleware.getNftLink()
-      )}`
-    );
-    middleware.setNftHash(
-      middleware.getNftLink() // FIXME
+      await getInput(CliStrings.NFTMintingQuestionLink, middleware.getNftLink())
     );
     // get blockchain specific nft receiver
     for (const blockchain of middleware.getSelectedBlockchains()) {
@@ -45,6 +41,7 @@ export class NFTMintingCommand implements Command {
     this.print_header();
     console.log(CliStrings.NFTMintingFeedbackSelectedBlockchains);
     console.log(CliStrings.NFTMintingFeedbackNFTName);
+    console.log(CliStrings.NFTMintingFeedbackNFTHash);
     console.log(CliStrings.NFTMintingFeedbackNFTLink);
 
     console.log(CliStrings.horizontalHashLine);
@@ -54,15 +51,13 @@ export class NFTMintingCommand implements Command {
     for (const blockchain of middleware.getSelectedBlockchains()) {
       console.log();
       if (blockchain === 'Solana') {
-        console.log(
-          CliStrings.NFTMintingFeedbackGasLimit('Not implemented yet')
-        );
+        console.log('Gas Limit: Not implemented yet');
       } else {
         console.log(CliStrings.NFTMintingFeedbackGasLimit(blockchain));
       }
       try {
         if (blockchain === 'Solana') {
-          console.log(`${blockchain} Estimated gas fee: Not implemented yet`);
+          console.log('Estimated gas fee: Not implemented yet');
         } else {
           console.log(
             await CliStrings.NFTMintingFeedbackEstimatedGasFeeGwei(blockchain)
