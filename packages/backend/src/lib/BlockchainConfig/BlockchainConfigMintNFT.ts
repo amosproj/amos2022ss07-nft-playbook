@@ -3,20 +3,15 @@
  */
 export abstract class BlockchainConfigMintNFT {
   private type: string;
-  NFT_name: string;
-  hash: string;
-  url_to_file: string;
+  nftName: string;
+  nftHash: string;
+  nftLink: string;
 
-  constructor(
-    NFT_name: string,
-    type: string,
-    url_to_file: string,
-    hash: string
-  ) {
-    this.NFT_name = NFT_name;
+  constructor(nftName: string, type: string, nftLink: string, nftHash: string) {
+    this.nftName = nftName;
     this.type = type;
-    this.url_to_file = url_to_file;
-    this.hash = hash;
+    this.nftLink = nftLink;
+    this.nftHash = nftHash;
   }
 
   getType(): string {

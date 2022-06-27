@@ -23,7 +23,10 @@ export class NFTMintingCommand implements Command {
     );
     // get link
     middleware.setNftLink(
-      await getInput(CliStrings.NFTMintingQuestionLink, middleware.getNftLink())
+      `https://gateway.ipfs.io/ipfs/${await getInput(
+        CliStrings.NFTMintingQuestionLink,
+        middleware.getNftLink()
+      )}`
     );
     middleware.setNftHash(
       middleware.getNftLink() // FIXME
@@ -50,11 +53,21 @@ export class NFTMintingCommand implements Command {
     }
     for (const blockchain of middleware.getSelectedBlockchains()) {
       console.log();
-      console.log(CliStrings.NFTMintingFeedbackGasLimit(blockchain));
-      try {
+      if (blockchain === 'Solana') {
         console.log(
-          await CliStrings.NFTMintingFeedbackEstimatedGasFeeGwei(blockchain)
+          CliStrings.NFTMintingFeedbackGasLimit('Not implemented yet')
         );
+      } else {
+        console.log(CliStrings.NFTMintingFeedbackGasLimit(blockchain));
+      }
+      try {
+        if (blockchain === 'Solana') {
+          console.log(`${blockchain} Estimated gas fee: Not implemented yet`);
+        } else {
+          console.log(
+            await CliStrings.NFTMintingFeedbackEstimatedGasFeeGwei(blockchain)
+          );
+        }
       } catch (e: unknown) {
         if (await showException(<NftPlaybookException>e)) {
           return;

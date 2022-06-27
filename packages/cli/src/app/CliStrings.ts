@@ -105,13 +105,7 @@ export const CliStrings = {
     return `NFT Name: ` + chalk.cyan(`${middleware.getNftName()}`);
   },
   get NFTMintingFeedbackNFTLink(): string {
-    return (
-      `NFT Link: ` +
-      chalk.cyan(
-        `${middleware.getNftLink()}\n` +
-          `https://gateway.ipfs.io/ipfs/${middleware.getNftLink()}`
-      )
-    );
+    return `NFT Link: ` + chalk.cyan(`${middleware.getNftLink()}\n`);
   },
   NFTMintingFeedbackGasLimit: (blockchain: string): string => {
     return (
