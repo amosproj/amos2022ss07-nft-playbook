@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+
+<head>
+  <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="text/javascript"></script>
+</head>
+
+<body>
+  <div id="text" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+    Hallo Welt!
+  </div>
+
+  <script async>
+    function decycle(object) {
+      var objects = [],   // Keep a reference to each unique object or array
+        paths = [];     // Keep the path to each unique object or array
+
+      return (function derez(value, path) {
+        // The derez recurses through the object, producing the deep copy.
+
+        var i,          // The loop counter
+          name,       // Property name
+          nu;         // The new object or array
+
+        var _value = value && value.toJSON instanceof Function ? value.toJSON() : value;
+        // typeof null === 'object', so go on if this value is really an object but not
+        // one of the weird builtin objects.
+
+        if (typeof _value === 'object' && _value !== null) {
+
+          // If the value is an object or array, look to see if we have already
+          // encountered it. If so, return a $ref/path object. This is a hard way,
+          // linear search that will get slower as the number of unique objects grows.
+
+          for (i = 0; i < objects.length; i += 1) {
+            if (objects[i] === _value) {
+              return { $ref: paths[i] };
+            }
+          }
+
+          // Otherwise, accumulate the unique value and its path.
+
+          objects.push(_value);
+          paths.push(path);
+
+          // If it is an array, replicate the array.
+
+          if (Object.prototype.toString.apply(_value) === '[object Array]') {
+            nu = [];
+            for (i = 0; i < _value.length; i += 1) {
+              nu[i] = derez(_value[i], path + '[' + i + ']');
+            }
+          } else {
+
+            // If it is an object, replicate the object.
+
+            nu = {};
+            for (name in _value) {
+              if (Object.prototype.hasOwnProperty.call(_value, name)) {
+                nu[name] = derez(_value[name],
+                  path + '[' + JSON.stringify(name) + ']');
+              }
+            }
+          }
+          return nu;
+        }
+        return _value;
+      }(object, '$'));
+    }
+
+    async function main() {
+      let provider = undefined;
+      let signer = undefined;
+      try {
+        console.log("vor allem");
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+        console.log(provider);
+        await provider.send("eth_requestAccounts", []);
+
+        // object to use!!
+        signer = provider.getSigner();
+
+        console.log(signer.signTransaction);
+        // console.log(signer);
+        document.getElementById("text").innerText = "Your wallet information has been loaded";
+      } catch (error) {
+        console.log(error)
+        document.getElementById("text").innerText = "Error with your Metamask wallet.. Please make sure it is installed and working correctly"
+      }
+
+      var xmlhttp = new XMLHttpRequest();
+      xmlhttp.open("POST", "http://localhost:8000/ethereum_data_receiver");
+      xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+      const providerToSendString = JSON.stringify(decycle(provider));
+      xmlhttp.send(providerToSendString);
+    }
+
+    main();
+  </script>
+
+</body>
+
+</html>
