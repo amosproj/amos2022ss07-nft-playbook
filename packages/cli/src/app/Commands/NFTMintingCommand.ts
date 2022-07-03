@@ -21,12 +21,11 @@ export class NFTMintingCommand implements Command {
     middleware.setNftName(
       await getInput(CliStrings.NFTMintingQuestionName, middleware.getNftName())
     );
+    // get hash
+    middleware.setNftHash(middleware.getNftHash());
     // get link
     middleware.setNftLink(
       await getInput(CliStrings.NFTMintingQuestionLink, middleware.getNftLink())
-    );
-    middleware.setNftHash(
-      middleware.getNftLink() // FIXME
     );
     // get blockchain specific nft receiver
     for (const blockchain of middleware.getSelectedBlockchains()) {
@@ -42,6 +41,7 @@ export class NFTMintingCommand implements Command {
     this.print_header();
     console.log(CliStrings.NFTMintingFeedbackSelectedBlockchains);
     console.log(CliStrings.NFTMintingFeedbackNFTName);
+    console.log(CliStrings.NFTMintingFeedbackNFTHash);
     console.log(CliStrings.NFTMintingFeedbackNFTLink);
 
     console.log(CliStrings.horizontalHashLine);
@@ -50,11 +50,19 @@ export class NFTMintingCommand implements Command {
     }
     for (const blockchain of middleware.getSelectedBlockchains()) {
       console.log();
-      console.log(CliStrings.NFTMintingFeedbackGasLimit(blockchain));
+      if (blockchain === 'Solana') {
+        console.log('Gas Limit: Not implemented yet');
+      } else {
+        console.log(CliStrings.NFTMintingFeedbackGasLimit(blockchain));
+      }
       try {
-        console.log(
-          await CliStrings.NFTMintingFeedbackEstimatedGasFeeGwei(blockchain)
-        );
+        if (blockchain === 'Solana') {
+          console.log('Estimated gas fee: Not implemented yet');
+        } else {
+          console.log(
+            await CliStrings.NFTMintingFeedbackEstimatedGasFeeGwei(blockchain)
+          );
+        }
       } catch (e: unknown) {
         if (await showException(<NftPlaybookException>e)) {
           return;

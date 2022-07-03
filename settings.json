@@ -1,5 +1,19 @@
 {
-  "GAS_LIMIT": "2000000",
-  "server_uri": "3",
+  "config": [
+    {
+      "blockchain": "Ethereum",
+      "settings": {
+        "GAS_LIMIT": "2000000",
+        "end_point": "3"
+      }
+    },
+    {
+      "blockchain": "Solana",
+      "settings": {
+        "GAS_LIMIT": "2000000",
+        "end_point": "https://api.devnet.solana.com"
+      }
+    }
+  ],
   "log_file": "log.txt"
 }

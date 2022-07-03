@@ -53,9 +53,9 @@ export class Solana implements Blockchain {
       );
 
     const { uri } = await metaplex.nfts().uploadMetadata({
-      name: config.NFT_name,
-      hash: config.hash,
-      image: config.url_to_file,
+      name: config.nftName,
+      hash: config.nftHash,
+      url: config.nftLink,
     });
 
     const { nft } = await metaplex

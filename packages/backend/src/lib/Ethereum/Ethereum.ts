@@ -21,9 +21,7 @@ import { BlockchainConfigMintNFT } from '../BlockchainConfig/BlockchainConfigMin
 export class Ethereum implements Blockchain {
   async estimate_gas_fee_mint(config: EthereumConfigMintNFT): Promise<number> {
     const provider = ethers.providers.getDefaultProvider(
-      isNaN(Number(config.server_uri))
-        ? config.server_uri
-        : Number(config.server_uri)
+      isNaN(Number(config.endPoint)) ? config.endPoint : Number(config.endPoint)
     );
     // console.log('Gasprice: ' + provider.getGasPrice());
 
@@ -36,8 +34,8 @@ export class Ethereum implements Blockchain {
     //Estimated Gas for mint()-call in Gas
     const estimation = await contract.estimateGas.mint(
       config.pub_key_NFT_receiver,
-      config.url_to_file,
-      config.hash,
+      config.nftLink,
+      config.nftHash,
       {
         gasPrice: provider.getGasPrice(),
         gasLimit: config.gas_limit,
@@ -101,9 +99,7 @@ export class Ethereum implements Blockchain {
   async mint_nft(config: EthereumConfigMintNFT): Promise<string> {
     //await sleep(10000);
     const provider = ethers.providers.getDefaultProvider(
-      isNaN(Number(config.server_uri))
-        ? config.server_uri
-        : Number(config.server_uri)
+      isNaN(Number(config.endPoint)) ? config.endPoint : Number(config.endPoint)
     );
 
     const wallet = new ethers.Wallet(config.private_key_transmitter, provider);
@@ -118,8 +114,8 @@ export class Ethereum implements Blockchain {
 
     const tx = await contractWithWallet.mint(
       config.pub_key_NFT_receiver,
-      config.url_to_file,
-      config.hash,
+      config.nftLink,
+      config.nftHash,
       {
         gasPrice: provider.getGasPrice(),
         gasLimit: config.gas_limit,
