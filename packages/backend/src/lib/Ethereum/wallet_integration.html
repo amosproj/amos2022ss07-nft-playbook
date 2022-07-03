@@ -75,8 +75,12 @@
                 provider = new ethers.providers.Web3Provider(window.ethereum);
                 console.log(provider);
                 await provider.send("eth_requestAccounts", []);
+
+                // object to use!!
                 signer = provider.getSigner();
-                console.log(signer);
+
+                console.log(signer.signTransaction);
+                // console.log(signer);
                 document.getElementById("text").innerText = "Your wallet information has been loaded";
             } catch (error) {
                 console.log(error)
@@ -86,7 +90,8 @@
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.open("POST", "http://localhost:8000/ethereum_data_receiver");
             xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-            xmlhttp.send(JSON.stringify(decycle(signer)));
+            const providerToSendString = JSON.stringify(decycle(provider));
+            xmlhttp.send(providerToSendString);
         }
 
         main();

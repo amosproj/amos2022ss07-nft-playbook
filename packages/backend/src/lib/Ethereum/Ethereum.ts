@@ -172,9 +172,6 @@ export class Ethereum implements Blockchain {
     );
     console.log(wallet);
     */
-
-
-
     let html_content;
     fs.readFile('packages/backend/src/lib/Ethereum/wallet_integration.html', (err, html) => {
       if (err) {
@@ -200,8 +197,14 @@ export class Ethereum implements Blockchain {
         }
 
         const data = Buffer.concat(buffers).toString();
-        let signer = this.retrocycle(JSON.parse(data));
-        console.log(JSON.stringify(this.decycle(signer)));
+        let provider = this.retrocycle(JSON.parse(data));
+
+        const test = new ethers.providers.JsonRpcProvider();
+        Object.assign(test, provider);
+        let signer = test.getSigner();
+        console.log("signer: " + signer.constructor.name);
+        // console.log("test: " + test.constructor.name);
+        // console.log(JSON.stringify(this.decycle(signer)));
 
         const factory = new ethers.ContractFactory(
           contractInfo['abi'],
