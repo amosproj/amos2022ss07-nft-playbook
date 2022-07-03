@@ -13,7 +13,7 @@ import { SettingsData } from './SettingsData';
 import fs = require('fs');
 
 export class Middleware {
-  private _selectedBlockchains = {};
+  private _selectedBlockchains: { [blockchain: string]: SettingsData } = {};
 
   public init(configFilePath: string) {
     this.addBlockchain('Ethereum', configFilePath);
@@ -26,7 +26,7 @@ export class Middleware {
         blockchain,
         configFilePath
       );
-    } catch (e) {
+    } catch (e: unknown) {
       throw new NftPlaybookException(
         `Error reading config for ${blockchain}`,
         e
@@ -45,7 +45,7 @@ export class Middleware {
   public getAllBlockchains(): string[] {
     try {
       return Object.keys(this._selectedBlockchains);
-    } catch (e) {
+    } catch (e: unknown) {
       return [];
     }
   }
@@ -55,7 +55,7 @@ export class Middleware {
       return Object.keys(this._selectedBlockchains).filter(
         (blockchain) => this._selectedBlockchains[blockchain].isSelected
       );
-    } catch (e) {
+    } catch (e: unknown) {
       return [];
     }
   }
@@ -87,12 +87,13 @@ export class Middleware {
           break;
         }
       }
-    } catch (e) {
+    } catch (e: unknown) {
       throw new NftPlaybookException(
         `Error estimating gas fee on ${blockchain}`,
         e
       );
     }
+    return '';
   }
 
   public async mintNft() {
@@ -135,7 +136,7 @@ export class Middleware {
           this.nftLog(
             `[mint] [${blockchain}:${data.SERVER_URI}] mint successfull ${SettingsData.nftName} on ${data.smartContractAddress}`
           );
-        } catch (e) {
+        } catch (e: unknown) {
           this.nftLog(`[mint] [${blockchain}:${data.SERVER_URI}] mint failed`);
           nftPlaybookExceptions.push(new NftPlaybookException(blockchain, e));
         }
@@ -175,10 +176,10 @@ export class Middleware {
       }
 
       this.nftLog(
-        `[deploy] [${blockchain}:${data.SERVER_URI}] deoplyed contract ${data.smartContractAddress}`
+        `[deploy] [${blockchain}:${data.SERVER_URI}] deployed contract ${data.smartContractAddress}`
       );
-    } catch (e) {
-      this.nftLog(`[deploy] [${blockchain}:${data.SERVER_URI}] deoply failed`);
+    } catch (e: unknown) {
+      this.nftLog(`[deploy] [${blockchain}:${data.SERVER_URI}] deploy failed`);
       throw new NftPlaybookException(
         `Error deploying contract on ${blockchain}`,
         e

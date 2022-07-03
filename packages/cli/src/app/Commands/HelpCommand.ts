@@ -7,7 +7,7 @@ export class HelpCommand implements Command {
   name = CliStrings.HelpCommandLabel;
   help = `THIS STRING IS CURRENTLY NOT IN USE`;
 
-  commandIndex: Command[];
+  commandIndex: Command[] = [];
 
   async execute() {
     this.commandIndex.forEach((command) => {

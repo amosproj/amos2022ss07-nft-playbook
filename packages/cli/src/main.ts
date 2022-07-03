@@ -66,7 +66,10 @@ async function main() {
     const answers = await inquirer.prompt(promptQuestions);
     const index = commandChoices.indexOf(answers.selectedCommand);
     console.clear();
-    await TopLevelCommandIndex.at(index).execute();
+    const command = TopLevelCommandIndex.at(index);
+    if (command) {
+      await command.execute();
+    }
     console.clear();
   }
 }

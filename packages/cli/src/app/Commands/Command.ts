@@ -81,7 +81,7 @@ export async function getInput(
     },
   ];
 
-  let input: string;
+  let input = '';
   let showPrompt = true;
   while (showPrompt) {
     input = (await inquirer.prompt(inputQuestion)).input;

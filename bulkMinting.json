@@ -2,12 +2,18 @@
   "nfts": [
     {
       "name": "Test1",
-      "path": "packages/cli/src/2022-06-03_12-29-44.png",
+      "path": "NFT-Logo.jpg",
       "blockchains": [
         {
           "name": "Ethereum",
           "transmitter": "0x6fBd68deA5df9ECE2aB42a3b8BD48dEB5737730c"
-        },
+        }
+      ]
+    },
+    {
+      "name": "Test2",
+      "path": "NFT-Logo.jpg",
+      "blockchains": [
         {
           "name": "Solana",
           "transmitter": "67PmqBmQiT18RGfcrJZQMcgACeMdedUD21LgZap2tMrn"
@@ -15,18 +21,8 @@
       ]
     },
     {
-      "name": "Test2",
-      "path": "packages/cli/src/2022-06-03_12-29-44.png",
-      "blockchains": [
-        {
-          "name": "Ethereum",
-          "transmitter": "0x6fBd68deA5df9ECE2aB42a3b8BD48dEB5737730c"
-        }
-      ]
-    },
-    {
       "name": "Test3",
-      "path": "packages/cli/src/2022-06-03_12-29-44.png",
+      "path": "NFT-Logo.jpg",
       "blockchains": [
         {
           "name": "Ethereum",
