@@ -56,92 +56,115 @@ export class BulkMintingCommand implements Command {
         {
           name: string;
           path: string;
-          blockchains: [{ name: string; transmitter: string }];
+          blockchains: [{ name: string; receiver: string }];
         }
       ];
     } = JSON.parse(file);
 
-    for (const nft of nfts.nfts) {
-      let hash: string;
-      try {
-        hash = await PinataClient.uploadImage(nft.path, apiKey, apiSec);
-      } catch (e: unknown) {
-        await showException(<NftPlaybookException>e);
-        return;
-      }
-      middleware.setNftHash(hash);
-      const link = `https://gateway.ipfs.io/ipfs/${hash}`;
-      middleware.setNftLink(link);
+    let estimateGasFeeEthereum = 0;
+    let countOfEthereumNfts = 0;
+    let countOfSolanaNfts = 0;
 
+    for (const nft of nfts.nfts) {
       middleware.setNftName(nft.name);
       middleware.getSelectedBlockchains().forEach((x) => {
         middleware.deselectBlockchain(x);
       });
-      nft.blockchains.forEach((blochchain) => {
-        middleware.selectBlockchain(blochchain.name);
+
+      for (const blockchain of nft.blockchains) {
+        middleware.selectBlockchain(blockchain.name);
         middleware.setPublicKeyNftReceiver(
-          blochchain.transmitter,
-          blochchain.name
+          blockchain.receiver,
+          blockchain.name
         );
-      });
-      this.print_header();
+      }
       console.log(CliStrings.NFTMintingFeedbackSelectedBlockchains);
       console.log(CliStrings.NFTMintingFeedbackNFTName);
-      console.log(CliStrings.NFTMintingFeedbackNFTHash);
-      console.log(CliStrings.NFTMintingFeedbackNFTLink);
-
-      console.log(CliStrings.horizontalHashLine);
-
+      if (middleware.getSelectedBlockchains().length === 0) {
+        console.log(`No blockchains selected`);
+      }
       for (const blockchain of middleware.getSelectedBlockchains()) {
         console.log();
         if (blockchain === 'Solana') {
-          console.log('Gas Limit: Not implemented yet');
+          console.log('Solana Gas Limit: Not implemented yet');
         } else {
           console.log(CliStrings.NFTMintingFeedbackGasLimit(blockchain));
         }
         try {
           if (blockchain === 'Solana') {
-            console.log('Estimated gas fee: Not implemented yet');
+            countOfSolanaNfts++;
+            console.log('Solana Estimated gas fee: Not implemented yet');
           } else {
-            console.log(
-              await CliStrings.NFTMintingFeedbackEstimatedGasFeeGwei(blockchain)
+            countOfEthereumNfts++;
+            const estimateGasFee = await middleware.estimateGasFeeMintGwei(
+              blockchain
             );
+            console.log(
+              `${blockchain} Estimated gas fee: ` + `${estimateGasFee} Gwei`
+            );
+            estimateGasFeeEthereum += Number(estimateGasFee);
           }
         } catch (e: unknown) {
           if (await showException(<NftPlaybookException>e)) {
             return;
           }
         }
-
         console.log(CliStrings.NFTMintingFeedbackServerUri(blockchain));
-        console.log(CliStrings.NFTMintingFeedbackPrivateKey(blockchain));
         console.log(CliStrings.NFTMintingFeedbackNFTReceiver(blockchain));
       }
       console.log(CliStrings.horizontalHashLine);
+    }
+    console.log(`Minted ${countOfEthereumNfts} NFTs on Ethereum`);
+    console.log(`Total gas fee Ethereum: ${estimateGasFeeEthereum}  Gwei`);
+    console.log(`Minted ${countOfSolanaNfts} NFTs on Solana`);
 
-      // continue prompt
-      const promptQuestion: inquirer.QuestionCollection = [
-        {
-          type: 'confirm',
-          name: 'confirmed',
-          message: CliStrings.NFTMintingSummaryConfirmationQuestion,
-        },
-      ];
-      const answer = await inquirer.prompt(promptQuestion);
-      if (answer.confirmed) {
-        // prompt accepted
-        try {
-          await middleware.mintNft();
-        } catch (e: unknown) {
-          if (await showException(<NftPlaybookException>e)) {
-            return;
+    const promptQuestion: inquirer.QuestionCollection = [
+      {
+        type: 'confirm',
+        name: 'confirmed',
+        message: CliStrings.NFTMintingSummaryConfirmationQuestion,
+      },
+    ];
+    const answer = await inquirer.prompt(promptQuestion);
+    if (answer.confirmed) {
+      // prompt accepted
+      try {
+        for (const nft of nfts.nfts) {
+          let hash: string;
+          try {
+            hash = await PinataClient.uploadImage(nft.path, apiKey, apiSec);
+          } catch (e: unknown) {
+            if (await showException(<NftPlaybookException>e)) {
+              return;
+            }
           }
+          middleware.setNftHash(hash);
+          const link = `https://gateway.ipfs.io/ipfs/${hash}`;
+          middleware.setNftLink(link);
+
+          middleware.setNftName(nft.name);
+          middleware.getSelectedBlockchains().forEach((x) => {
+            middleware.deselectBlockchain(x);
+          });
+          nft.blockchains.forEach((blochchain) => {
+            middleware.selectBlockchain(blochchain.name);
+            middleware.setPublicKeyNftReceiver(
+              blochchain.receiver,
+              blochchain.name
+            );
+          });
+          await middleware.mintNft();
+          await sleep(2000);
         }
-      } else {
-        // prompt denied
-        console.log(CliStrings.NFTMintingFeedbackAbort);
-        await sleep(2000);
+      } catch (e: unknown) {
+        if (await showException(<NftPlaybookException>e)) {
+          return;
+        }
       }
+    } else {
+      // prompt denied
+      console.log(CliStrings.NFTMintingFeedbackAbort);
+      await sleep(2000);
     }
   }
 }
