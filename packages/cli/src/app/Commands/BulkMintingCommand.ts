@@ -61,11 +61,31 @@ export class BulkMintingCommand implements Command {
       ];
     } = JSON.parse(file);
 
+    const nftSettings: {
+      [nft: string]: {
+        hash: string;
+        link: string;
+      };
+    } = {};
+
     let estimateGasFeeEthereum = 0;
     let countOfEthereumNfts = 0;
     let countOfSolanaNfts = 0;
 
     for (const nft of nfts.nfts) {
+      let hash: string;
+      try {
+        hash = await PinataClient.uploadImage(nft.path, apiKey, apiSec);
+      } catch (e: unknown) {
+        if (await showException(<NftPlaybookException>e)) {
+          return;
+        }
+      }
+      middleware.setNftHash(hash);
+      const link = `https://gateway.ipfs.io/ipfs/${hash}`;
+      middleware.setNftLink(link);
+      nftSettings[nft.name] = { hash, link };
+
       middleware.setNftName(nft.name);
       middleware.getSelectedBlockchains().forEach((x) => {
         middleware.deselectBlockchain(x);
@@ -80,6 +100,8 @@ export class BulkMintingCommand implements Command {
       }
       console.log(CliStrings.NFTMintingFeedbackSelectedBlockchains);
       console.log(CliStrings.NFTMintingFeedbackNFTName);
+      console.log(CliStrings.NFTMintingFeedbackNFTHash);
+      console.log(CliStrings.NFTMintingFeedbackNFTLink);
       if (middleware.getSelectedBlockchains().length === 0) {
         console.log(`No blockchains selected`);
       }
@@ -130,18 +152,8 @@ export class BulkMintingCommand implements Command {
       // prompt accepted
       try {
         for (const nft of nfts.nfts) {
-          let hash: string;
-          try {
-            hash = await PinataClient.uploadImage(nft.path, apiKey, apiSec);
-          } catch (e: unknown) {
-            if (await showException(<NftPlaybookException>e)) {
-              return;
-            }
-          }
-          middleware.setNftHash(hash);
-          const link = `https://gateway.ipfs.io/ipfs/${hash}`;
-          middleware.setNftLink(link);
-
+          middleware.setNftHash(nftSettings[nft.name].hash);
+          middleware.setNftLink(nftSettings[nft.name].link);
           middleware.setNftName(nft.name);
           middleware.getSelectedBlockchains().forEach((x) => {
             middleware.deselectBlockchain(x);
