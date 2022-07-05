@@ -17,16 +17,13 @@ export class IPFSCommand implements Command {
       process.env.PINATA_API_SEC === undefined ||
       process.env.PINATA_API_SEC.length === 0
     ) {
-      apiKey = await getInput(CliStrings.IPFSQuestionApiKey, undefined);
-      apiSec = await getInput(CliStrings.IPFSQuestionApiSec, undefined);
+      apiKey = await getInput(CliStrings.IPFSQuestionApiKey, '');
+      apiSec = await getInput(CliStrings.IPFSQuestionApiSec, '');
     } else {
       apiKey = process.env.PINATA_API_KEY;
       apiSec = process.env.PINATA_API_SEC;
     }
-    const path = await getInput(
-      CliStrings.IPFSFileConfirmationQuestion,
-      undefined
-    );
+    const path = await getInput(CliStrings.IPFSFileConfirmationQuestion, '');
 
     try {
       fs.accessSync(path, fs.constants.R_OK);

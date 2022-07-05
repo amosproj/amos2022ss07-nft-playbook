@@ -151,6 +151,18 @@ export const CliStrings = {
   ),
   GetInputConfirmationInput: `Input: `,
 
+  // Bulk Minting
+  BulkMintingCommandLabel: `Bulk Minting`,
+  BulkMintingCommandHelp: `Bulk Minting help`,
+  BulkMintingCommandMenuHeader: chalk.green(`Bulk Minting`),
+  BulkMintingConfirmationQuestion: chalk.yellow(
+    `Please provide the path to the file you want to minting.`
+  ),
+  BulkMintingErrorMessageNotFile: chalk.red(`Given path is not a file`),
+  BulkMintingErrorMessageNoAccess: chalk.red(
+    "No access or file doesn't exist!"
+  ),
+
   // Start Minting
   TestMintingCommandLabel: `Test Minting`,
   TestMintingCommandHelp: `Test the minting process`,

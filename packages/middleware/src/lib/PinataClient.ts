@@ -17,7 +17,7 @@ export class PinataClient {
       const res = await pinata.pinFileToIPFS(fs.createReadStream(path));
       middleware.nftLog(`[pinata] upload successfull: ${res['IpfsHash']}`);
       return res['IpfsHash'];
-    } catch (e) {
+    } catch (e: unknown) {
       middleware.nftLog(`[pinata] upload failed`);
       throw new NftPlaybookException(chalk.red(`Upload failed`), e);
     }

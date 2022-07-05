@@ -52,6 +52,10 @@ export class BlockchainSettingsCommand implements Command {
       ];
 
       if (blockchain === 'Solana') {
+        middleware.setContractAddress(
+          blockchain,
+          'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s'
+        );
         return;
       }
       const selectedContractMethod: string = (

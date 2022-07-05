@@ -8,6 +8,7 @@ import { IPFSCommand } from './IPFSCommand';
 import inquirer = require('inquirer');
 import chalk = require('chalk');
 import { NftPlaybookException } from '@nft-playbook/middleware';
+import { BulkMintingCommand } from './BulkMintingCommand';
 
 // import { SelectWalletCommand } from './SelectWalletCommand';
 
@@ -28,6 +29,7 @@ export const TopLevelCommandIndex: Command[] = [
   new IPFSCommand(),
   new BlockchainSettingsCommand(),
   new NFTMintingCommand(),
+  new BulkMintingCommand(),
   new VersionCommand(),
   // new TestMintingCommand(),
   new BackCommand(
@@ -79,7 +81,7 @@ export async function getInput(
     },
   ];
 
-  let input: string;
+  let input = '';
   let showPrompt = true;
   while (showPrompt) {
     input = (await inquirer.prompt(inputQuestion)).input;

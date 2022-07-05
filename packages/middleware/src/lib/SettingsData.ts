@@ -22,13 +22,12 @@ export class SettingsData {
     this._blockchain = blockchain;
     //'./packages/cli/src/info.json'
     // if (configFilePath != undefined)
-    this.readSettingsFile(configFilePath);
-    this.fillEmptySettings();
-  }
-  private fillEmptySettings() {
-    this._smartContractAddress = '';
-    this._userPrivKey = '';
     this._pubKeyNftReceiver = '';
+    this._userPrivKey = '';
+    this._SERVER_URI = '';
+    this._GAS_LIMIT = 0;
+    this._smartContractAddress = '';
+    this.readSettingsFile(configFilePath);
   }
 
   private readSettingsFile(configFilePath: string): boolean {

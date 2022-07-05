@@ -4,13 +4,12 @@ import { EthereumConfigDeployContract } from './EthereumConfig/EthereumConfigDep
 import { EthereumConfigMintNFT } from './EthereumConfig/EthereumConfigMintNFT';
 import { EthereumConfigReadSmartContract } from './EthereumConfig/EthereumConfigReadSmartContract';
 import { EthereumConfigReadUserDataFromSmartContract } from './EthereumConfig/EthereumConfigReadUserDataFromSmartContract';
-import { readFileSync, writeFileSync } from 'fs';
-import { exit, listenerCount } from 'process';
+import { readFileSync } from 'fs';
+import { exit } from 'process';
 import { resolve, sep, posix } from 'path';
 import * as solc from 'solc';
 //import solc = require('solc');
 import { EthereumConfigReadTokenData } from './EthereumConfig/EthereumConfigReadTokenData';
-import { BlockchainConfigMintNFT } from '../BlockchainConfig/BlockchainConfigMintNFT';
 //const open = require('open');
 //const fs = require('fs');
 //const jc = require('json-cycle');
@@ -249,7 +248,7 @@ export class Ethereum implements Blockchain {
   // recursive function that iterates over all dependencies and merges them into @param merged_sources
   private static _rec_merge_all_solidity_sources(
     current_file_path: string,
-    merged_sources
+    merged_sources: { [x: string]: { content: any } }
   ) {
     // read the content of the current file and append it to our merged_soruces
     let current_file_content;
