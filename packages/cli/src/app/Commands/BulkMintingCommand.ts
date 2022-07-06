@@ -151,6 +151,9 @@ export class BulkMintingCommand implements Command {
     if (answer.confirmed) {
       // prompt accepted
       try {
+        const totalNfts = countOfEthereumNfts + countOfSolanaNfts;
+        let mintedNfts = 0;
+        let tmp = '';
         for (const nft of nfts.nfts) {
           middleware.setNftHash(nftSettings[nft.name].hash);
           middleware.setNftLink(nftSettings[nft.name].link);
@@ -166,13 +169,26 @@ export class BulkMintingCommand implements Command {
             );
           });
           await middleware.mintNft();
-          await sleep(2000);
+          mintedNfts++;
+          tmp += '#';
+          console.log(
+            CliStrings.BulkMintingCommandProgress(tmp, mintedNfts, totalNfts)
+          );
+          await sleep(1000);
         }
       } catch (e: unknown) {
         if (await showException(<NftPlaybookException>e)) {
           return;
         }
       }
+      const promptQuestion: inquirer.QuestionCollection = [
+        {
+          type: 'confirm',
+          name: 'confirmed',
+          message: CliStrings.BulkMintingCommandSucsessMessage,
+        },
+      ];
+      const answer = await inquirer.prompt(promptQuestion);
     } else {
       // prompt denied
       console.log(CliStrings.NFTMintingFeedbackAbort);
