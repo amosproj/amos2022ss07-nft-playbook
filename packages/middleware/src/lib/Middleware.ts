@@ -328,8 +328,8 @@ export class Middleware {
         data.smartContractAddress = contract_addr;
         break;
       }
-      case 'Flow': {
-        //this._deployContractFlow();
+      case 'Solana': {
+        data.smartContractAddress = contract_addr;
         break;
       }
       default: {
