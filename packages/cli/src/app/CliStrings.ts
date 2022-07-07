@@ -46,9 +46,9 @@ export const CliStrings = {
 
   // IPFS
   IPFSCommandLabel: `IPFS/Pinata`,
-  IPFSCommandHelp: `\tUpload files to IPFS via pinata`,
-  IPFSQuestionApiKey: `Api-key`,
-  IPFSQuestionApiSec: `Api-sec`,
+  IPFSCommandHelp: `\tUpload files to IPFS via pinata.\n\tLearn more about pinata at: https://www.pinata.cloud/`,
+  IPFSQuestionApiKey: `Please provide your Pinata API-Key. Alternatively you can provide your API-Key and API-Sec in `,
+  IPFSQuestionApiSec: `Api-Please provide your Pinata API-Sec.`,
   IPFSFileConfirmationQuestion: chalk.yellow(
     `Please provide the path to the file you want to upload.`
   ),
@@ -61,7 +61,7 @@ export const CliStrings = {
 
   // Blockchain Settings
   BlockchainSettingsCommandLabel: `Blockchain Settings`,
-  BlockchainSettingsCommandHelp: `\tPLease use the 'Blockchain Settings' command to configure all settings related to your used blockchains.`,
+  BlockchainSettingsCommandHelp: `\tPlease use the 'Blockchain Settings' command to configure all settings related to your used blockchains.`,
   BlockchainSettingsMenuHeader: chalk.green(`Blockchain Settings`),
   BlockchainSettingsMenuQuestion01: chalk.yellow(
     `Please select your desired blockchain(s), multiselection is possible.`
@@ -87,7 +87,7 @@ export const CliStrings = {
 
   // NFT Minting
   NFTMintingCommandLabel: `NFT Minting`,
-  NFTMintingCommandHelp: `\tThe 'NFT Minting' folder provides you with the 'NFT Settings' command to configure your NFT settings as well as the 'Start Minting' command to start your minting process.`,
+  NFTMintingCommandHelp: `\tIn the NFT Minting Menu you can specify all information concerning your NFT including Name and Link (which is already prefilled if you upload a file via Pinata).`,
   NFTMintingCommandMenuHeader: chalk.green(`NFT Minting`),
   NFTMintingQuestionName: `Name`,
   NFTMintingQuestionLink: `NFT Link`,
@@ -153,7 +153,7 @@ export const CliStrings = {
 
   // Bulk Minting
   BulkMintingCommandLabel: `Bulk Minting`,
-  BulkMintingCommandHelp: `Bulk Minting help`,
+  BulkMintingCommandHelp: `Here you can provide a JSON file to mint multiple NFTs at once.`,
   BulkMintingCommandMenuHeader: chalk.green(`Bulk Minting`),
   BulkMintingConfirmationQuestion: chalk.yellow(
     `Please provide the path to the file you want to minting.`

@@ -17,6 +17,7 @@ export class IPFSCommand implements Command {
       process.env.PINATA_API_SEC === undefined ||
       process.env.PINATA_API_SEC.length === 0
     ) {
+      //console.log(CliStrings.IPFSCommandHelp, '');
       apiKey = await getInput(CliStrings.IPFSQuestionApiKey, '');
       apiSec = await getInput(CliStrings.IPFSQuestionApiSec, '');
     } else {
