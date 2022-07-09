@@ -162,10 +162,7 @@ export const CliStrings = {
   BulkMintingErrorMessageNoAccess: chalk.red(
     "No access or file doesn't exist!"
   ),
-  BulkMintingCommandProgress: (
-    mintedNfts: number,
-    totalNfts: number
-  ) => {
+  BulkMintingCommandProgress: (mintedNfts: number, totalNfts: number) => {
     return chalk.blue(`${mintedNfts}/${totalNfts} completed`);
   },
   BulkMintingCommandSucsessMessage: chalk.yellow(
