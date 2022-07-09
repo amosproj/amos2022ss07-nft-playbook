@@ -10,6 +10,7 @@ import { resolve, sep, posix } from 'path';
 import * as solc from 'solc';
 //import solc = require('solc');
 import { EthereumConfigReadTokenData } from './EthereumConfig/EthereumConfigReadTokenData';
+const CoinGecko = require('coingecko-api');
 //const open = require('open');
 //const fs = require('fs');
 //const jc = require('json-cycle');
@@ -196,6 +197,21 @@ export class Ethereum implements Blockchain {
     );
   }
 
+  async convert_gwei_to_euro(amount_of_gwei: number, anz_max_digits: number): Promise<number> {
+    // Get CoinGecko object
+    const CoinGeckoClient = new CoinGecko();
+
+    // retrieve cryptocurrency price data for ethereum in euro
+    let data = await CoinGeckoClient.simple.price({
+      ids: ['ethereum'],
+      vs_currencies: ['eur'],
+    });
+
+    // return the price in euro mit the maximum amount of digits
+    return Math.round(data.data.ethereum.eur / Math.pow(10, 9) * amount_of_gwei * Math.pow(10, anz_max_digits)) / Math.pow(10, anz_max_digits);
+  }
+
+
   /**
    * Binds & Compiles a contract from .sol-file
    * @param path_to_contract_solidity
@@ -230,13 +246,13 @@ export class Ethereum implements Blockchain {
 
     const contractJSON =
       output['contracts'][
-        resolve(process.cwd(), path_to_contract_solidity)
-          .split(sep)
-          .join(posix.sep)
+      resolve(process.cwd(), path_to_contract_solidity)
+        .split(sep)
+        .join(posix.sep)
       ][
-        path_to_contract_solidity
-          .substr(path_to_contract_solidity.lastIndexOf('/') + 1)
-          .split('.')[0]
+      path_to_contract_solidity
+        .substr(path_to_contract_solidity.lastIndexOf('/') + 1)
+        .split('.')[0]
       ];
 
     return {
