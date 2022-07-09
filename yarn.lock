@@ -2551,6 +2551,11 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
+"@types/coingecko-api@^1.0.10":
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@types/coingecko-api/-/coingecko-api-1.0.10.tgz#e841f75c1dc5c6ab8f251011b28a9aec0576ec19"
+  integrity sha512-ENJO5JzV7qTj8GfrRWAy8lom4RPQv03stvw2z9riz0z7WOXcaorc8OPov8JEekoGQ397O1BbvgPjZj7bWgqdgg==
+
 "@types/connect@^3.4.33":
   version "3.4.35"
   resolved "https://registry.yarnpkg.com/@types/connect/-/connect-3.4.35.tgz#5fcf6ae445e4021d1fc2219a4873cc73a3bb2ad1"
@@ -3711,6 +3716,11 @@ co@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/co/-/co-4.6.0.tgz#6ea6bdf3d853ae54ccb8e47bfa0bf3f9031fb184"
   integrity sha512-QVb0dM5HvG+uaxitm8wONl7jltx8dqhfU33DcqtOZcLSVIKSDDLDi7+0LbAKiyI8hD9u42m2YxXSkMGWThaecQ==
+
+coingecko-api@^1.0.10:
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/coingecko-api/-/coingecko-api-1.0.10.tgz#ac8694d5999f00727fe55f0078ce2917603076b2"
+  integrity sha512-7YLLC85+daxAw5QlBWoHVBVpJRwoPr4HtwanCr8V/WRjoyHTa1Lb9DQAvv4MDJZHiz4no6HGnDQnddtjV35oRA==
 
 collect-v8-coverage@^1.0.0:
   version "1.0.1"
