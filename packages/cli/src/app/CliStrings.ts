@@ -163,11 +163,10 @@ export const CliStrings = {
     "No access or file doesn't exist!"
   ),
   BulkMintingCommandProgress: (
-    z: string,
     mintedNfts: number,
     totalNfts: number
   ) => {
-    return chalk.blue(`${z} ${mintedNfts}/${totalNfts} is minted`);
+    return chalk.blue(`${mintedNfts}/${totalNfts} completed`);
   },
   BulkMintingCommandSucsessMessage: chalk.yellow(
     `Congratulations minting sucsessful please confirm to continue`

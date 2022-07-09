@@ -151,9 +151,8 @@ export class BulkMintingCommand implements Command {
     if (answer.confirmed) {
       // prompt accepted
       try {
-        const totalNfts = countOfEthereumNfts + countOfSolanaNfts;
+        const totalNfts = nfts.nfts.length;
         let mintedNfts = 0;
-        let tmp = '';
         for (const nft of nfts.nfts) {
           middleware.setNftHash(nftSettings[nft.name].hash);
           middleware.setNftLink(nftSettings[nft.name].link);
@@ -170,9 +169,8 @@ export class BulkMintingCommand implements Command {
           });
           await middleware.mintNft();
           mintedNfts++;
-          tmp += '#';
           console.log(
-            CliStrings.BulkMintingCommandProgress(tmp, mintedNfts, totalNfts)
+            CliStrings.BulkMintingCommandProgress(mintedNfts, totalNfts)
           );
           await sleep(1000);
         }
