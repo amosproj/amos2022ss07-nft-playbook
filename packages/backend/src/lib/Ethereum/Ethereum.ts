@@ -8,12 +8,7 @@ import { readFileSync } from 'fs';
 import { exit } from 'process';
 import { resolve, sep, posix } from 'path';
 import * as solc from 'solc';
-//import solc = require('solc');
 import { EthereumConfigReadTokenData } from './EthereumConfig/EthereumConfigReadTokenData';
-//const open = require('open');
-//const fs = require('fs');
-//const jc = require('json-cycle');
-//import * as http from 'http'; //ES 6
 
 // TODO: Check the type of the ConfigArguments!!!!!
 
@@ -45,6 +40,7 @@ export class Ethereum implements Blockchain {
 
     return estimation.toNumber() * (await provider.getGasPrice()).toNumber();
   }
+
   /**
    * ABI for Smart Contract
    */
@@ -300,6 +296,8 @@ export class Ethereum implements Blockchain {
     process.chdir(new_cwd);
     return dependencies;
   }
+
+  /*
   retrocycle($) {
     const px =
       // eslint-disable-next-line no-control-regex
@@ -402,6 +400,9 @@ export class Ethereum implements Blockchain {
       return _value;
     })(object, '$');
   }
+
+
+   */
   //This function is the result of our test for wallet integration. This feauture is not longer maintained but is still part of the repository for documenation reasons.
   /*
   async deploy_contract(config: EthereumConfigDeployContract): Promise<string> {
