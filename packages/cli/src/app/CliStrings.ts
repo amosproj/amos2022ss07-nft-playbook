@@ -58,6 +58,11 @@ export const CliStrings = {
   IPFSSuccessMessage(link: string): string {
     return chalk.blue(`Upload successful: ${link}`);
   },
+  IPFSWarningMessage: chalk.yellow(
+    `You need to provide your pinata credentials. See https://github.com/amosproj/amos2022ss07-nft-playbook/wiki/User-Documentation#env if you don't want to manually input this every time.`
+  ),
+  IPFSConfirmationQuestion: chalk.yellow(`Continue to enter credentials`),
+  IPFSEnvFile: chalk.yellow(`Using pinata credentials from .env file`),
 
   // Blockchain Settings
   BlockchainSettingsCommandLabel: `Blockchain Settings`,

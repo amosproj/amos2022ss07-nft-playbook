@@ -3,6 +3,7 @@ import { CliStrings } from '../CliStrings';
 import { Command, getInput, showException, sleep } from './Command';
 import { middleware } from '@nft-playbook/middleware';
 import fs = require('fs');
+import inquirer = require('inquirer');
 
 export class IPFSCommand implements Command {
   name = CliStrings.IPFSCommandLabel;
@@ -17,9 +18,23 @@ export class IPFSCommand implements Command {
       process.env.PINATA_API_SEC === undefined ||
       process.env.PINATA_API_SEC.length === 0
     ) {
-      apiKey = await getInput(CliStrings.IPFSQuestionApiKey, '');
-      apiSec = await getInput(CliStrings.IPFSQuestionApiSec, '');
+      console.log(CliStrings.IPFSWarningMessage);
+      const promptQuestion: inquirer.QuestionCollection = [
+        {
+          type: 'confirm',
+          name: 'confirmed',
+          message: CliStrings.IPFSConfirmationQuestion,
+        },
+      ];
+      const answer = await inquirer.prompt(promptQuestion);
+      if (answer.confirmed) {
+        apiKey = await getInput(CliStrings.IPFSQuestionApiKey, '');
+        apiSec = await getInput(CliStrings.IPFSQuestionApiSec, '');
+      } else {
+        return;
+      }
     } else {
+      console.log(CliStrings.IPFSEnvFile);
       apiKey = process.env.PINATA_API_KEY;
       apiSec = process.env.PINATA_API_SEC;
     }
