@@ -8,13 +8,8 @@ import { readFileSync } from 'fs';
 import { exit } from 'process';
 import { resolve, sep, posix } from 'path';
 import * as solc from 'solc';
-//import solc = require('solc');
 import { EthereumConfigReadTokenData } from './EthereumConfig/EthereumConfigReadTokenData';
-const CoinGecko = require('coingecko-api');
-//const open = require('open');
-//const fs = require('fs');
-//const jc = require('json-cycle');
-//import * as http from 'http'; //ES 6
+import CoinGecko = require('coingecko-api');
 
 // TODO: Check the type of the ConfigArguments!!!!!
 
@@ -214,8 +209,8 @@ export class Ethereum implements Blockchain {
     return (
       Math.round(
         (data.data.ethereum.eur / Math.pow(10, 9)) *
-        amount_of_gwei *
-        Math.pow(10, anz_max_digits)
+          amount_of_gwei *
+          Math.pow(10, anz_max_digits)
       ) / Math.pow(10, anz_max_digits)
     );
   }
@@ -254,13 +249,13 @@ export class Ethereum implements Blockchain {
 
     const contractJSON =
       output['contracts'][
-      resolve(process.cwd(), path_to_contract_solidity)
-        .split(sep)
-        .join(posix.sep)
+        resolve(process.cwd(), path_to_contract_solidity)
+          .split(sep)
+          .join(posix.sep)
       ][
-      path_to_contract_solidity
-        .substr(path_to_contract_solidity.lastIndexOf('/') + 1)
-        .split('.')[0]
+        path_to_contract_solidity
+          .substr(path_to_contract_solidity.lastIndexOf('/') + 1)
+          .split('.')[0]
       ];
 
     return {

@@ -4,9 +4,8 @@ import { SolanaConfigMintNFT } from './SolanaConfig/SolanaConfigMintNFT';
 import { BlockchainConfigReadSmartContract } from '../BlockchainConfig/BlockchainConfigReadSmartContract';
 import { BlockChainConfigReadTokenData } from '../BlockchainConfig/BlockChainConfigReadTokenData';
 import { BlockChainConfigReadUserDataFromSmartContract } from '../BlockchainConfig/BlockChainConfigReadUserDataFromSmartContract';
-const CoinGecko = require('coingecko-api');
 // TODO: Check the type of the ConfigArguments!!!!!
-
+import CoinGecko = require('coingecko-api');
 import {
   Connection,
   Keypair,
@@ -97,8 +96,8 @@ export class Solana implements Blockchain {
     return (
       Math.round(
         (data.data.solana.eur / Math.pow(10, 9)) *
-        amount_of_sol *
-        Math.pow(10, anz_max_digits)
+          amount_of_sol *
+          Math.pow(10, anz_max_digits)
       ) / Math.pow(10, anz_max_digits)
     );
   }

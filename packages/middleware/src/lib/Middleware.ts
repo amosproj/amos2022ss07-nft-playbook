@@ -96,6 +96,43 @@ export class Middleware {
     return '';
   }
 
+  public async estimateGasFeeMint(blockchain: string): Promise<any> {
+    const data: SettingsData = this._selectedBlockchains[blockchain];
+
+    try {
+      switch (blockchain) {
+        case 'Ethereum': {
+          const estimateGasFeeMintEthereum =
+            await this._estimateGasFeeMintGweiAndEuroEthereum(
+              SettingsData.nftName,
+              data.SERVER_URI,
+              data.userPrivKey,
+              data.smartContractAddress,
+              data.pubKeyNftReceiver,
+              SettingsData.nftHash,
+              SettingsData.nftLink,
+              data.GAS_LIMIT
+            );
+
+          return estimateGasFeeMintEthereum;
+        }
+        case 'Flow': {
+          //this._mintNftFlow();
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+    } catch (e: unknown) {
+      throw new NftPlaybookException(
+        `Error estimating gas fee on ${blockchain}`,
+        e
+      );
+    }
+    return '';
+  }
+
   public async mintNft() {
     const nftPlaybookExceptions: NftPlaybookException[] = [];
 
@@ -457,6 +494,43 @@ export class Middleware {
 
     //mint nft on given contract
     return await new Ethereum().estimate_gas_fee_mint(ethereumConfigMintNFT);
+  }
+
+  private async _estimateGasFeeMintGweiAndEuroEthereum(
+    nft_name: string,
+    server_uri: string,
+    priv_key_NFT_transmitter: string,
+    addr: string,
+    pub_key_NFT_receiver: string,
+    nft_hash: string,
+    nft_link: string,
+    GAS_LIMIT: number
+  ): Promise<any> {
+    const ethereumConfigMintNFT = new EthereumConfigMintNFT(
+      nft_name,
+      server_uri,
+      priv_key_NFT_transmitter,
+      addr,
+      pub_key_NFT_receiver,
+      nft_hash,
+      nft_link,
+      GAS_LIMIT
+    );
+    const ANZ_DIGITS = 5;
+
+    // get amount of gwei and euro
+    const amount_of_gwei: number =
+      (await new Ethereum().estimate_gas_fee_mint(ethereumConfigMintNFT)) *
+      Math.pow(10, -9);
+    const amount_of_euro: number = await new Ethereum().convert_gwei_to_euro(
+      Math.floor(amount_of_gwei),
+      ANZ_DIGITS
+    );
+
+    return {
+      crypto: amount_of_gwei.toFixed(2) + ' Gwei',
+      fiat: amount_of_euro.toFixed(ANZ_DIGITS) + ' Euro',
+    };
   }
 
   /* read token data from Ethereum */
