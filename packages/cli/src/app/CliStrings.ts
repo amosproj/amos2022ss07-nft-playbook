@@ -116,12 +116,13 @@ export const CliStrings = {
       chalk.cyan(`${middleware.getGasLimit(blockchain)}`)
     );
   },
-  NFTMintingFeedbackEstimatedGasFeeGwei: async (
+  NFTMintingFeedbackEstimatedGasFee: async (
     blockchain: string
   ): Promise<string> => {
+    const estimateGasFee = await middleware.estimateGasFeeMint(blockchain);
     return (
       `${blockchain} Estimated gas fee: ` +
-      chalk.cyan(`${await middleware.estimateGasFeeMintGwei(blockchain)} Gwei`)
+      chalk.cyan(`${estimateGasFee.crypto} => ${estimateGasFee.fiat}`)
     );
   },
   NFTMintingFeedbackServerUri: (blockchain: string): string => {

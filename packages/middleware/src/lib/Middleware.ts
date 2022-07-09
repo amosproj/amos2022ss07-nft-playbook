@@ -60,42 +60,6 @@ export class Middleware {
     }
   }
 
-  public async estimateGasFeeMintGwei(blockchain: string): Promise<string> {
-    const data: SettingsData = this._selectedBlockchains[blockchain];
-
-    try {
-      switch (blockchain) {
-        case 'Ethereum': {
-          const estimateGasFeeMintEthereum =
-            await this._estimateGasFeeMintEthereum(
-              SettingsData.nftName,
-              data.SERVER_URI,
-              data.userPrivKey,
-              data.smartContractAddress,
-              data.pubKeyNftReceiver,
-              SettingsData.nftHash,
-              SettingsData.nftLink,
-              data.GAS_LIMIT
-            );
-          return (estimateGasFeeMintEthereum * Math.pow(10, -9)).toFixed(2);
-        }
-        case 'Flow': {
-          //this._mintNftFlow();
-          break;
-        }
-        default: {
-          break;
-        }
-      }
-    } catch (e: unknown) {
-      throw new NftPlaybookException(
-        `Error estimating gas fee on ${blockchain}`,
-        e
-      );
-    }
-    return '';
-  }
-
   public async estimateGasFeeMint(blockchain: string): Promise<any> {
     const data: SettingsData = this._selectedBlockchains[blockchain];
 
@@ -116,7 +80,7 @@ export class Middleware {
 
           return estimateGasFeeMintEthereum;
         }
-        case 'Flow': {
+        case 'Solana': {
           //this._mintNftFlow();
           break;
         }
@@ -469,31 +433,6 @@ export class Middleware {
 
     // deploy contract on ethereum blockchain
     return await new Ethereum().deploy_contract(ethereumConfigDeployContract);
-  }
-
-  private async _estimateGasFeeMintEthereum(
-    nft_name: string,
-    server_uri: string,
-    priv_key_NFT_transmitter: string,
-    addr: string,
-    pub_key_NFT_receiver: string,
-    nft_hash: string,
-    nft_link: string,
-    GAS_LIMIT: number
-  ): Promise<number> {
-    const ethereumConfigMintNFT = new EthereumConfigMintNFT(
-      nft_name,
-      server_uri,
-      priv_key_NFT_transmitter,
-      addr,
-      pub_key_NFT_receiver,
-      nft_hash,
-      nft_link,
-      GAS_LIMIT
-    );
-
-    //mint nft on given contract
-    return await new Ethereum().estimate_gas_fee_mint(ethereumConfigMintNFT);
   }
 
   private async _estimateGasFeeMintGweiAndEuroEthereum(
