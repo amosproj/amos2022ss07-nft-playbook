@@ -80,17 +80,26 @@ export class Solana implements Blockchain {
   }
 
   // IMPORTANT! amount_of_sol == Math.pow(10, 9) * SOL! (Same as with ETH -> Gwei)
-  async convert_sol_to_euro(amount_of_sol: number, anz_max_digits: number): Promise<number> {
+  async convert_sol_to_euro(
+    amount_of_sol: number,
+    anz_max_digits: number
+  ): Promise<number> {
     // Get CoinGecko object
     const CoinGeckoClient = new CoinGecko();
 
     // retrieve cryptocurrency price data for solana in euro
-    let data = await CoinGeckoClient.simple.price({
+    const data = await CoinGeckoClient.simple.price({
       ids: ['solana'],
       vs_currencies: ['eur'],
     });
 
     // return the price in euro mit the maximum amount of digits
-    return Math.round(data.data.solana.eur / Math.pow(10, 9) * amount_of_sol * Math.pow(10, anz_max_digits)) / Math.pow(10, anz_max_digits);
+    return (
+      Math.round(
+        (data.data.solana.eur / Math.pow(10, 9)) *
+        amount_of_sol *
+        Math.pow(10, anz_max_digits)
+      ) / Math.pow(10, anz_max_digits)
+    );
   }
 }
