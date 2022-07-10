@@ -20,7 +20,8 @@
       "@nft-playbook/middleware": ["packages/middleware/src/index.ts"]
     },
     "typeRoots": [
-      "./solc.d.ts"
+      "./solc.d.ts",
+      "node_modules/@types"
     ],
     "types": ["jest", "node"]
   },
