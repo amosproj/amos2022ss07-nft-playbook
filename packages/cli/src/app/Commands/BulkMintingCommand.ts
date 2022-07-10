@@ -73,13 +73,17 @@ export class BulkMintingCommand implements Command {
     let countOfSolanaNfts = 0;
 
     for (const nft of nfts.nfts) {
-      let hash: string;
+      let hash: string | undefined = undefined;
       try {
         hash = await PinataClient.uploadImage(nft.path, apiKey, apiSec);
       } catch (e: unknown) {
         if (await showException(<NftPlaybookException>e)) {
           return;
         }
+      }
+      if (hash == undefined) {
+        //TODO: Show error message!
+        return;
       }
       middleware.setNftHash(hash);
       const link = `https://gateway.ipfs.io/ipfs/${hash}`;
