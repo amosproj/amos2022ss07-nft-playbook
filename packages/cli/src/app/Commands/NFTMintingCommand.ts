@@ -60,7 +60,7 @@ export class NFTMintingCommand implements Command {
           console.log('Estimated gas fee: Not implemented yet');
         } else {
           console.log(
-            await CliStrings.NFTMintingFeedbackEstimatedGasFeeGwei(blockchain)
+            await CliStrings.NFTMintingFeedbackEstimatedGasFee(blockchain)
           );
         }
       } catch (e: unknown) {

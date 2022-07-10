@@ -9,6 +9,7 @@ import { exit } from 'process';
 import { resolve, sep, posix } from 'path';
 import * as solc from 'solc';
 import { EthereumConfigReadTokenData } from './EthereumConfig/EthereumConfigReadTokenData';
+import CoinGecko = require('coingecko-api');
 
 // TODO: Check the type of the ConfigArguments!!!!!
 
@@ -189,6 +190,29 @@ export class Ethereum implements Blockchain {
 
     console.log(
       `Picture hash: <${await contract.read_pic_hash(config.token_id)}>`
+    );
+  }
+
+  async convert_gwei_to_euro(
+    amount_of_gwei: number,
+    anz_max_digits: number
+  ): Promise<number> {
+    // Get CoinGecko object
+    const CoinGeckoClient = new CoinGecko();
+
+    // retrieve cryptocurrency price data for ethereum in euro
+    const data = await CoinGeckoClient.simple.price({
+      ids: ['ethereum'],
+      vs_currencies: ['eur'],
+    });
+
+    // return the price in euro mit the maximum amount of digits
+    return (
+      Math.round(
+        (data.data.ethereum.eur / Math.pow(10, 9)) *
+          amount_of_gwei *
+          Math.pow(10, anz_max_digits)
+      ) / Math.pow(10, anz_max_digits)
     );
   }
 

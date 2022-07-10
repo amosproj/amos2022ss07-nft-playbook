@@ -116,12 +116,13 @@ export const CliStrings = {
       chalk.cyan(`${middleware.getGasLimit(blockchain)}`)
     );
   },
-  NFTMintingFeedbackEstimatedGasFeeGwei: async (
+  NFTMintingFeedbackEstimatedGasFee: async (
     blockchain: string
   ): Promise<string> => {
+    const estimateGasFee = await middleware.estimateGasFeeMint(blockchain);
     return (
       `${blockchain} Estimated gas fee: ` +
-      chalk.cyan(`${await middleware.estimateGasFeeMintGwei(blockchain)} Gwei`)
+      chalk.cyan(`${estimateGasFee.crypto} => ${estimateGasFee.fiat}`)
     );
   },
   NFTMintingFeedbackServerUri: (blockchain: string): string => {
@@ -161,6 +162,12 @@ export const CliStrings = {
   BulkMintingErrorMessageNotFile: chalk.red(`Given path is not a file`),
   BulkMintingErrorMessageNoAccess: chalk.red(
     "No access or file doesn't exist!"
+  ),
+  BulkMintingCommandProgress: (mintedNfts: number, totalNfts: number) => {
+    return chalk.blue(`${mintedNfts}/${totalNfts} completed`);
+  },
+  BulkMintingCommandSucsessMessage: chalk.yellow(
+    `Congratulations minting sucsessful please confirm to continue`
   ),
 
   // Start Minting

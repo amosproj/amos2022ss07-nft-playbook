@@ -60,14 +60,14 @@ export class Middleware {
     }
   }
 
-  public async estimateGasFeeMintGwei(blockchain: string): Promise<string> {
+  public async estimateGasFeeMint(blockchain: string): Promise<any> {
     const data: SettingsData = this._selectedBlockchains[blockchain];
 
     try {
       switch (blockchain) {
         case 'Ethereum': {
           const estimateGasFeeMintEthereum =
-            await this._estimateGasFeeMintEthereum(
+            await this._estimateGasFeeMintGweiAndEuroEthereum(
               SettingsData.nftName,
               data.SERVER_URI,
               data.userPrivKey,
@@ -77,9 +77,10 @@ export class Middleware {
               SettingsData.nftLink,
               data.GAS_LIMIT
             );
-          return (estimateGasFeeMintEthereum * Math.pow(10, -9)).toFixed(2);
+
+          return estimateGasFeeMintEthereum;
         }
-        case 'Flow': {
+        case 'Solana': {
           //this._mintNftFlow();
           break;
         }
@@ -434,7 +435,7 @@ export class Middleware {
     return await new Ethereum().deploy_contract(ethereumConfigDeployContract);
   }
 
-  private async _estimateGasFeeMintEthereum(
+  private async _estimateGasFeeMintGweiAndEuroEthereum(
     nft_name: string,
     server_uri: string,
     priv_key_NFT_transmitter: string,
@@ -443,7 +444,7 @@ export class Middleware {
     nft_hash: string,
     nft_link: string,
     GAS_LIMIT: number
-  ): Promise<number> {
+  ): Promise<any> {
     const ethereumConfigMintNFT = new EthereumConfigMintNFT(
       nft_name,
       server_uri,
@@ -454,9 +455,21 @@ export class Middleware {
       nft_link,
       GAS_LIMIT
     );
+    const ANZ_DIGITS = 5;
 
-    //mint nft on given contract
-    return await new Ethereum().estimate_gas_fee_mint(ethereumConfigMintNFT);
+    // get amount of gwei and euro
+    const amount_of_gwei: number =
+      (await new Ethereum().estimate_gas_fee_mint(ethereumConfigMintNFT)) *
+      Math.pow(10, -9);
+    const amount_of_euro: number = await new Ethereum().convert_gwei_to_euro(
+      Math.floor(amount_of_gwei),
+      ANZ_DIGITS
+    );
+
+    return {
+      crypto: amount_of_gwei.toFixed(2) + ' Gwei',
+      fiat: amount_of_euro.toFixed(ANZ_DIGITS) + ' Euro',
+    };
   }
 
   /* read token data from Ethereum */

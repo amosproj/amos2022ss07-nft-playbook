@@ -4,9 +4,8 @@ import { SolanaConfigMintNFT } from './SolanaConfig/SolanaConfigMintNFT';
 import { BlockchainConfigReadSmartContract } from '../BlockchainConfig/BlockchainConfigReadSmartContract';
 import { BlockChainConfigReadTokenData } from '../BlockchainConfig/BlockChainConfigReadTokenData';
 import { BlockChainConfigReadUserDataFromSmartContract } from '../BlockchainConfig/BlockChainConfigReadUserDataFromSmartContract';
-
 // TODO: Check the type of the ConfigArguments!!!!!
-
+import CoinGecko = require('coingecko-api');
 import {
   Connection,
   Keypair,
@@ -77,5 +76,29 @@ export class Solana implements Blockchain {
     config: BlockChainConfigReadTokenData
   ): Promise<void> {
     throw new Error('Method not implemented.');
+  }
+
+  // IMPORTANT! amount_of_sol == Math.pow(10, 9) * SOL! (Same as with ETH -> Gwei)
+  async convert_sol_to_euro(
+    amount_of_sol: number,
+    anz_max_digits: number
+  ): Promise<number> {
+    // Get CoinGecko object
+    const CoinGeckoClient = new CoinGecko();
+
+    // retrieve cryptocurrency price data for solana in euro
+    const data = await CoinGeckoClient.simple.price({
+      ids: ['solana'],
+      vs_currencies: ['eur'],
+    });
+
+    // return the price in euro mit the maximum amount of digits
+    return (
+      Math.round(
+        (data.data.solana.eur / Math.pow(10, 9)) *
+          amount_of_sol *
+          Math.pow(10, anz_max_digits)
+      ) / Math.pow(10, anz_max_digits)
+    );
   }
 }
