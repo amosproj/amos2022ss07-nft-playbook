@@ -22,8 +22,7 @@
     "typeRoots": [
       "./solc.d.ts",
       "node_modules/@types"
-    ],
-    "types": ["jest", "node"]
+    ]
   },
   "exclude": ["node_modules", "tmp"]
 }
