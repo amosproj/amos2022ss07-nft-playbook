@@ -41,6 +41,7 @@ export class Ethereum implements Blockchain {
 
     return estimation.toNumber() * (await provider.getGasPrice()).toNumber();
   }
+
   /**
    * ABI for Smart Contract
    */
@@ -319,6 +320,8 @@ export class Ethereum implements Blockchain {
     process.chdir(new_cwd);
     return dependencies;
   }
+
+  /*
   retrocycle($) {
     const px =
       // eslint-disable-next-line no-control-regex
@@ -421,6 +424,9 @@ export class Ethereum implements Blockchain {
       return _value;
     })(object, '$');
   }
+
+
+   */
   //This function is the result of our test for wallet integration. This feauture is not longer maintained but is still part of the repository for documenation reasons.
   /*
   async deploy_contract(config: EthereumConfigDeployContract): Promise<string> {

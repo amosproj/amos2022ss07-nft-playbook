@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "strict": true,
     "rootDir": ".",
     "sourceMap": true,
     "declaration": false,
@@ -17,7 +18,11 @@
     "paths": {
       "@nft-playbook/backend": ["packages/backend/src/index.ts"],
       "@nft-playbook/middleware": ["packages/middleware/src/index.ts"]
-    }
+    },
+    "typeRoots": [
+      "./solc.d.ts",
+      "node_modules/@types"
+    ]
   },
   "exclude": ["node_modules", "tmp"]
 }
