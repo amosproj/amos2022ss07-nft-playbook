@@ -39,7 +39,11 @@ export class Ethereum implements Blockchain {
 
     // console.log('GAS for mint: ' + estimation);
 
-    return estimation.toNumber() * (await provider.getGasPrice()).toNumber();
+    return (
+      estimation.toNumber() *
+      (await provider.getGasPrice()).toNumber() *
+      Math.pow(10, 9)
+    );
   }
 
   /**
@@ -193,10 +197,7 @@ export class Ethereum implements Blockchain {
     );
   }
 
-  async convert_gwei_to_euro(
-    amount_of_gwei: number,
-    anz_max_digits: number
-  ): Promise<number> {
+  async convert_gwei_to_euro(amount_of_gwei: number): Promise<number> {
     // Get CoinGecko object
     const CoinGeckoClient = new CoinGecko();
 
@@ -207,12 +208,8 @@ export class Ethereum implements Blockchain {
     });
 
     // return the price in euro mit the maximum amount of digits
-    return (
-      Math.round(
-        (data.data.ethereum.eur / Math.pow(10, 9)) *
-          amount_of_gwei *
-          Math.pow(10, anz_max_digits)
-      ) / Math.pow(10, anz_max_digits)
+    return Math.round(
+      (data.data.ethereum.eur / Math.pow(10, 9)) * amount_of_gwei
     );
   }
 

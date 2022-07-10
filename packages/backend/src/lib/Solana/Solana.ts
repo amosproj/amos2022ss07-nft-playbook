@@ -18,27 +18,32 @@ import {
   Metaplex,
 } from '@metaplex-foundation/js';
 
+// this hardcoded value was calculated many times for the create function call. (07.10.2022)
+// It will be adjusted while the program runs (for better approximations)
+let estimated_lamport_per_mint = 11987475;
+
 export class Solana implements Blockchain {
   deploy_contract(config: BlockchainConfigDeployContract): Promise<string> {
     throw new Error('Method not implemented.');
   }
   estimate_gas_fee_mint(config: SolanaConfigMintNFT): Promise<number> {
-    throw new Error('Method not implemented.');
+    return new Promise<number>((resolve, reject) => {
+      resolve(estimated_lamport_per_mint);
+    });
   }
   async mint_nft(config: SolanaConfigMintNFT): Promise<string> {
     const connection = new Connection(config.server_uri, 'confirmed');
     const privKey: Uint8Array = Uint8Array.from(
       config.private_key_transmitter.split(',').map((s) => Number(s))
     );
-    const wallet = Keypair.fromSecretKey(privKey);
+    const pub_key = Keypair.fromSecretKey(
+      Uint8Array.from(
+        config.private_key_transmitter.split(',').map((item) => Number(item))
+      )
+    ).publicKey;
+    const balance_before_create: number = await connection.getBalance(pub_key);
 
-    // (only for testing purposes) -> add some SOL to the user wallet
-    const fromAirDropSignature = await connection.requestAirdrop(
-      wallet.publicKey,
-      LAMPORTS_PER_SOL //lamport: A fractional native token with the value of 0.000000001 sol.
-    );
-    // Wait for airdrop confirmation
-    await connection.confirmTransaction(fromAirDropSignature);
+    const wallet = Keypair.fromSecretKey(privKey);
 
     // Global metaplex object, for communication with Metaplex program (aka Contract) system for minting NFTs
     const metaplex = Metaplex.make(connection)
@@ -60,6 +65,13 @@ export class Solana implements Blockchain {
     const { nft } = await metaplex
       .nfts()
       .create({ uri: uri, owner: new PublicKey(config.pub_key_NFT_receiver) });
+
+    const balance_after_create: number = await connection.getBalance(pub_key);
+    estimated_lamport_per_mint =
+      (estimated_lamport_per_mint +
+        (balance_before_create - balance_after_create)) /
+      2;
+
     return nft.metadataAccount.data.mint.toString();
   }
   read_smart_contract(
@@ -78,11 +90,7 @@ export class Solana implements Blockchain {
     throw new Error('Method not implemented.');
   }
 
-  // IMPORTANT! amount_of_sol == Math.pow(10, 9) * SOL! (Same as with ETH -> Gwei)
-  async convert_sol_to_euro(
-    amount_of_sol: number,
-    anz_max_digits: number
-  ): Promise<number> {
+  async convert_lamport_to_euro(amount_of_lamport: number): Promise<number> {
     // Get CoinGecko object
     const CoinGeckoClient = new CoinGecko();
 
@@ -93,12 +101,6 @@ export class Solana implements Blockchain {
     });
 
     // return the price in euro mit the maximum amount of digits
-    return (
-      Math.round(
-        (data.data.solana.eur / Math.pow(10, 9)) *
-          amount_of_sol *
-          Math.pow(10, anz_max_digits)
-      ) / Math.pow(10, anz_max_digits)
-    );
+    return (data.data.solana.eur / Math.pow(10, 9)) * amount_of_lamport;
   }
 }
