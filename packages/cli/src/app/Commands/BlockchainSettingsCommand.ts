@@ -7,7 +7,15 @@ export class BlockchainSettingsCommand implements Command {
   name = CliStrings.BlockchainSettingsCommandLabel;
   help = CliStrings.BlockchainSettingsCommandHelp;
 
+  private print_header() {
+    console.clear();
+    console.log(CliStrings.horizontalHashLine);
+    console.log(CliStrings.BlockchainSettingsMenuHeader);
+    console.log(CliStrings.horizontalHashLine);
+  }
+
   async execute() {
+    this.print_header();
     const promptQuestions: inquirer.QuestionCollection = [
       {
         type: 'checkbox',

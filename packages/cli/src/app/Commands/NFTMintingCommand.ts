@@ -16,6 +16,7 @@ export class NFTMintingCommand implements Command {
 
   async execute() {
     this.print_header();
+    console.log(CliStrings.NFTMintingClarification);
 
     // get name
     middleware.setNftName(
@@ -47,6 +48,7 @@ export class NFTMintingCommand implements Command {
     console.log(CliStrings.horizontalHashLine);
     if (middleware.getSelectedBlockchains().length === 0) {
       console.log(`No blockchains selected`);
+      console.log(CliStrings.NFTMintingWarning);
     }
     for (const blockchain of middleware.getSelectedBlockchains()) {
       console.log();

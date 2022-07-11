@@ -8,7 +8,15 @@ export class IPFSCommand implements Command {
   name = CliStrings.IPFSCommandLabel;
   help = CliStrings.IPFSCommandHelp;
 
+  private print_header() {
+    console.clear();
+    console.log(CliStrings.horizontalHashLine);
+    console.log(CliStrings.IPFSMenuHeader);
+    console.log(CliStrings.horizontalHashLine);
+  }
+
   async execute() {
+    this.print_header();
     let apiKey: string;
     let apiSec: string;
     if (
@@ -18,6 +26,7 @@ export class IPFSCommand implements Command {
       process.env.PINATA_API_SEC.length === 0
     ) {
       //console.log(CliStrings.IPFSCommandHelp, '');
+      console.log(CliStrings.IPFSClarification);
       apiKey = await getInput(CliStrings.IPFSQuestionApiKey, '');
       apiSec = await getInput(CliStrings.IPFSQuestionApiSec, '');
     } else {

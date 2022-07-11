@@ -47,17 +47,19 @@ export const CliStrings = {
   // IPFS
   IPFSCommandLabel: `IPFS/Pinata`,
   IPFSCommandHelp: `\tUpload files to IPFS via pinata.\n\tLearn more about pinata at: https://www.pinata.cloud/`,
-  IPFSQuestionApiKey: `Please provide your Pinata API-Key. Alternatively you can provide your API-Key and API-Sec in `,
-  IPFSQuestionApiSec: `Api-Please provide your Pinata API-Sec.`,
+  IPFSQuestionApiKey: `Please provide your Pinata API-Key.`,
+  IPFSQuestionApiSec: `Please provide your Pinata API-Sec.`,
   IPFSFileConfirmationQuestion: chalk.yellow(
     `Please provide the path to the file you want to upload.`
   ),
+  IPFSMenuHeader: chalk.green(`IPFS/Pinata`),
   IPFSErrorMessageNoAccess: chalk.red("No access or file doesn't exist!"),
   IPFSErrorMessageNotFile: chalk.red(`Given path is not a file`),
   IPFSErrorMessageUpload: chalk.red(`Upload failed`),
   IPFSSuccessMessage(link: string): string {
     return chalk.blue(`Upload successful: ${link}`);
   },
+  IPFSClarification: chalk.yellow(`Please provide your Pinata API-Key and API-Sec in this section. Alternatively you could provide your API-Key and API-Sec in a .env file. That way those variables can be read automatically.`),
 
   // Blockchain Settings
   BlockchainSettingsCommandLabel: `Blockchain Settings`,
@@ -89,11 +91,13 @@ export const CliStrings = {
   NFTMintingCommandLabel: `NFT Minting`,
   NFTMintingCommandHelp: `\tIn the NFT Minting Menu you can specify all information concerning your NFT including Name and Link (which is already prefilled if you upload a file via Pinata).`,
   NFTMintingCommandMenuHeader: chalk.green(`NFT Minting`),
-  NFTMintingQuestionName: `Name`,
-  NFTMintingQuestionLink: `NFT Link`,
+  NFTMintingQuestionName: `Please provide the name of your NFT.`,
+  NFTMintingQuestionLink: `Please provide the link to or location of your NFT.`,
   NFTMintingQuestionNFTReceiver: (blockchain: string): string => {
     return `${blockchain} NFT Receiver`;
   },
+  NFTMintingClarification: chalk.yellow(`In this section you can specify all information concerning your NFT including Name and Link (which is already prefilled if you upload a file via Pinata).`),
+  NFTMintingWarning: chalk.red(`Minting cannot be proceed without at least one selected blockchain. Please select a blockchain via the 'Blockchain Settings' command if you'd like to proceed the minting process.`),
 
   get NFTMintingFeedbackSelectedBlockchains(): string {
     return (
@@ -153,7 +157,7 @@ export const CliStrings = {
 
   // Bulk Minting
   BulkMintingCommandLabel: `Bulk Minting`,
-  BulkMintingCommandHelp: `Here you can provide a JSON file to mint multiple NFTs at once.`,
+  BulkMintingCommandHelp: `Within the 'Bulk Minting' command please provide a JSON file to mint multiple NFTs at once.`,
   BulkMintingCommandMenuHeader: chalk.green(`Bulk Minting`),
   BulkMintingConfirmationQuestion: chalk.yellow(
     `Please provide the path to the file you want to minting.`
