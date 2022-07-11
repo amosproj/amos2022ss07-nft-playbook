@@ -461,9 +461,9 @@ export class Middleware {
     const ANZ_DIGITS = 5;
 
     // get amount of gwei and euro
-    const amount_of_gwei: number =
-      (await new Ethereum().estimate_gas_fee_mint(ethereumConfigMintNFT)) *
-      Math.pow(10, -9);
+    const amount_of_gwei: number = await new Ethereum().estimate_gas_fee_mint(
+      ethereumConfigMintNFT
+    );
     const amount_of_euro: number = await new Ethereum().convert_gwei_to_euro(
       Math.floor(amount_of_gwei)
     );
