@@ -71,6 +71,8 @@ export class BulkMintingCommand implements Command {
 
     let estimateGasFeeEthereum = 0;
     let estimateGasFeeEthereumInEuro = 0;
+    let estimateGasFeeSolana = 0;
+    let estimateGasFeeSolanaInEuro = 0;
     let countOfEthereumNfts = 0;
     let countOfSolanaNfts = 0;
 
@@ -113,25 +115,26 @@ export class BulkMintingCommand implements Command {
       }
       for (const blockchain of middleware.getSelectedBlockchains()) {
         console.log();
-        if (blockchain === 'Solana') {
-          console.log('Solana Gas Limit: Not implemented yet');
-        } else {
+        if (blockchain !== 'Solana') {
           console.log(CliStrings.NFTMintingFeedbackGasLimit(blockchain));
         }
         try {
+          const estimateGasFee = await middleware.estimateGasFeeMint(
+            blockchain
+          );
+          console.log(
+            `${blockchain} Estimated gas fee: ${chalk.cyan(
+              `${estimateGasFee.crypto} => ${estimateGasFee.fiat}`
+            )}`
+          );
           if (blockchain === 'Solana') {
             countOfSolanaNfts++;
-            console.log('Solana Estimated gas fee: Not implemented yet');
-          } else {
+            estimateGasFeeSolana += Number(estimateGasFee.crypto.split(' ')[0]);
+            estimateGasFeeSolanaInEuro += Number(
+              estimateGasFee.fiat.split(' ')[0]
+            );
+          } else if (blockchain === 'Ethereum') {
             countOfEthereumNfts++;
-            const estimateGasFee = await middleware.estimateGasFeeMint(
-              blockchain
-            );
-            console.log(
-              `${blockchain} Estimated gas fee: ${chalk.cyan(
-                `${estimateGasFee.crypto} => ${estimateGasFee.fiat}`
-              )}`
-            );
             estimateGasFeeEthereum += Number(
               estimateGasFee.crypto.split(' ')[0]
             );
@@ -156,6 +159,11 @@ export class BulkMintingCommand implements Command {
       )} Euro`
     );
     console.log(`Minted ${countOfSolanaNfts} NFTs on Solana`);
+    console.log(
+      `Total gas fee Solana: ${estimateGasFeeSolana} Lamport => ${estimateGasFeeSolanaInEuro.toFixed(
+        5
+      )} Euro`
+    );
 
     const promptQuestion: inquirer.QuestionCollection = [
       {

@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import { ethers, utils } from 'ethers';
 import { Blockchain } from '../Blockchain';
 import { EthereumConfigDeployContract } from './EthereumConfig/EthereumConfigDeployContract';
 import { EthereumConfigMintNFT } from './EthereumConfig/EthereumConfigMintNFT';
@@ -18,7 +18,6 @@ export class Ethereum implements Blockchain {
     const provider = ethers.providers.getDefaultProvider(
       isNaN(Number(config.endPoint)) ? config.endPoint : Number(config.endPoint)
     );
-    // console.log('Gasprice: ' + provider.getGasPrice());
 
     const contract = new ethers.Contract(
       config.address_of_contract,
@@ -27,23 +26,25 @@ export class Ethereum implements Blockchain {
     );
 
     //Estimated Gas for mint()-call in Gas
-    const estimation = await contract.estimateGas.mint(
-      config.pub_key_NFT_receiver,
-      config.nftLink,
-      config.nftHash,
-      {
-        gasPrice: provider.getGasPrice(),
-        gasLimit: config.gas_limit,
-      }
+    const estimated_gas: number = (
+      await contract.estimateGas.mint(
+        config.pub_key_NFT_receiver,
+        config.nftLink,
+        config.nftHash,
+        {
+          gasPrice: provider.getGasPrice(),
+          gasLimit: config.gas_limit,
+        }
+      )
+    ).toNumber();
+
+    // get gasprice in gwei
+    const gas_price_in_gwei: number = +utils.formatUnits(
+      await provider.getGasPrice(),
+      'gwei'
     );
 
-    // console.log('GAS for mint: ' + estimation);
-
-    return (
-      estimation.toNumber() *
-      (await provider.getGasPrice()).toNumber() *
-      Math.pow(10, 9)
-    );
+    return estimated_gas * gas_price_in_gwei;
   }
 
   /**
@@ -208,9 +209,7 @@ export class Ethereum implements Blockchain {
     });
 
     // return the price in euro mit the maximum amount of digits
-    return Math.round(
-      (data.data.ethereum.eur / Math.pow(10, 9)) * amount_of_gwei
-    );
+    return (data.data.ethereum.eur / Math.pow(10, 9)) * amount_of_gwei;
   }
 
   /**
