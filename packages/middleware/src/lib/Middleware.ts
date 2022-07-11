@@ -81,7 +81,10 @@ export class Middleware {
           return estimateGasFeeMintEthereum;
         }
         case 'Solana': {
-          //this._mintNftFlow();
+          const estimateGasFeeMintSolana =
+            await this._estimateGasFeeMintLamportAndEuroSolana();
+
+          return estimateGasFeeMintSolana;
           break;
         }
         default: {
@@ -462,12 +465,11 @@ export class Middleware {
       (await new Ethereum().estimate_gas_fee_mint(ethereumConfigMintNFT)) *
       Math.pow(10, -9);
     const amount_of_euro: number = await new Ethereum().convert_gwei_to_euro(
-      Math.floor(amount_of_gwei),
-      ANZ_DIGITS
+      Math.floor(amount_of_gwei)
     );
 
     return {
-      crypto: amount_of_gwei.toFixed(2) + ' Gwei',
+      crypto: amount_of_gwei.toFixed(0) + ' Gwei',
       fiat: amount_of_euro.toFixed(ANZ_DIGITS) + ' Euro',
     };
   }
@@ -536,5 +538,23 @@ export class Middleware {
     );
 
     return await new Solana().mint_nft(solanaConfigMintNFT);
+  }
+
+  private async _estimateGasFeeMintLamportAndEuroSolana(): Promise<any> {
+    const ANZ_DIGITS = 5;
+
+    // get amount of lamport and euro
+    const amount_of_lamport: number = await new Solana().estimate_gas_fee_mint(
+      new SolanaConfigMintNFT('', '', '', '', '', '')
+    );
+
+    const amount_of_euro: number = await new Solana().convert_lamport_to_euro(
+      amount_of_lamport
+    );
+
+    return {
+      crypto: amount_of_lamport.toFixed(0) + ' Lamport',
+      fiat: amount_of_euro.toFixed(ANZ_DIGITS) + ' Euro',
+    };
   }
 }
