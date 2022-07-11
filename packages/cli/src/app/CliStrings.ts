@@ -59,7 +59,9 @@ export const CliStrings = {
   IPFSSuccessMessage(link: string): string {
     return chalk.blue(`Upload successful: ${link}`);
   },
-  IPFSClarification: chalk.yellow(`Please provide your Pinata API-Key and API-Sec in this section. Alternatively you could provide your API-Key and API-Sec in a .env file. That way those variables can be read automatically.`),
+  IPFSClarification: chalk.yellow(
+    `Please provide your Pinata API-Key and API-Sec in this section. Alternatively you could provide your API-Key and API-Sec in a .env file. That way those variables can be read automatically.`
+  ),
 
   // Blockchain Settings
   BlockchainSettingsCommandLabel: `Blockchain Settings`,
@@ -96,8 +98,12 @@ export const CliStrings = {
   NFTMintingQuestionNFTReceiver: (blockchain: string): string => {
     return `${blockchain} NFT Receiver`;
   },
-  NFTMintingClarification: chalk.yellow(`In this section you can specify all information concerning your NFT including Name and Link (which is already prefilled if you upload a file via Pinata).`),
-  NFTMintingWarning: chalk.red(`Minting cannot be proceed without at least one selected blockchain. Please select a blockchain via the 'Blockchain Settings' command if you'd like to proceed the minting process.`),
+  NFTMintingClarification: chalk.yellow(
+    `In this section you can specify all information concerning your NFT including Name and Link (which is already prefilled if you upload a file via Pinata).`
+  ),
+  NFTMintingWarning: chalk.red(
+    `Minting cannot be proceed without at least one selected blockchain. Please select a blockchain via the 'Blockchain Settings' command if you'd like to proceed the minting process.`
+  ),
 
   get NFTMintingFeedbackSelectedBlockchains(): string {
     return (
