@@ -38,11 +38,13 @@ export class BlockchainSettingsCommand implements Command {
     });
 
     for (const blockchain of selectedBlockchains) {
+      const input = await getInput(
+        CliStrings.BlockchainSettingsMenuQuestion02(blockchain),
+        middleware.getPrivateKeyUser(blockchain)
+      );
+      if (input === null) return;
       middleware.setPrivateKeyUser(
-        await getInput(
-          CliStrings.BlockchainSettingsMenuQuestion02(blockchain),
-          middleware.getPrivateKeyUser(blockchain)
-        ),
+        input,
         blockchain
       );
 
@@ -90,6 +92,7 @@ export class BlockchainSettingsCommand implements Command {
           CliStrings.BlockchainSettingsEnterContractAddress,
           ``
         );
+        if (contractAddress === null) return;
         middleware.setContractAddress(blockchain, contractAddress);
       }
       // }

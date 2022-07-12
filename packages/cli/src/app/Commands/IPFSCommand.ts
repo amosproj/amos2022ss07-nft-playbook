@@ -28,12 +28,15 @@ export class IPFSCommand implements Command {
       //console.log(CliStrings.IPFSCommandHelp, '');
       console.log(CliStrings.IPFSClarification);
       apiKey = await getInput(CliStrings.IPFSQuestionApiKey, '');
+      if(apiKey === null) return;
       apiSec = await getInput(CliStrings.IPFSQuestionApiSec, '');
+      if(apiSec === null) return;
     } else {
       apiKey = process.env.PINATA_API_KEY;
       apiSec = process.env.PINATA_API_SEC;
     }
     const path = await getInput(CliStrings.IPFSFileConfirmationQuestion, '');
+    if (path === null) return;
 
     try {
       fs.accessSync(path, fs.constants.R_OK);
