@@ -19,18 +19,27 @@ export class NFTMintingCommand implements Command {
     console.log(CliStrings.NFTMintingClarification);
 
     // get name
-    const inputSetNftName = await getInput(CliStrings.NFTMintingQuestionName, middleware.getNftName());
+    const inputSetNftName = await getInput(
+      CliStrings.NFTMintingQuestionName,
+      middleware.getNftName()
+    );
     if (inputSetNftName === null) return;
     middleware.setNftName(inputSetNftName);
     // get hash
     middleware.setNftHash(middleware.getNftHash());
     // get link
-    const inputSetNftLink = await getInput(CliStrings.NFTMintingQuestionLink, middleware.getNftLink());
+    const inputSetNftLink = await getInput(
+      CliStrings.NFTMintingQuestionLink,
+      middleware.getNftLink()
+    );
     if (inputSetNftLink === null) return;
     middleware.setNftLink(inputSetNftLink);
     // get blockchain specific nft receiver
     for (const blockchain of middleware.getSelectedBlockchains()) {
-      const inputSetPublicKeyNftReceiver = await getInput(CliStrings.NFTMintingQuestionNFTReceiver(blockchain), middleware.getPublicKeyNftReceiver(blockchain));
+      const inputSetPublicKeyNftReceiver = await getInput(
+        CliStrings.NFTMintingQuestionNFTReceiver(blockchain),
+        middleware.getPublicKeyNftReceiver(blockchain)
+      );
       if (inputSetPublicKeyNftReceiver === null) return;
       middleware.setPublicKeyNftReceiver(
         inputSetPublicKeyNftReceiver,

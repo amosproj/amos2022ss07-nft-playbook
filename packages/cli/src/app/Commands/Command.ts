@@ -73,7 +73,6 @@ export async function getInput(
     },
   ];
 
-
   const confirmQuestion: inquirer.QuestionCollection = [
     {
       type: 'rawlist',
@@ -87,14 +86,16 @@ export async function getInput(
     },
   ];
 
-
   let input = '';
   let showPrompt = true;
   while (showPrompt) {
     input = (await inquirer.prompt(inputQuestion)).input;
     console.log(CliStrings.GetInputConfirmationInput + input);
     const confirmAnswer = await inquirer.prompt(confirmQuestion);
-    if (confirmAnswer.confirmed === CliStrings.BlockchainSettingsMenuQuestionChoices03) {
+    if (
+      confirmAnswer.confirmed ===
+      CliStrings.BlockchainSettingsMenuQuestionChoices03
+    ) {
       return null;
     }
     if (confirmAnswer.confirmed === 'yes') {

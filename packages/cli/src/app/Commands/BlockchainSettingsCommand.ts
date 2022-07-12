@@ -43,10 +43,7 @@ export class BlockchainSettingsCommand implements Command {
         middleware.getPrivateKeyUser(blockchain)
       );
       if (input === null) return;
-      middleware.setPrivateKeyUser(
-        input,
-        blockchain
-      );
+      middleware.setPrivateKeyUser(input, blockchain);
 
       const promptQuestions: inquirer.QuestionCollection = [
         {
