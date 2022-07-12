@@ -21,7 +21,7 @@ export class BlockchainSettingsCommand implements Command {
         type: 'checkbox',
         name: 'selectedBlockchains',
         message: CliStrings.BlockchainSettingsMenuQuestion01,
-        choices: middleware.getAllBlockchains(),//[middleware.getAllBlockchains(), CliStrings.BlockchainSettingsMenuQuestionChoices03],
+        choices: middleware.getAllBlockchains(), //[middleware.getAllBlockchains(), CliStrings.BlockchainSettingsMenuQuestionChoices03],
         default: middleware.getSelectedBlockchains(),
       },
     ];
