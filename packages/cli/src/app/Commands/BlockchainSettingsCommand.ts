@@ -21,13 +21,15 @@ export class BlockchainSettingsCommand implements Command {
         type: 'checkbox',
         name: 'selectedBlockchains',
         message: CliStrings.BlockchainSettingsMenuQuestion01,
-        choices: middleware.getAllBlockchains(),
+        choices: middleware.getAllBlockchains(),//[middleware.getAllBlockchains(), CliStrings.BlockchainSettingsMenuQuestionChoices03],
         default: middleware.getSelectedBlockchains(),
       },
     ];
     const selectedBlockchains: string[] = (
       await inquirer.prompt(promptQuestions)
     ).selectedBlockchains;
+
+    //if(selectedBlockchains.some(x => x === CliStrings.BlockchainSettingsMenuQuestionChoices03)) return;
 
     middleware.getAllBlockchains().forEach((blockchain) => {
       if (selectedBlockchains.includes(blockchain)) {

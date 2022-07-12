@@ -163,7 +163,7 @@ export const CliStrings = {
 
   // Bulk Minting
   BulkMintingCommandLabel: `Bulk Minting`,
-  BulkMintingCommandHelp: `Within the 'Bulk Minting' command please provide a JSON file to mint multiple NFTs at once.`,
+  BulkMintingCommandHelp: `\tWithin the 'Bulk Minting' command please provide a JSON file to mint multiple NFTs at once.`,
   BulkMintingCommandMenuHeader: chalk.green(`Bulk Minting`),
   BulkMintingConfirmationQuestion: chalk.yellow(
     `Please provide the path to the file you want to minting.`
