@@ -16,24 +16,33 @@ export class NFTMintingCommand implements Command {
 
   async execute() {
     this.print_header();
+    console.log(CliStrings.NFTMintingClarification);
 
     // get name
-    middleware.setNftName(
-      await getInput(CliStrings.NFTMintingQuestionName, middleware.getNftName())
+    const inputSetNftName = await getInput(
+      CliStrings.NFTMintingQuestionName,
+      middleware.getNftName()
     );
+    if (inputSetNftName === null) return;
+    middleware.setNftName(inputSetNftName);
     // get hash
     middleware.setNftHash(middleware.getNftHash());
     // get link
-    middleware.setNftLink(
-      await getInput(CliStrings.NFTMintingQuestionLink, middleware.getNftLink())
+    const inputSetNftLink = await getInput(
+      CliStrings.NFTMintingQuestionLink,
+      middleware.getNftLink()
     );
+    if (inputSetNftLink === null) return;
+    middleware.setNftLink(inputSetNftLink);
     // get blockchain specific nft receiver
     for (const blockchain of middleware.getSelectedBlockchains()) {
+      const inputSetPublicKeyNftReceiver = await getInput(
+        CliStrings.NFTMintingQuestionNFTReceiver(blockchain),
+        middleware.getPublicKeyNftReceiver(blockchain)
+      );
+      if (inputSetPublicKeyNftReceiver === null) return;
       middleware.setPublicKeyNftReceiver(
-        await getInput(
-          CliStrings.NFTMintingQuestionNFTReceiver(blockchain),
-          middleware.getPublicKeyNftReceiver(blockchain)
-        ),
+        inputSetPublicKeyNftReceiver,
         blockchain
       );
     }
@@ -47,6 +56,7 @@ export class NFTMintingCommand implements Command {
     console.log(CliStrings.horizontalHashLine);
     if (middleware.getSelectedBlockchains().length === 0) {
       console.log(`No blockchains selected`);
+      console.log(CliStrings.NFTMintingWarning);
     }
     for (const blockchain of middleware.getSelectedBlockchains()) {
       console.log();

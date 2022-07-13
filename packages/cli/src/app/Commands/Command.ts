@@ -63,7 +63,7 @@ export async function showException(e: NftPlaybookException) {
 export async function getInput(
   promptMessage: string,
   prevAnswer: string
-): Promise<string> {
+): Promise<string | null> {
   const inputQuestion: inquirer.QuestionCollection = [
     {
       type: 'input',
@@ -75,9 +75,14 @@ export async function getInput(
 
   const confirmQuestion: inquirer.QuestionCollection = [
     {
-      type: 'confirm',
+      type: 'rawlist',
       name: 'confirmed',
       message: CliStrings.GetInputConfirmationQuestion,
+      choices: [
+        'yes',
+        'no',
+        CliStrings.BlockchainSettingsMenuQuestionChoices03,
+      ],
     },
   ];
 
@@ -87,7 +92,13 @@ export async function getInput(
     input = (await inquirer.prompt(inputQuestion)).input;
     console.log(CliStrings.GetInputConfirmationInput + input);
     const confirmAnswer = await inquirer.prompt(confirmQuestion);
-    if (confirmAnswer.confirmed) {
+    if (
+      confirmAnswer.confirmed ===
+      CliStrings.BlockchainSettingsMenuQuestionChoices03
+    ) {
+      return null;
+    }
+    if (confirmAnswer.confirmed === 'yes') {
       showPrompt = false;
     }
   }

@@ -7,19 +7,29 @@ export class BlockchainSettingsCommand implements Command {
   name = CliStrings.BlockchainSettingsCommandLabel;
   help = CliStrings.BlockchainSettingsCommandHelp;
 
+  private print_header() {
+    console.clear();
+    console.log(CliStrings.horizontalHashLine);
+    console.log(CliStrings.BlockchainSettingsMenuHeader);
+    console.log(CliStrings.horizontalHashLine);
+  }
+
   async execute() {
+    this.print_header();
     const promptQuestions: inquirer.QuestionCollection = [
       {
         type: 'checkbox',
         name: 'selectedBlockchains',
         message: CliStrings.BlockchainSettingsMenuQuestion01,
-        choices: middleware.getAllBlockchains(),
+        choices: middleware.getAllBlockchains(), //[middleware.getAllBlockchains(), CliStrings.BlockchainSettingsMenuQuestionChoices03],
         default: middleware.getSelectedBlockchains(),
       },
     ];
     const selectedBlockchains: string[] = (
       await inquirer.prompt(promptQuestions)
     ).selectedBlockchains;
+
+    //if(selectedBlockchains.some(x => x === CliStrings.BlockchainSettingsMenuQuestionChoices03)) return;
 
     middleware.getAllBlockchains().forEach((blockchain) => {
       if (selectedBlockchains.includes(blockchain)) {
@@ -30,13 +40,12 @@ export class BlockchainSettingsCommand implements Command {
     });
 
     for (const blockchain of selectedBlockchains) {
-      middleware.setPrivateKeyUser(
-        await getInput(
-          CliStrings.BlockchainSettingsMenuQuestion02(blockchain),
-          middleware.getPrivateKeyUser(blockchain)
-        ),
-        blockchain
+      const input = await getInput(
+        CliStrings.BlockchainSettingsMenuQuestion02(blockchain),
+        middleware.getPrivateKeyUser(blockchain)
       );
+      if (input === null) return;
+      middleware.setPrivateKeyUser(input, blockchain);
 
       const promptQuestions: inquirer.QuestionCollection = [
         {
@@ -82,6 +91,7 @@ export class BlockchainSettingsCommand implements Command {
           CliStrings.BlockchainSettingsEnterContractAddress,
           ``
         );
+        if (contractAddress === null) return;
         middleware.setContractAddress(blockchain, contractAddress);
       }
       // }

@@ -23,6 +23,7 @@ export class BulkMintingCommand implements Command {
   async execute(): Promise<void> {
     this.print_header();
     const path = await getInput(CliStrings.BulkMintingConfirmationQuestion, '');
+    if (path === null) return;
     try {
       fs.accessSync(path, fs.constants.R_OK);
       if (!fs.statSync(path).isFile()) {
@@ -35,8 +36,8 @@ export class BulkMintingCommand implements Command {
       await sleep(2000);
       return;
     }
-    let apiKey: string;
-    let apiSec: string;
+    let apiKey: string | null;
+    let apiSec: string | null;
     if (
       process.env.PINATA_API_KEY === undefined ||
       process.env.PINATA_API_KEY.length === 0 ||
@@ -44,7 +45,9 @@ export class BulkMintingCommand implements Command {
       process.env.PINATA_API_SEC.length === 0
     ) {
       apiKey = await getInput(CliStrings.IPFSQuestionApiKey, '');
+      if (apiKey === null) return;
       apiSec = await getInput(CliStrings.IPFSQuestionApiSec, '');
+      if (apiSec === null) return;
     } else {
       apiKey = process.env.PINATA_API_KEY;
       apiSec = process.env.PINATA_API_SEC;
