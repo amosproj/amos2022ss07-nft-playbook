@@ -16,6 +16,11 @@ export class NFTMintingCommand implements Command {
 
   async execute() {
     this.print_header();
+    if (middleware.getSelectedBlockchains().length === 0) {
+      console.log(CliStrings.CliStructure);
+      await sleep(8000);
+      return;
+    }
     console.log(CliStrings.NFTMintingClarification);
 
     // get name
