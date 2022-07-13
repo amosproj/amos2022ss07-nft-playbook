@@ -3,20 +3,13 @@ import { CliStrings } from '../CliStrings';
 import { Command, getInput, showException, sleep } from './Command';
 import { middleware } from '@nft-playbook/middleware';
 import fs = require('fs');
+import inquirer = require('inquirer');
 
 export class IPFSCommand implements Command {
   name = CliStrings.IPFSCommandLabel;
   help = CliStrings.IPFSCommandHelp;
 
-  private print_header() {
-    console.clear();
-    console.log(CliStrings.horizontalHashLine);
-    console.log(CliStrings.IPFSMenuHeader);
-    console.log(CliStrings.horizontalHashLine);
-  }
-
   async execute() {
-    this.print_header();
     let apiKey: string;
     let apiSec: string;
     if (
@@ -25,18 +18,27 @@ export class IPFSCommand implements Command {
       process.env.PINATA_API_SEC === undefined ||
       process.env.PINATA_API_SEC.length === 0
     ) {
-      //console.log(CliStrings.IPFSCommandHelp, '');
-      console.log(CliStrings.IPFSClarification);
-      apiKey = await getInput(CliStrings.IPFSQuestionApiKey, '');
-      if (apiKey === null) return;
-      apiSec = await getInput(CliStrings.IPFSQuestionApiSec, '');
-      if (apiSec === null) return;
+      console.log(CliStrings.IPFSWarningMessage);
+      const promptQuestion: inquirer.QuestionCollection = [
+        {
+          type: 'confirm',
+          name: 'confirmed',
+          message: CliStrings.IPFSConfirmationQuestion,
+        },
+      ];
+      const answer = await inquirer.prompt(promptQuestion);
+      if (answer.confirmed) {
+        apiKey = await getInput(CliStrings.IPFSQuestionApiKey, '');
+        apiSec = await getInput(CliStrings.IPFSQuestionApiSec, '');
+      } else {
+        return;
+      }
     } else {
+      console.log(CliStrings.IPFSEnvFile);
       apiKey = process.env.PINATA_API_KEY;
       apiSec = process.env.PINATA_API_SEC;
     }
     const path = await getInput(CliStrings.IPFSFileConfirmationQuestion, '');
-    if (path === null) return;
 
     try {
       fs.accessSync(path, fs.constants.R_OK);

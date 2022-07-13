@@ -66,13 +66,9 @@ export class NFTMintingCommand implements Command {
         console.log(CliStrings.NFTMintingFeedbackGasLimit(blockchain));
       }
       try {
-        if (blockchain === 'Solana') {
-          console.log('Estimated gas fee: Not implemented yet');
-        } else {
-          console.log(
-            await CliStrings.NFTMintingFeedbackEstimatedGasFeeGwei(blockchain)
-          );
-        }
+        console.log(
+          await CliStrings.NFTMintingFeedbackEstimatedGasFee(blockchain)
+        );
       } catch (e: unknown) {
         if (await showException(<NftPlaybookException>e)) {
           return;

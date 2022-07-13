@@ -7,6 +7,7 @@ import {
   PinataClient,
 } from '@nft-playbook/middleware';
 import inquirer = require('inquirer');
+import chalk = require('chalk');
 
 export class BulkMintingCommand implements Command {
   name: string = CliStrings.BulkMintingCommandLabel;
@@ -72,17 +73,24 @@ export class BulkMintingCommand implements Command {
     } = {};
 
     let estimateGasFeeEthereum = 0;
+    let estimateGasFeeEthereumInEuro = 0;
+    let estimateGasFeeSolana = 0;
+    let estimateGasFeeSolanaInEuro = 0;
     let countOfEthereumNfts = 0;
     let countOfSolanaNfts = 0;
 
     for (const nft of nfts.nfts) {
-      let hash: string;
+      let hash: string | undefined = undefined;
       try {
         hash = await PinataClient.uploadImage(nft.path, apiKey, apiSec);
       } catch (e: unknown) {
         if (await showException(<NftPlaybookException>e)) {
           return;
         }
+      }
+      if (hash == undefined) {
+        //TODO: Show error message!
+        return;
       }
       middleware.setNftHash(hash);
       const link = `https://gateway.ipfs.io/ipfs/${hash}`;
@@ -110,24 +118,32 @@ export class BulkMintingCommand implements Command {
       }
       for (const blockchain of middleware.getSelectedBlockchains()) {
         console.log();
-        if (blockchain === 'Solana') {
-          console.log('Solana Gas Limit: Not implemented yet');
-        } else {
+        if (blockchain !== 'Solana') {
           console.log(CliStrings.NFTMintingFeedbackGasLimit(blockchain));
         }
         try {
+          const estimateGasFee = await middleware.estimateGasFeeMint(
+            blockchain
+          );
+          console.log(
+            `${blockchain} Estimated gas fee: ${chalk.cyan(
+              `${estimateGasFee.crypto} => ${estimateGasFee.fiat}`
+            )}`
+          );
           if (blockchain === 'Solana') {
             countOfSolanaNfts++;
-            console.log('Solana Estimated gas fee: Not implemented yet');
-          } else {
+            estimateGasFeeSolana += Number(estimateGasFee.crypto.split(' ')[0]);
+            estimateGasFeeSolanaInEuro += Number(
+              estimateGasFee.fiat.split(' ')[0]
+            );
+          } else if (blockchain === 'Ethereum') {
             countOfEthereumNfts++;
-            const estimateGasFee = await middleware.estimateGasFeeMintGwei(
-              blockchain
+            estimateGasFeeEthereum += Number(
+              estimateGasFee.crypto.split(' ')[0]
             );
-            console.log(
-              `${blockchain} Estimated gas fee: ` + `${estimateGasFee} Gwei`
+            estimateGasFeeEthereumInEuro += Number(
+              estimateGasFee.fiat.split(' ')[0]
             );
-            estimateGasFeeEthereum += Number(estimateGasFee);
           }
         } catch (e: unknown) {
           if (await showException(<NftPlaybookException>e)) {
@@ -140,8 +156,17 @@ export class BulkMintingCommand implements Command {
       console.log(CliStrings.horizontalHashLine);
     }
     console.log(`Minted ${countOfEthereumNfts} NFTs on Ethereum`);
-    console.log(`Total gas fee Ethereum: ${estimateGasFeeEthereum}  Gwei`);
+    console.log(
+      `Total gas fee Ethereum: ${estimateGasFeeEthereum} Gwei => ${estimateGasFeeEthereumInEuro.toFixed(
+        5
+      )} Euro`
+    );
     console.log(`Minted ${countOfSolanaNfts} NFTs on Solana`);
+    console.log(
+      `Total gas fee Solana: ${estimateGasFeeSolana} Lamport => ${estimateGasFeeSolanaInEuro.toFixed(
+        5
+      )} Euro`
+    );
 
     const promptQuestion: inquirer.QuestionCollection = [
       {
@@ -154,6 +179,8 @@ export class BulkMintingCommand implements Command {
     if (answer.confirmed) {
       // prompt accepted
       try {
+        const totalNfts = nfts.nfts.length;
+        let mintedNfts = 0;
         for (const nft of nfts.nfts) {
           middleware.setNftHash(nftSettings[nft.name].hash);
           middleware.setNftLink(nftSettings[nft.name].link);
@@ -169,13 +196,25 @@ export class BulkMintingCommand implements Command {
             );
           });
           await middleware.mintNft();
-          await sleep(2000);
+          mintedNfts++;
+          console.log(
+            CliStrings.BulkMintingCommandProgress(mintedNfts, totalNfts)
+          );
+          await sleep(1000);
         }
       } catch (e: unknown) {
         if (await showException(<NftPlaybookException>e)) {
           return;
         }
       }
+      const promptQuestion: inquirer.QuestionCollection = [
+        {
+          type: 'confirm',
+          name: 'confirmed',
+          message: CliStrings.BulkMintingCommandSucsessMessage,
+        },
+      ];
+      const answer = await inquirer.prompt(promptQuestion);
     } else {
       // prompt denied
       console.log(CliStrings.NFTMintingFeedbackAbort);

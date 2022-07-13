@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import { ethers, utils } from 'ethers';
 import { Blockchain } from '../Blockchain';
 import { EthereumConfigDeployContract } from './EthereumConfig/EthereumConfigDeployContract';
 import { EthereumConfigMintNFT } from './EthereumConfig/EthereumConfigMintNFT';
@@ -8,12 +8,8 @@ import { readFileSync } from 'fs';
 import { exit } from 'process';
 import { resolve, sep, posix } from 'path';
 import * as solc from 'solc';
-//import solc = require('solc');
 import { EthereumConfigReadTokenData } from './EthereumConfig/EthereumConfigReadTokenData';
-//const open = require('open');
-//const fs = require('fs');
-//const jc = require('json-cycle');
-//import * as http from 'http'; //ES 6
+import CoinGecko = require('coingecko-api');
 
 // TODO: Check the type of the ConfigArguments!!!!!
 
@@ -22,7 +18,6 @@ export class Ethereum implements Blockchain {
     const provider = ethers.providers.getDefaultProvider(
       isNaN(Number(config.endPoint)) ? config.endPoint : Number(config.endPoint)
     );
-    // console.log('Gasprice: ' + provider.getGasPrice());
 
     const contract = new ethers.Contract(
       config.address_of_contract,
@@ -31,20 +26,27 @@ export class Ethereum implements Blockchain {
     );
 
     //Estimated Gas for mint()-call in Gas
-    const estimation = await contract.estimateGas.mint(
-      config.pub_key_NFT_receiver,
-      config.nftLink,
-      config.nftHash,
-      {
-        gasPrice: provider.getGasPrice(),
-        gasLimit: config.gas_limit,
-      }
+    const estimated_gas: number = (
+      await contract.estimateGas.mint(
+        config.pub_key_NFT_receiver,
+        config.nftLink,
+        config.nftHash,
+        {
+          gasPrice: provider.getGasPrice(),
+          gasLimit: config.gas_limit,
+        }
+      )
+    ).toNumber();
+
+    // get gasprice in gwei
+    const gas_price_in_gwei: number = +utils.formatUnits(
+      await provider.getGasPrice(),
+      'gwei'
     );
 
-    // console.log('GAS for mint: ' + estimation);
-
-    return estimation.toNumber() * (await provider.getGasPrice()).toNumber();
+    return estimated_gas * gas_price_in_gwei;
   }
+
   /**
    * ABI for Smart Contract
    */
@@ -196,6 +198,20 @@ export class Ethereum implements Blockchain {
     );
   }
 
+  async convert_gwei_to_euro(amount_of_gwei: number): Promise<number> {
+    // Get CoinGecko object
+    const CoinGeckoClient = new CoinGecko();
+
+    // retrieve cryptocurrency price data for ethereum in euro
+    const data = await CoinGeckoClient.simple.price({
+      ids: ['ethereum'],
+      vs_currencies: ['eur'],
+    });
+
+    // return the price in euro mit the maximum amount of digits
+    return (data.data.ethereum.eur / Math.pow(10, 9)) * amount_of_gwei;
+  }
+
   /**
    * Binds & Compiles a contract from .sol-file
    * @param path_to_contract_solidity
@@ -300,6 +316,8 @@ export class Ethereum implements Blockchain {
     process.chdir(new_cwd);
     return dependencies;
   }
+
+  /*
   retrocycle($) {
     const px =
       // eslint-disable-next-line no-control-regex
@@ -402,6 +420,9 @@ export class Ethereum implements Blockchain {
       return _value;
     })(object, '$');
   }
+
+
+   */
   //This function is the result of our test for wallet integration. This feauture is not longer maintained but is still part of the repository for documenation reasons.
   /*
   async deploy_contract(config: EthereumConfigDeployContract): Promise<string> {

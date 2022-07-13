@@ -46,26 +46,27 @@ export const CliStrings = {
 
   // IPFS
   IPFSCommandLabel: `IPFS/Pinata`,
-  IPFSCommandHelp: `\tUpload files to IPFS via pinata.\n\tLearn more about pinata at: https://www.pinata.cloud/`,
-  IPFSQuestionApiKey: `Please provide your Pinata API-Key.`,
-  IPFSQuestionApiSec: `Please provide your Pinata API-Sec.`,
+  IPFSCommandHelp: `\tUpload files to IPFS via pinata`,
+  IPFSQuestionApiKey: `Api-key`,
+  IPFSQuestionApiSec: `Api-sec`,
   IPFSFileConfirmationQuestion: chalk.yellow(
     `Please provide the path to the file you want to upload.`
   ),
-  IPFSMenuHeader: chalk.green(`IPFS/Pinata`),
   IPFSErrorMessageNoAccess: chalk.red("No access or file doesn't exist!"),
   IPFSErrorMessageNotFile: chalk.red(`Given path is not a file`),
   IPFSErrorMessageUpload: chalk.red(`Upload failed`),
   IPFSSuccessMessage(link: string): string {
     return chalk.blue(`Upload successful: ${link}`);
   },
-  IPFSClarification: chalk.yellow(
-    `Please provide your Pinata API-Key and API-Sec in this section. Alternatively you could provide your API-Key and API-Sec in a .env file. That way those variables can be read automatically.`
+  IPFSWarningMessage: chalk.yellow(
+    `You need to provide your pinata credentials. See https://github.com/amosproj/amos2022ss07-nft-playbook/wiki/User-Documentation#env if you don't want to manually input this every time.`
   ),
+  IPFSConfirmationQuestion: chalk.yellow(`Continue to enter credentials`),
+  IPFSEnvFile: chalk.yellow(`Using pinata credentials from .env file`),
 
   // Blockchain Settings
   BlockchainSettingsCommandLabel: `Blockchain Settings`,
-  BlockchainSettingsCommandHelp: `\tPlease use the 'Blockchain Settings' command to configure all settings related to your used blockchains.`,
+  BlockchainSettingsCommandHelp: `\tPLease use the 'Blockchain Settings' command to configure all settings related to your used blockchains.`,
   BlockchainSettingsMenuHeader: chalk.green(`Blockchain Settings`),
   BlockchainSettingsMenuQuestion01: chalk.yellow(
     `Please select your desired blockchain(s), multiselection is possible.`
@@ -91,19 +92,13 @@ export const CliStrings = {
 
   // NFT Minting
   NFTMintingCommandLabel: `NFT Minting`,
-  NFTMintingCommandHelp: `\tIn the NFT Minting Menu you can specify all information concerning your NFT including Name and Link (which is already prefilled if you upload a file via Pinata).`,
+  NFTMintingCommandHelp: `\tThe 'NFT Minting' folder provides you with the 'NFT Settings' command to configure your NFT settings as well as the 'Start Minting' command to start your minting process.`,
   NFTMintingCommandMenuHeader: chalk.green(`NFT Minting`),
-  NFTMintingQuestionName: `Please provide the name of your NFT.`,
-  NFTMintingQuestionLink: `Please provide the link to or location of your NFT.`,
+  NFTMintingQuestionName: `Name`,
+  NFTMintingQuestionLink: `NFT Link`,
   NFTMintingQuestionNFTReceiver: (blockchain: string): string => {
     return `${blockchain} NFT Receiver`;
   },
-  NFTMintingClarification: chalk.yellow(
-    `In this section you can specify all information concerning your NFT including Name and Link (which is already prefilled if you upload a file via Pinata).`
-  ),
-  NFTMintingWarning: chalk.red(
-    `Minting cannot be proceed without at least one selected blockchain. Please select a blockchain via the 'Blockchain Settings' command if you'd like to proceed the minting process.`
-  ),
 
   get NFTMintingFeedbackSelectedBlockchains(): string {
     return (
@@ -126,12 +121,13 @@ export const CliStrings = {
       chalk.cyan(`${middleware.getGasLimit(blockchain)}`)
     );
   },
-  NFTMintingFeedbackEstimatedGasFeeGwei: async (
+  NFTMintingFeedbackEstimatedGasFee: async (
     blockchain: string
   ): Promise<string> => {
+    const estimateGasFee = await middleware.estimateGasFeeMint(blockchain);
     return (
       `${blockchain} Estimated gas fee: ` +
-      chalk.cyan(`${await middleware.estimateGasFeeMintGwei(blockchain)} Gwei`)
+      chalk.cyan(`${estimateGasFee.crypto} => ${estimateGasFee.fiat}`)
     );
   },
   NFTMintingFeedbackServerUri: (blockchain: string): string => {
@@ -163,7 +159,7 @@ export const CliStrings = {
 
   // Bulk Minting
   BulkMintingCommandLabel: `Bulk Minting`,
-  BulkMintingCommandHelp: `\tWithin the 'Bulk Minting' command please provide a JSON file to mint multiple NFTs at once.`,
+  BulkMintingCommandHelp: `Bulk Minting help`,
   BulkMintingCommandMenuHeader: chalk.green(`Bulk Minting`),
   BulkMintingConfirmationQuestion: chalk.yellow(
     `Please provide the path to the file you want to minting.`
@@ -171,6 +167,12 @@ export const CliStrings = {
   BulkMintingErrorMessageNotFile: chalk.red(`Given path is not a file`),
   BulkMintingErrorMessageNoAccess: chalk.red(
     "No access or file doesn't exist!"
+  ),
+  BulkMintingCommandProgress: (mintedNfts: number, totalNfts: number) => {
+    return chalk.blue(`${mintedNfts}/${totalNfts} completed`);
+  },
+  BulkMintingCommandSucsessMessage: chalk.yellow(
+    `Congratulations minting sucsessful please confirm to continue`
   ),
 
   // Start Minting
