@@ -36,21 +36,27 @@ export class BulkMintingCommand implements Command {
       await sleep(2000);
       return;
     }
-    let apiKey: string | null;
-    let apiSec: string | null;
+
     if (
       process.env.PINATA_API_KEY === undefined ||
       process.env.PINATA_API_KEY.length === 0 ||
       process.env.PINATA_API_SEC === undefined ||
       process.env.PINATA_API_SEC.length === 0
     ) {
-      apiKey = await getInput(CliStrings.IPFSQuestionApiKey, '');
-      if (apiKey === null) return;
-      apiSec = await getInput(CliStrings.IPFSQuestionApiSec, '');
-      if (apiSec === null) return;
+      if (
+        PinataClient.apiKey === null ||
+        PinataClient.apiKey === undefined ||
+        PinataClient.apiSec === null ||
+        PinataClient.apiSec === undefined
+      ) {
+        PinataClient.apiKey = await getInput(CliStrings.IPFSQuestionApiKey, '');
+        if (PinataClient.apiKey === null) return;
+        PinataClient.apiSec = await getInput(CliStrings.IPFSQuestionApiSec, '');
+        if (PinataClient.apiSec === null) return;
+      }
     } else {
-      apiKey = process.env.PINATA_API_KEY;
-      apiSec = process.env.PINATA_API_SEC;
+      PinataClient.apiKey = process.env.PINATA_API_KEY;
+      PinataClient.apiSec = process.env.PINATA_API_SEC;
     }
 
     const file: string = fs.readFileSync(path, 'utf-8');
@@ -82,7 +88,11 @@ export class BulkMintingCommand implements Command {
     for (const nft of nfts.nfts) {
       let hash: string | undefined = undefined;
       try {
-        hash = await PinataClient.uploadImage(nft.path, apiKey, apiSec);
+        hash = await PinataClient.uploadImage(
+          nft.path,
+          PinataClient.apiKey,
+          PinataClient.apiSec
+        );
       } catch (e: unknown) {
         if (await showException(<NftPlaybookException>e)) {
           return;

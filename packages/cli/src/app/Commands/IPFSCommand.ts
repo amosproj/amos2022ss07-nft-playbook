@@ -18,38 +18,45 @@ export class IPFSCommand implements Command {
 
   async execute() {
     this.print_header();
-    let apiKey: string;
-    let apiSec: string;
     if (
       process.env.PINATA_API_KEY === undefined ||
       process.env.PINATA_API_KEY.length === 0 ||
       process.env.PINATA_API_SEC === undefined ||
       process.env.PINATA_API_SEC.length === 0
     ) {
-      console.log(CliStrings.IPFSWarningMessage);
-      const promptQuestion: inquirer.QuestionCollection = [
-        {
-          type: 'confirm',
-          name: 'confirmed',
-          message: CliStrings.IPFSConfirmationQuestion,
-        },
-      ];
-      const answer = await inquirer.prompt(promptQuestion);
-      if (answer.confirmed) {
-        const key = await getInput(CliStrings.IPFSQuestionApiKey, '');
-        if (key === null) return;
-        apiKey = key;
+      if (
+        PinataClient.apiKey === null ||
+        PinataClient.apiKey === undefined ||
+        PinataClient.apiSec === null ||
+        PinataClient.apiSec === undefined
+      ) {
+        console.log(CliStrings.IPFSWarningMessage);
+        const promptQuestion: inquirer.QuestionCollection = [
+          {
+            type: 'confirm',
+            name: 'confirmed',
+            message: CliStrings.IPFSConfirmationQuestion,
+          },
+        ];
+        const answer = await inquirer.prompt(promptQuestion);
+        if (answer.confirmed) {
+          const key = await getInput(CliStrings.IPFSQuestionApiKey, '');
+          if (key === null) return;
+          PinataClient.apiKey = key;
 
-        const sec = await getInput(CliStrings.IPFSQuestionApiSec, '');
-        if (sec === null) return;
-        apiSec = sec;
-      } else {
-        return;
+          const sec = await getInput(CliStrings.IPFSQuestionApiSec, '');
+          if (sec === null) return;
+          PinataClient.apiSec = sec;
+        } else {
+          return;
+        }
       }
     } else {
       console.log(CliStrings.IPFSEnvFile);
-      apiKey = process.env.PINATA_API_KEY;
-      apiSec = process.env.PINATA_API_SEC;
+      PinataClient.apiKey = process.env.PINATA_API_KEY;
+      PinataClient.apiSec = process.env.PINATA_API_SEC;
+      PinataClient.apiKey = process.env.PINATA_API_KEY;
+      PinataClient.apiSec = process.env.PINATA_API_SEC;
     }
     const path = await getInput(CliStrings.IPFSFileConfirmationQuestion, '');
     if (path === null) return;
@@ -69,7 +76,11 @@ export class IPFSCommand implements Command {
 
     let hash: string;
     try {
-      hash = await PinataClient.uploadImage(path, apiKey, apiSec);
+      hash = await PinataClient.uploadImage(
+        path,
+        PinataClient.apiKey,
+        PinataClient.apiSec
+      );
     } catch (e: unknown) {
       await showException(<NftPlaybookException>e);
       return;
