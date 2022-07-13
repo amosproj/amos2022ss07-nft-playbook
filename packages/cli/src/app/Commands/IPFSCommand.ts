@@ -9,7 +9,15 @@ export class IPFSCommand implements Command {
   name = CliStrings.IPFSCommandLabel;
   help = CliStrings.IPFSCommandHelp;
 
+  private print_header() {
+    console.clear();
+    console.log(CliStrings.horizontalHashLine);
+    console.log(CliStrings.IPFSMenuHeader);
+    console.log(CliStrings.horizontalHashLine);
+  }
+
   async execute() {
+    this.print_header();
     let apiKey: string;
     let apiSec: string;
     if (
@@ -33,9 +41,8 @@ export class IPFSCommand implements Command {
         apiKey = key;
 
         const sec = await getInput(CliStrings.IPFSQuestionApiSec, '');
-        if(sec === null) return;
+        if (sec === null) return;
         apiSec = sec;
-
       } else {
         return;
       }

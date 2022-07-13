@@ -47,6 +47,7 @@ export const CliStrings = {
   // IPFS
   IPFSCommandLabel: `IPFS/Pinata`,
   IPFSCommandHelp: `\tUpload files to IPFS via pinata`,
+  IPFSMenuHeader: chalk.green(`IPFS/Pinata`),
   IPFSQuestionApiKey: `Api-key`,
   IPFSQuestionApiSec: `Api-sec`,
   IPFSFileConfirmationQuestion: chalk.yellow(
@@ -59,7 +60,7 @@ export const CliStrings = {
     return chalk.blue(`Upload successful: ${link}`);
   },
   IPFSWarningMessage: chalk.yellow(
-    `You need to provide your pinata credentials. See https://github.com/amosproj/amos2022ss07-nft-playbook/wiki/User-Documentation#env if you don't want to manually input this every time.`
+    `Please provide your pinata credentials. You can either enter them manually in the following or alternatively see https://github.com/amosproj/amos2022ss07-nft-playbook/wiki/User-Documentation#env to have them read in automatically.`
   ),
   IPFSConfirmationQuestion: chalk.yellow(`Continue to enter credentials`),
   IPFSEnvFile: chalk.yellow(`Using pinata credentials from .env file`),
