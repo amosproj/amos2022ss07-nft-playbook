@@ -42,7 +42,8 @@ export class BlockchainSettingsCommand implements Command {
     for (const blockchain of selectedBlockchains) {
       const input = await getInput(
         CliStrings.BlockchainSettingsMenuQuestion02(blockchain),
-        middleware.getPrivateKeyUser(blockchain)
+        '',
+        true
       );
       if (input === null) return;
       middleware.setPrivateKeyUser(input, blockchain);
