@@ -60,7 +60,9 @@ export class Middleware {
     }
   }
 
-  public async estimateGasFeeMint(blockchain: string): Promise<any> {
+  public async estimateGasFeeMint(
+    blockchain: string
+  ): Promise<{ crypto: string; fiat: string }> {
     const data: SettingsData = this._selectedBlockchains[blockchain];
 
     try {
@@ -85,7 +87,6 @@ export class Middleware {
             await this._estimateGasFeeMintLamportAndEuroSolana();
 
           return estimateGasFeeMintSolana;
-          break;
         }
         default: {
           break;
@@ -97,7 +98,7 @@ export class Middleware {
         e
       );
     }
-    return '';
+    return { crypto: '', fiat: '' };
   }
 
   public async mintNft() {
@@ -170,7 +171,7 @@ export class Middleware {
           );
           break;
         }
-        case 'Flow': {
+        case 'Solana': {
           // this._deployContractFlow();
           break;
         }
@@ -447,7 +448,7 @@ export class Middleware {
     nft_hash: string,
     nft_link: string,
     GAS_LIMIT: number
-  ): Promise<any> {
+  ): Promise<{ crypto: string; fiat: string }> {
     const ethereumConfigMintNFT = new EthereumConfigMintNFT(
       nft_name,
       server_uri,
@@ -540,7 +541,10 @@ export class Middleware {
     return await new Solana().mint_nft(solanaConfigMintNFT);
   }
 
-  private async _estimateGasFeeMintLamportAndEuroSolana(): Promise<any> {
+  private async _estimateGasFeeMintLamportAndEuroSolana(): Promise<{
+    crypto: string;
+    fiat: string;
+  }> {
     const ANZ_DIGITS = 5;
 
     // get amount of lamport and euro

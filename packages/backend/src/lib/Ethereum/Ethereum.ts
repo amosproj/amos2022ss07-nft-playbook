@@ -264,10 +264,10 @@ export class Ethereum implements Blockchain {
   // recursive function that iterates over all dependencies and merges them into @param merged_sources
   private static _rec_merge_all_solidity_sources(
     current_file_path: string,
-    merged_sources: { [x: string]: { content: any } }
+    merged_sources: { [x: string]: { content: string } }
   ) {
     // read the content of the current file and append it to our merged_soruces
-    let current_file_content;
+    let current_file_content: string;
     try {
       // read content of file and add it to sources
       current_file_content = readFileSync(current_file_path, 'utf-8');

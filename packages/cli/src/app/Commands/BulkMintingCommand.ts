@@ -214,7 +214,7 @@ export class BulkMintingCommand implements Command {
           message: CliStrings.BulkMintingCommandSucsessMessage,
         },
       ];
-      const answer = await inquirer.prompt(promptQuestion);
+      await inquirer.prompt(promptQuestion);
     } else {
       // prompt denied
       console.log(CliStrings.NFTMintingFeedbackAbort);
