@@ -63,7 +63,7 @@ export async function showException(e: NftPlaybookException) {
 export async function getInput(
   promptMessage: string,
   prevAnswer: string
-): Promise<string> {
+): Promise<string | null> {
   const inputQuestion: inquirer.QuestionCollection = [
     {
       type: 'input',

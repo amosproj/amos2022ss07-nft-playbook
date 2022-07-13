@@ -36,8 +36,8 @@ export class BulkMintingCommand implements Command {
       await sleep(2000);
       return;
     }
-    let apiKey: string;
-    let apiSec: string;
+    let apiKey: string | null;
+    let apiSec: string | null;
     if (
       process.env.PINATA_API_KEY === undefined ||
       process.env.PINATA_API_KEY.length === 0 ||

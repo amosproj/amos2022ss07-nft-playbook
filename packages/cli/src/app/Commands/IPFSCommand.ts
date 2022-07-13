@@ -28,8 +28,14 @@ export class IPFSCommand implements Command {
       ];
       const answer = await inquirer.prompt(promptQuestion);
       if (answer.confirmed) {
-        apiKey = await getInput(CliStrings.IPFSQuestionApiKey, '');
-        apiSec = await getInput(CliStrings.IPFSQuestionApiSec, '');
+        const key = await getInput(CliStrings.IPFSQuestionApiKey, '');
+        if (key === null) return;
+        apiKey = key;
+
+        const sec = await getInput(CliStrings.IPFSQuestionApiSec, '');
+        if(sec === null) return;
+        apiSec = sec;
+
       } else {
         return;
       }
@@ -39,6 +45,7 @@ export class IPFSCommand implements Command {
       apiSec = process.env.PINATA_API_SEC;
     }
     const path = await getInput(CliStrings.IPFSFileConfirmationQuestion, '');
+    if (path === null) return;
 
     try {
       fs.accessSync(path, fs.constants.R_OK);
