@@ -6,12 +6,7 @@ import { BlockChainConfigReadTokenData } from '../BlockchainConfig/BlockChainCon
 import { BlockChainConfigReadUserDataFromSmartContract } from '../BlockchainConfig/BlockChainConfigReadUserDataFromSmartContract';
 // TODO: Check the type of the ConfigArguments!!!!!
 import CoinGecko = require('coingecko-api');
-import {
-  Connection,
-  Keypair,
-  LAMPORTS_PER_SOL,
-  PublicKey,
-} from '@solana/web3.js';
+import { Connection, Keypair, PublicKey } from '@solana/web3.js';
 import {
   bundlrStorage,
   keypairIdentity,
@@ -24,10 +19,12 @@ let estimated_lamport_per_mint = 11987475;
 
 export class Solana implements Blockchain {
   deploy_contract(config: BlockchainConfigDeployContract): Promise<string> {
+    config;
     throw new Error('Method not implemented.');
   }
   estimate_gas_fee_mint(config: SolanaConfigMintNFT): Promise<number> {
-    return new Promise<number>((resolve, reject) => {
+    config;
+    return new Promise<number>((resolve) => {
       resolve(estimated_lamport_per_mint);
     });
   }
@@ -77,16 +74,19 @@ export class Solana implements Blockchain {
   read_smart_contract(
     config: BlockchainConfigReadSmartContract
   ): Promise<void> {
+    config;
     throw new Error('Method not implemented.');
   }
   read_user_data_from_smart_contract(
     config: BlockChainConfigReadUserDataFromSmartContract
   ): Promise<void> {
+    config;
     throw new Error('Method not implemented.');
   }
   read_pic_data_from_smart_contract(
     config: BlockChainConfigReadTokenData
   ): Promise<void> {
+    config;
     throw new Error('Method not implemented.');
   }
 

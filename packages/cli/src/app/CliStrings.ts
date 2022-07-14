@@ -179,7 +179,7 @@ export const CliStrings = {
     return chalk.blue(`${mintedNfts}/${totalNfts} completed`);
   },
   BulkMintingCommandSucsessMessage: chalk.yellow(
-    `Congratulations minting sucsessful please confirm to continue`
+    `Congratulations minting successful please confirm to continue`
   ),
 
   // Start Minting

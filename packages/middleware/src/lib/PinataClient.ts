@@ -6,6 +6,9 @@ import { middleware } from '../';
 const pinataSDK = require('@pinata/sdk');
 
 export class PinataClient {
+  public static apiKey: string | null;
+  public static apiSec: string | null;
+
   public static async uploadImage(
     path: string,
     api_key: string,
