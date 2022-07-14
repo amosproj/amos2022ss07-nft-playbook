@@ -22,6 +22,11 @@ export class BulkMintingCommand implements Command {
 
   async execute(): Promise<void> {
     this.print_header();
+    if (middleware.getSelectedBlockchains().length === 0) {
+      console.log(CliStrings.CliStructure);
+      await sleep(8000);
+      return;
+    }
     const path = await getInput(CliStrings.BulkMintingConfirmationQuestion, '');
     if (path === null) return;
     try {

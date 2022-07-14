@@ -186,6 +186,11 @@ export const CliStrings = {
   TestMintingCommandLabel: `Test Minting`,
   TestMintingCommandHelp: `Test the minting process`,
 
+  // Cli Struktur
+  CliStructure: chalk.cyan(
+    'Please select and configure at least one blockchain in the Blockchain Settings Menu in order to use this feature'
+  ),
+
   // Version
   VersionCommandLabel: `Version`,
   VersionCommandHelp: `\tThe 'Version' command provides you with the current version number of the program.`,

@@ -62,16 +62,29 @@ export async function showException(e: NftPlaybookException) {
 
 export async function getInput(
   promptMessage: string,
-  prevAnswer: string
+  prevAnswer: string,
+  hidden = false
 ): Promise<string | null> {
-  const inputQuestion: inquirer.QuestionCollection = [
-    {
-      type: 'input',
-      name: 'input',
-      message: promptMessage,
-      default: prevAnswer,
-    },
-  ];
+  let inputQuestion: inquirer.QuestionCollection;
+  if (hidden) {
+    inputQuestion = [
+      {
+        type: 'password',
+        name: 'input',
+        message: promptMessage,
+        default: prevAnswer,
+      },
+    ];
+  } else {
+    inputQuestion = [
+      {
+        type: 'input',
+        name: 'input',
+        message: promptMessage,
+        default: prevAnswer,
+      },
+    ];
+  }
 
   const confirmQuestion: inquirer.QuestionCollection = [
     {
@@ -90,7 +103,7 @@ export async function getInput(
   let showPrompt = true;
   while (showPrompt) {
     input = (await inquirer.prompt(inputQuestion)).input;
-    console.log(CliStrings.GetInputConfirmationInput + input);
+
     const confirmAnswer = await inquirer.prompt(confirmQuestion);
     if (
       confirmAnswer.confirmed ===
