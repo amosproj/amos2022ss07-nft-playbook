@@ -2,28 +2,29 @@ import { Ethereum } from './Ethereum';
 import { EthereumConfigMintNFT } from './EthereumConfig/EthereumConfigMintNFT';
 
 describe('Ethereum', () => {
-  it.skip('should estimate gas', async () => {
+  jest.setTimeout(1000000);
+
+  it('should mint NFT to Ethereum using one of our contracts', async () => {
     const ethereum = new Ethereum();
 
-    const contract_adress = '0xB924387088C7c2961f3049002D9474b5F308F8c4';
+    const contract_adress = '0x9225326e5C6f149a930143feCb9cf02c57001c79';
     const priv_key_NFT_transmitter =
-      '36b802d163dea869795fa3ebd5f671743038a4fc4f9d8b0e3538de4fc1a1d8e8';
-    const pub_key_NFT_receiver = '0xA995ECea55f0739d07B8F3eEF8153E58C1e838C8';
+      'b0dc1a6a2141fbbc099f957695c58cb1c95bd63eac8d2d3901b59a8376f186cc';
+    const pub_key_NFT_receiver = '0x6fBd68deA5df9ECE2aB42a3b8BD48dEB5737730c';
 
     const config = new EthereumConfigMintNFT(
-      'Test',
-      'http://127.0.0.1:7545',
+      'AMOS ETHEREUM NFT',
+      '3',
       priv_key_NFT_transmitter,
       contract_adress,
       pub_key_NFT_receiver,
-      'hash',
-      'link123',
+      'DEMO_HASH',
+      'DEMO_URLTOFILE',
       2000000
     );
 
-    const gas_fee = await ethereum.estimate_gas_fee_mint(config);
-    console.log('Gasfee: ' + gas_fee);
-    console.log(gas_fee);
+    const token_id = await ethereum.mint_nft(config);
+    console.log('TOKENID ETHEREUM NFT: ' + token_id);
 
     expect(1 == 1);
   });
