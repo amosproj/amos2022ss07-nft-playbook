@@ -98,8 +98,7 @@ export class NFTMintingCommand implements Command {
     if (answer.confirmed) {
       // prompt accepted
       const worker = new Worker(
-        './packages/cli/src/app/Commands/CliWorker.ts',
-        undefined
+        './packages/cli/src/app/Commands/CliWorker.ts'
       );
       try {
         await middleware.mintNft();

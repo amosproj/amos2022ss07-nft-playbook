@@ -79,8 +79,7 @@ export class BlockchainSettingsCommand implements Command {
         CliStrings.BlockchainSettingsMenuQuestionChoices01
       ) {
         const worker = new Worker(
-          './packages/cli/src/app/Commands/CliWorker.ts',
-          undefined
+          './packages/cli/src/app/Commands/CliWorker.ts'
         );
         try {
           await middleware.deployContract(blockchain);
