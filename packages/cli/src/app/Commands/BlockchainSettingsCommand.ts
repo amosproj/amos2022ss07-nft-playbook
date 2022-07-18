@@ -2,6 +2,7 @@ import * as inquirer from 'inquirer';
 import { Command, getInput, showException } from './Command';
 import { CliStrings } from '../CliStrings';
 import { middleware, NftPlaybookException } from '@nft-playbook/middleware';
+import { Worker } from 'worker_threads';
 
 export class BlockchainSettingsCommand implements Command {
   name = CliStrings.BlockchainSettingsCommandLabel;
@@ -77,13 +78,20 @@ export class BlockchainSettingsCommand implements Command {
         selectedContractMethod ===
         CliStrings.BlockchainSettingsMenuQuestionChoices01
       ) {
+        const worker = new Worker(
+          './packages/cli/src/app/Commands/CliWorker.ts'
+        );
         try {
           await middleware.deployContract(blockchain);
         } catch (e: unknown) {
+          worker.terminate();
+          console.log();
           if (await showException(<NftPlaybookException>e)) {
             return;
           }
         }
+        worker.terminate();
+        console.log();
       } else if (
         selectedContractMethod ===
         CliStrings.BlockchainSettingsMenuQuestionChoices02
