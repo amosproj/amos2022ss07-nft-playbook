@@ -143,12 +143,6 @@ export const CliStrings = {
       chalk.cyan(`${middleware.getServerUri(blockchain)}`)
     );
   },
-  NFTMintingFeedbackPrivateKey: (blockchain: string): string => {
-    return (
-      `${blockchain} Key contract owner: ` +
-      chalk.cyan(`${middleware.getPrivateKeyUser(blockchain)}`)
-    );
-  },
   NFTMintingFeedbackNFTReceiver: (blockchain: string): string => {
     return (
       `${blockchain} Key NFT receiver: ` +

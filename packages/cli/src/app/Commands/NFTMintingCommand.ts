@@ -2,6 +2,7 @@ import * as inquirer from 'inquirer';
 import { Command, getInput, showException, sleep } from './Command';
 import { CliStrings } from '../CliStrings';
 import { middleware, NftPlaybookException } from '@nft-playbook/middleware';
+import { Worker } from 'worker_threads';
 
 export class NFTMintingCommand implements Command {
   name = CliStrings.NFTMintingCommandLabel;
@@ -66,7 +67,7 @@ export class NFTMintingCommand implements Command {
     for (const blockchain of middleware.getSelectedBlockchains()) {
       console.log();
       if (blockchain === 'Solana') {
-        console.log('Gas Limit: Not implemented yet');
+        // console.log('Gas Limit: Not implemented yet');
       } else {
         console.log(CliStrings.NFTMintingFeedbackGasLimit(blockchain));
       }
@@ -81,7 +82,6 @@ export class NFTMintingCommand implements Command {
       }
 
       console.log(CliStrings.NFTMintingFeedbackServerUri(blockchain));
-      console.log(CliStrings.NFTMintingFeedbackPrivateKey(blockchain));
       console.log(CliStrings.NFTMintingFeedbackNFTReceiver(blockchain));
     }
     console.log(CliStrings.horizontalHashLine);
@@ -97,13 +97,20 @@ export class NFTMintingCommand implements Command {
     const answer = await inquirer.prompt(promptQuestion);
     if (answer.confirmed) {
       // prompt accepted
+      const worker = new Worker(
+        './packages/cli/src/app/Commands/CliWorker.ts',
+        undefined
+      );
       try {
         await middleware.mintNft();
       } catch (e: unknown) {
+        console.log();
+        worker.terminate();
         if (await showException(<NftPlaybookException>e)) {
           return;
         }
       }
+      worker.terminate();
     } else {
       // prompt denied
       console.log(CliStrings.NFTMintingFeedbackAbort);

@@ -196,6 +196,9 @@ export class BulkMintingCommand implements Command {
       try {
         const totalNfts = nfts.nfts.length;
         let mintedNfts = 0;
+        console.log(
+          CliStrings.BulkMintingCommandProgress(mintedNfts, totalNfts)
+        );
         for (const nft of nfts.nfts) {
           middleware.setNftHash(nftSettings[nft.name].hash);
           middleware.setNftLink(nftSettings[nft.name].link);

@@ -4,6 +4,7 @@ import { Command, getInput, showException, sleep } from './Command';
 import { middleware } from '@nft-playbook/middleware';
 import fs = require('fs');
 import inquirer = require('inquirer');
+import { Worker } from 'worker_threads';
 
 export class IPFSCommand implements Command {
   name = CliStrings.IPFSCommandLabel;
@@ -75,6 +76,10 @@ export class IPFSCommand implements Command {
     }
 
     let hash: string;
+    const worker = new Worker(
+      './packages/cli/src/app/Commands/CliWorker.ts',
+      undefined
+    );
     try {
       hash = await PinataClient.uploadImage(
         path,
@@ -82,9 +87,13 @@ export class IPFSCommand implements Command {
         PinataClient.apiSec
       );
     } catch (e: unknown) {
+      worker.terminate();
+      console.log();
       await showException(<NftPlaybookException>e);
       return;
     }
+    worker.terminate();
+    console.log();
     middleware.setNftHash(hash);
     const link = `https://gateway.ipfs.io/ipfs/${hash}`;
     middleware.setNftLink(link);
