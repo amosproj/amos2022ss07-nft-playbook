@@ -76,9 +76,7 @@ export class IPFSCommand implements Command {
     }
 
     let hash: string;
-    const worker = new Worker(
-      './packages/cli/src/app/Commands/CliWorker.ts'
-    );
+    const worker = new Worker('./packages/cli/src/app/Commands/CliWorker.ts');
     try {
       hash = await PinataClient.uploadImage(
         path,
