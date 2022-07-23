@@ -1,5 +1,11 @@
 import { CliStrings } from '../CliStrings';
-import { Command, getInput, showException, sleep } from './Command';
+import {
+  checkPinataCredentials,
+  Command,
+  getInput,
+  showException,
+  sleep,
+} from './Command';
 import fs = require('fs');
 import {
   middleware,
@@ -42,26 +48,8 @@ export class BulkMintingCommand implements Command {
       return;
     }
 
-    if (
-      process.env.PINATA_API_KEY === undefined ||
-      process.env.PINATA_API_KEY.length === 0 ||
-      process.env.PINATA_API_SEC === undefined ||
-      process.env.PINATA_API_SEC.length === 0
-    ) {
-      if (
-        PinataClient.apiKey === null ||
-        PinataClient.apiKey === undefined ||
-        PinataClient.apiSec === null ||
-        PinataClient.apiSec === undefined
-      ) {
-        PinataClient.apiKey = await getInput(CliStrings.IPFSQuestionApiKey, '');
-        if (PinataClient.apiKey === null) return;
-        PinataClient.apiSec = await getInput(CliStrings.IPFSQuestionApiSec, '');
-        if (PinataClient.apiSec === null) return;
-      }
-    } else {
-      PinataClient.apiKey = process.env.PINATA_API_KEY;
-      PinataClient.apiSec = process.env.PINATA_API_SEC;
+    if (!(await checkPinataCredentials())) {
+      return;
     }
 
     const file: string = fs.readFileSync(path, 'utf-8');

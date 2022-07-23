@@ -7,10 +7,8 @@ import { NFTMintingCommand } from './NFTMintingCommand';
 import { IPFSCommand } from './IPFSCommand';
 import inquirer = require('inquirer');
 import chalk = require('chalk');
-import { NftPlaybookException } from '@nft-playbook/middleware';
+import { NftPlaybookException, PinataClient } from '@nft-playbook/middleware';
 import { BulkMintingCommand } from './BulkMintingCommand';
-
-// import { SelectWalletCommand } from './SelectWalletCommand';
 
 export interface Command {
   name: string;
@@ -116,4 +114,41 @@ export async function getInput(
     }
   }
   return input;
+}
+
+export async function checkPinataCredentials(): Promise<boolean> {
+  if (
+    process.env.PINATA_API_KEY === undefined ||
+    process.env.PINATA_API_KEY.length === 0 ||
+    process.env.PINATA_API_SEC === undefined ||
+    process.env.PINATA_API_SEC.length === 0
+  ) {
+    if (PinataClient.apiKey.length === 0 || PinataClient.apiKey.length === 0) {
+      console.log(CliStrings.IPFSWarningMessage);
+      const promptQuestion: inquirer.QuestionCollection = [
+        {
+          type: 'confirm',
+          name: 'confirmed',
+          message: CliStrings.IPFSConfirmationQuestion,
+        },
+      ];
+      const answer = await inquirer.prompt(promptQuestion);
+      if (answer.confirmed) {
+        const key = await getInput(CliStrings.IPFSQuestionApiKey, '');
+        if (key === null) return false;
+        PinataClient.apiKey = key;
+
+        const sec = await getInput(CliStrings.IPFSQuestionApiSec, '');
+        if (sec === null) return false;
+        PinataClient.apiSec = sec;
+      } else {
+        return false;
+      }
+    }
+  } else {
+    console.log(CliStrings.IPFSEnvFile);
+    PinataClient.apiKey = process.env.PINATA_API_KEY;
+    PinataClient.apiSec = process.env.PINATA_API_SEC;
+  }
+  return true;
 }
