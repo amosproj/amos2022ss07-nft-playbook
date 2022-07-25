@@ -1,0 +1,38 @@
+{
+  "nfts": [
+    {
+      "name": "Test1",
+      "path": "NFT-Logo.jpg",
+      "blockchains": [
+        {
+          "name": "Ethereum",
+          "receiver": "0x6fBd68deA5df9ECE2aB42a3b8BD48dEB5737730c"
+        }
+      ]
+    },
+    {
+      "name": "Test2",
+      "path": "NFT-Logo.jpg",
+      "blockchains": [
+        {
+          "name": "Solana",
+          "receiver": "67PmqBmQiT18RGfcrJZQMcgACeMdedUD21LgZap2tMrn"
+        }
+      ]
+    },
+    {
+      "name": "Test3",
+      "path": "NFT-Logo.jpg",
+      "blockchains": [
+        {
+          "name": "Ethereum",
+          "receiver": "0x6fBd68deA5df9ECE2aB42a3b8BD48dEB5737730c"
+        },
+        {
+          "name": "Solana",
+          "receiver": "67PmqBmQiT18RGfcrJZQMcgACeMdedUD21LgZap2tMrn"
+        }
+      ]
+    }
+  ]
+}
