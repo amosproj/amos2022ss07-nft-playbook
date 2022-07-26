@@ -104,7 +104,7 @@ export class BlockchainSettingsCommand implements Command {
         middleware.setContractAddress(blockchain, contractAddress);
       }
       // }
-      console.clear();
+      // console.clear();
     }
   }
 }

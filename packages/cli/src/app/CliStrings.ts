@@ -3,7 +3,7 @@ import chalk = require('chalk');
 
 const program_information = {
   name: 'nft-playbook',
-  version: '0.0.1',
+  version: '1.0.0',
 };
 
 export const CliStrings = {
@@ -160,7 +160,7 @@ export const CliStrings = {
 
   // Bulk Minting
   BulkMintingCommandLabel: `Bulk Minting`,
-  BulkMintingCommandHelp: `Bulk Minting help`,
+  BulkMintingCommandHelp: `\tBulk Minting help`,
   BulkMintingCommandMenuHeader: chalk.green(`Bulk Minting`),
   BulkMintingConfirmationQuestion: chalk.yellow(
     `Please provide the path to the file you want to minting.`
