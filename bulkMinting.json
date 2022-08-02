@@ -6,7 +6,7 @@
       "blockchains": [
         {
           "name": "Ethereum",
-          "receiver": "0x6fBd68deA5df9ECE2aB42a3b8BD48dEB5737730c"
+          "receiver": "0x50356d94942360aF7CDDBF245A670C2035bb7217"
         }
       ]
     },
@@ -16,7 +16,7 @@
       "blockchains": [
         {
           "name": "Solana",
-          "receiver": "67PmqBmQiT18RGfcrJZQMcgACeMdedUD21LgZap2tMrn"
+          "receiver": "6fxbzoo6CnpjQSigg17EJ3UAGhAPuXVSdHRwQHrGGGHA"
         }
       ]
     },
@@ -26,11 +26,11 @@
       "blockchains": [
         {
           "name": "Ethereum",
-          "receiver": "0x6fBd68deA5df9ECE2aB42a3b8BD48dEB5737730c"
+          "receiver": "0x50356d94942360aF7CDDBF245A670C2035bb7217"
         },
         {
           "name": "Solana",
-          "receiver": "67PmqBmQiT18RGfcrJZQMcgACeMdedUD21LgZap2tMrn"
+          "receiver": "6fxbzoo6CnpjQSigg17EJ3UAGhAPuXVSdHRwQHrGGGHA"
         }
       ]
     }
